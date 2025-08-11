@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloudlight Minimal - 云光极简</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .font-mono {
+            font-family: 'Roboto Mono', monospace;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 h-screen w-screen flex items-center justify-center overflow-hidden">
+
+    <div class="flex flex-col items-center gap-12">
+        <div class="relative w-80 h-80 rounded-full border-8 border-gray-200 flex items-center justify-center" style="background: linear-gradient(145deg, #ffffff, #e6e6e6);">
+            <div id="clock-face" class="relative w-[95%] h-[95%] bg-white rounded-full border-2 border-gray-200">
+                <!-- Hand -->
+                <div id="hand" class="absolute bottom-1/2 left-1/2 w-0.5 h-[45%] bg-red-500 origin-bottom transform -translate-x-1/2 rotate-0 rounded-full z-10 transition-transform duration-1000 linear"></div>
+                <!-- Center Dot -->
+                <div class="absolute top-1/2 left-1/2 w-3 h-3 bg-gray-800 rounded-full transform -translate-x-1/2 -translate-y-1/2 z-20"></div>
+            </div>
+        </div>
+        
+        <div id="time-display" class="font-mono text-5xl font-bold text-gray-800">25:00</div>
+
+        <div class="flex items-center gap-6">
+            <button id="reset-btn" class="bg-gray-200 text-gray-700 rounded-xl p-3 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md hover:bg-gray-300 active:translate-y-0 active:scale-95 active:shadow-inner">
+                <i data-lucide="rotate-cw" class="w-8 h-8"></i>
+            </button>
+            <button id="start-pause-btn" class="bg-gray-200 text-gray-700 rounded-xl p-3 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md hover:bg-gray-300 active:translate-y-0 active:scale-95 active:shadow-inner">
+                <i id="play-icon" data-lucide="play" class="w-8 h-8"></i>
+                <i id="pause-icon" data-lucide="pause" class="w-8 h-8 hidden"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const WORK_TIME = 25 * 60; // 25 minutes
+        const timeDisplay = document.getElementById('time-display');
+        const hand = document.getElementById('hand');
+        const startPauseBtn = document.getElementById('start-pause-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const playIcon = document.getElementById('play-icon');
+        const pauseIcon = document.getElementById('pause-icon');
+        const clockFace = document.getElementById('clock-face');
+
+        let timer = null;
+        let totalSeconds = WORK_TIME;
+        let remainingTime = WORK_TIME;
+        let isPaused = true;
+
+        /**
+         * Creates the tick marks on the clock face.
+         */
+        function createTicks() {
+            // Use clientWidth to exclude border width from calculations
+            const faceWidth = clockFace.clientWidth;
+            const radius = faceWidth / 2;
+            const existingTicks = clockFace.querySelectorAll('.tick');
+            existingTicks.forEach(t => t.remove());
+
+            for (let i = 0; i < 100; i++) {
+                const tick = document.createElement('div');
+                tick.className = 'tick absolute bg-gray-800';
+                const isMajor = i % 10 === 0;
+                const tickLength = isMajor ? 12 : 8; // px
+                const tickWidth = isMajor ? 3 : 1;   // px
+
+                // Ensure exact px sizes to avoid Tailwind class width rounding
+                tick.style.width = `${tickWidth}px`;
+                tick.style.height = `${tickLength}px`;
+
+                // Angle in radians with -90deg offset so i=0 is at top
+                const angleRad = (i * 3.6 - 90) * Math.PI / 180;
+
+                // Center of tick lies inside by half its length, so outer end touches edge
+                const rCenter = radius - tickLength / 2;
+                const cx = radius + rCenter * Math.cos(angleRad);
+                const cy = radius + rCenter * Math.sin(angleRad);
+
+                tick.style.left = `${cx}px`;
+                tick.style.top = `${cy}px`;
+                tick.style.transformOrigin = 'center center';
+                tick.style.transform = `translate(-50%, -50%) rotate(${i * 3.6}deg)`;
+
+                clockFace.appendChild(tick);
+            }
+        }
+
+        /**
+         * Formats seconds into MM:SS format.
+         * @param {number} seconds - The total seconds.
+         * @returns {string} The formatted time string.
+         */
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        /**
+         * Updates the time display and the clock hand.
+         */
+        function updateDisplay() {
+            timeDisplay.textContent = formatTime(remainingTime);
+            
+            const elapsedSeconds = totalSeconds - remainingTime;
+            const degreesPerSecond = 360 / totalSeconds;
+            const rotation = elapsedSeconds * degreesPerSecond;
+            
+            hand.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
+        }
+
+        /**
+         * Toggles the timer on and off.
+         */
+        function toggleTimer() {
+            isPaused = !isPaused;
+            if (!isPaused) {
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+                timer = setInterval(() => {
+                    remainingTime--;
+                    updateDisplay();
+                    if (remainingTime < 0) {
+                        clearInterval(timer);
+                        isPaused = true;
+                        playIcon.classList.remove('hidden');
+                        pauseIcon.classList.add('hidden');
+                        // Optionally reset or handle completion
+                        remainingTime = WORK_TIME;
+                        updateDisplay();
+                    }
+                }, 1000);
+            } else {
+                clearInterval(timer);
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+            }
+        }
+
+        /**
+         * Resets the timer to the initial state.
+         */
+        function resetTimer() {
+            clearInterval(timer);
+            isPaused = true;
+            remainingTime = WORK_TIME;
+            playIcon.classList.remove('hidden');
+            pauseIcon.classList.add('hidden');
+            updateDisplay();
+        }
+
+        startPauseBtn.addEventListener('click', toggleTimer);
+        resetBtn.addEventListener('click', resetTimer);
+
+        // Initial setup
+        setTimeout(() => {
+            createTicks();
+            updateDisplay();
+        }, 0);
+        
+        window.addEventListener('resize', createTicks);
+
+    </script>
+</body>
+</html>

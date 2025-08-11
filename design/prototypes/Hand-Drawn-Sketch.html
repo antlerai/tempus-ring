@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hand-Drawn Sketch - 手绘素描</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kalam&display=swap');
+        body {
+            background-color: #EFEFEF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Kalam', cursive;
+        }
+        .clock-container {
+            position: relative;
+            width: 350px;
+            height: 350px;
+        }
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+        .clock-face {
+            stroke: #333;
+            stroke-width: 4;
+            fill: #EFEFEF;
+            filter: url(#wobble);
+        }
+        .numbers text {
+            fill: #333;
+            font-size: 28px;
+            text-anchor: middle;
+            dominant-baseline: middle;
+        }
+        .hand {
+            stroke: #333;
+            stroke-width: 4;
+            stroke-linecap: round;
+            transform-origin: center;
+        }
+        .hour-hand {
+            stroke-width: 6;
+        }
+        .second-hand {
+            stroke: red;
+            stroke-width: 2;
+        }
+        .center-dot {
+            fill: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="clock-container">
+        <svg viewBox="0 0 200 200">
+            <defs>
+                <filter id="wobble">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="3" result="warp" />
+                    <feDisplacementMap xChannelSelector="R" yChannelSelector="G" scale="3" in="SourceGraphic" in2="warp" />
+                </filter>
+            </defs>
+            <path class="clock-face" d="M 100,10 C 150,10 190,50 190,100 C 190,150 150,190 100,190 C 50,190 10,150 10,100 C 10,50 50,10 100,10 Z" />
+            <g class="numbers">
+                <text x="100" y="35">12</text>
+                <text x="165" y="100">3</text>
+                <text x="100" y="165">6</text>
+                <text x="35" y="100">9</text>
+            </g>
+            <line class="hand hour-hand" x1="100" y1="100" x2="100" y2="65" />
+            <line class="hand minute-hand" x1="100" y1="100" x2="100" y2="45" />
+            <line class="hand second-hand" x1="100" y1="100" x2="100" y2="35" />
+            <circle class="center-dot" cx="100" cy="100" r="4" />
+        </svg>
+    </div>
+    <script>
+        const hourHand = document.querySelector('.hour-hand');
+        const minuteHand = document.querySelector('.minute-hand');
+        const secondHand = document.querySelector('.second-hand');
+
+        function setDate() {
+            const now = new Date();
+
+            const seconds = now.getSeconds();
+            const secondsDegrees = ((seconds / 60) * 360) + 90;
+            secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
+
+            const minutes = now.getMinutes();
+            const minutesDegrees = ((minutes / 60) * 360) + ((seconds/60)*6) + 90;
+            minuteHand.style.transform = `rotate(${minutesDegrees}deg)`;
+
+            const hours = now.getHours();
+            const hoursDegrees = ((hours / 12) * 360) + ((minutes/60)*30) + 90;
+            hourHand.style.transform = `rotate(${hoursDegrees}deg)`;
+        }
+
+        setInterval(setDate, 1000);
+        setDate();
+    </script>
+</body>
+</html>

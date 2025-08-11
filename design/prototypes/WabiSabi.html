@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WabiSabi- 侘寂时钟</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/roughjs@latest/bundled/rough.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;700&family=Kalam:wght@400;700&family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            /* Add paper texture effect */
+            background-image: 
+                radial-gradient(circle at 20% 50%, transparent 20%, rgba(255,255,255,0.3) 21%, rgba(255,255,255,0.3) 34%, transparent 35%, transparent),
+                linear-gradient(0deg, rgba(255,255,255,0.1) 50%, transparent 50%);
+            background-size: 75px 50px, 20px 20px;
+        }
+        .font-mono {
+            font-family: 'Roboto Mono', monospace;
+        }
+        .rough-text {
+            font-family: 'Caveat', cursive;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        #clock-canvas {
+            filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.1));
+            transition: all 0.3s ease;
+        }
+        .canvas-container {
+            position: relative;
+            display: inline-block;
+        }
+        /* Responsive canvas sizing */
+        @media (max-width: 640px) {
+            #clock-canvas {
+                width: 300px !important;
+                height: 300px !important;
+            }
+            .rough-text {
+                font-size: 3rem !important;
+            }
+        }
+        @media (max-width: 480px) {
+            #clock-canvas {
+                width: 250px !important;
+                height: 250px !important;
+            }
+            .rough-text {
+                font-size: 2.5rem !important;
+            }
+        }
+    </style>
+</head>
+<body class="h-screen w-screen flex items-center justify-center overflow-hidden">
+
+    <div class="flex flex-col items-center gap-8 md:gap-12 p-4">
+        <div class="canvas-container">
+            <canvas id="clock-canvas" width="400" height="400" class="rounded-full bg-white"></canvas>
+        </div>
+        
+        <div id="time-display" class="rough-text text-4xl md:text-6xl font-bold text-gray-800 drop-shadow-sm transform -rotate-1">25:00</div>
+
+        <div class="flex items-center gap-6">
+            <button id="reset-btn" class="bg-white text-gray-700 rounded-xl p-3 shadow-lg transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-xl hover:bg-gray-50 active:translate-y-0 active:scale-95">
+                <i data-lucide="rotate-cw" class="w-8 h-8"></i>
+            </button>
+            <button id="start-pause-btn" class="bg-white text-gray-700 rounded-xl p-3 shadow-lg transition-all duration-200 ease-out hover:-translate-y-1 hover:shadow-xl hover:bg-gray-50 active:translate-y-0 active:scale-95">
+                <i id="play-icon" data-lucide="play" class="w-8 h-8"></i>
+                <i id="pause-icon" data-lucide="pause" class="w-8 h-8 hidden"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const WORK_TIME = 25 * 60; // 25 minutes
+        const canvas = document.getElementById('clock-canvas');
+        const ctx = canvas.getContext('2d');
+        const rc = rough.canvas(canvas);
+        const timeDisplay = document.getElementById('time-display');
+        const startPauseBtn = document.getElementById('start-pause-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const playIcon = document.getElementById('play-icon');
+        const pauseIcon = document.getElementById('pause-icon');
+
+        let timer = null;
+        let totalSeconds = WORK_TIME;
+        let remainingTime = WORK_TIME;
+        let isPaused = true;
+        let currentRotation = 0;
+        let animationSeed = Math.floor(Math.random() * 1000);
+        
+        // 外圈动态变化参数
+        let outerCircleParams = {
+            lastUpdate: Date.now(),
+            updateInterval: 150 + Math.random() * 100, // 150-250ms 随机更新间隔
+            currentWidth: 0,
+            currentHeight: 0,
+            targetWidth: 0,
+            targetHeight: 0,
+            wobbleX: 0,
+            wobbleY: 0,
+            targetWobbleX: 0,
+            targetWobbleY: 0
+        };
+        
+        // 简单的Perlin噪声实现
+        function simpleNoise(x) {
+            const int = Math.floor(x);
+            const frac = x - int;
+            const a = pseudoRandom(int);
+            const b = pseudoRandom(int + 1);
+            const smoothed = frac * frac * (3 - 2 * frac);
+            return a * (1 - smoothed) + b * smoothed;
+        }
+        
+        function pseudoRandom(x) {
+            x = (x << 13) ^ x;
+            return (1.0 - ((x * (x * x * 15731 + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0) * 0.5 + 0.5;
+        }
+
+        // Responsive canvas dimensions
+        let canvasSize = 400;
+        let centerX = canvasSize / 2;
+        let centerY = canvasSize / 2;
+        let clockRadius = canvasSize * 0.45;
+
+        /**
+         * Updates canvas size based on screen dimensions
+         */
+        function updateCanvasSize() {
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            
+            if (screenWidth <= 480) {
+                canvasSize = 250;
+            } else if (screenWidth <= 640) {
+                canvasSize = 300;
+            } else if (screenWidth <= 768) {
+                canvasSize = 350;
+            } else {
+                canvasSize = 400;
+            }
+            
+            canvas.width = canvasSize;
+            canvas.height = canvasSize;
+            centerX = canvasSize / 2;
+            centerY = canvasSize / 2;
+            clockRadius = canvasSize * 0.45;
+            
+            // Update canvas style for proper display
+            canvas.style.width = canvasSize + 'px';
+            canvas.style.height = canvasSize + 'px';
+        }
+
+        /**
+         * Draws the clock face with rough.js styling
+         */
+        function drawClockFace() {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Calculate responsive stroke widths
+            const baseStrokeWidth = Math.max(1, canvasSize / 150);
+            const now = Date.now();
+            
+            // 更新外圈参数 - 使用不规则的间隔更新
+            if (now - outerCircleParams.lastUpdate > outerCircleParams.updateInterval) {
+                // 生成新的目标值
+                const maxVariation = canvasSize / 100; // 变化幅度
+                outerCircleParams.targetWidth = (Math.random() - 0.5) * maxVariation;
+                outerCircleParams.targetHeight = (Math.random() - 0.5) * maxVariation;
+                
+                // 添加细微的位置偏移，模拟手绘时的轻微抖动
+                outerCircleParams.targetWobbleX = (Math.random() - 0.5) * 2;
+                outerCircleParams.targetWobbleY = (Math.random() - 0.5) * 2;
+                
+                // 更新时间和下次更新间隔
+                outerCircleParams.lastUpdate = now;
+                outerCircleParams.updateInterval = 200 + Math.random() * 300; // 200-500ms
+            }
+            
+            // 平滑插值到目标值
+            const lerpFactor = 0.08; // 插值速度，值越小变化越平滑
+            outerCircleParams.currentWidth += (outerCircleParams.targetWidth - outerCircleParams.currentWidth) * lerpFactor;
+            outerCircleParams.currentHeight += (outerCircleParams.targetHeight - outerCircleParams.currentHeight) * lerpFactor;
+            outerCircleParams.wobbleX += (outerCircleParams.targetWobbleX - outerCircleParams.wobbleX) * lerpFactor;
+            outerCircleParams.wobbleY += (outerCircleParams.targetWobbleY - outerCircleParams.wobbleY) * lerpFactor;
+            
+            // 添加基于Perlin噪声的微小变化
+            const noiseScale = now * 0.0001;
+            const noiseX = simpleNoise(noiseScale) * 2 - 1;
+            const noiseY = simpleNoise(noiseScale + 100) * 2 - 1;
+            
+            // 动态调整roughness，让线条粗糙度也有变化
+            const dynamicRoughness = 0.4 + Math.abs(noiseX) * 0.3;
+            
+            // 最终的变化值
+            const widthVariation = outerCircleParams.currentWidth + noiseX * 2;
+            const heightVariation = outerCircleParams.currentHeight + noiseY * 2;
+            const centerOffsetX = outerCircleParams.wobbleX;
+            const centerOffsetY = outerCircleParams.wobbleY;
+            
+            // Draw outer circle with dynamic width and height to give it a more hand-drawn feel
+            rc.ellipse(centerX + centerOffsetX, centerY + centerOffsetY, 
+                      clockRadius * 2 + widthVariation, clockRadius * 2 + heightVariation, {
+                stroke: '#374151',
+                strokeWidth: baseStrokeWidth * 3,
+                roughness: dynamicRoughness,
+                bowing: 0.2,
+                seed: animationSeed
+            });
+            
+            // Draw inner circle for better definition
+            rc.ellipse(centerX + centerOffsetX * 0.5, centerY + centerOffsetY * 0.5, 
+                      clockRadius * 1.8 + widthVariation * 0.7, clockRadius * 1.8 + heightVariation * 0.7, {
+                stroke: '#6b7280',
+                strokeWidth: baseStrokeWidth,
+                roughness: dynamicRoughness * 0.8,
+                bowing: 0.1,
+                seed: animationSeed + 1
+            });
+            
+            // Draw tick marks
+            drawTicks();
+            
+            // Draw numbers
+            drawNumbers();
+            
+            // Draw progress arc
+            drawProgressArc();
+            
+            // Draw clock hand
+            drawHand();
+            
+            // Draw center dot with minimal roughness to maintain perfect circle
+            const centerDotSize = Math.max(8, 12 * (canvasSize / 400));
+            rc.circle(centerX, centerY, centerDotSize, {
+                fill: '#ef4444',
+                fillStyle: 'solid',
+                stroke: '#dc2626',
+                strokeWidth: Math.max(1, 2 * (canvasSize / 400)),
+                roughness: 0.1,
+                bowing: 0.05,
+                seed: animationSeed + 999
+            });
+        }
+
+        /**
+         * Draws tick marks around the clock face
+         */
+        function drawTicks() {
+            const baseStrokeWidth = Math.max(1, canvasSize / 150);
+            const dynamicRoughness = 0.6 + Math.sin(Date.now() / 4000) * 0.1;
+            
+            for (let i = 0; i < 100; i++) {
+                const angle = (i * 3.6 - 90) * Math.PI / 180;
+                const isMajor = i % 10 === 0;
+                const tickLength = isMajor ? clockRadius * 0.11 : clockRadius * 0.055;
+                const tickWidth = isMajor ? baseStrokeWidth * 2.5 : baseStrokeWidth * 0.8;
+                
+                const startRadius = clockRadius - clockRadius * 0.08;
+                const endRadius = startRadius - tickLength;
+                
+                const x1 = centerX + startRadius * Math.cos(angle);
+                const y1 = centerY + startRadius * Math.sin(angle);
+                const x2 = centerX + endRadius * Math.cos(angle);
+                const y2 = centerY + endRadius * Math.sin(angle);
+                
+                rc.line(x1, y1, x2, y2, {
+                    stroke: isMajor ? '#374151' : '#9ca3af',
+                    strokeWidth: tickWidth,
+                    roughness: dynamicRoughness,
+                    seed: animationSeed + i
+                });
+            }
+        }
+
+        /**
+         * Draws numbers on the clock face
+         */
+        function drawNumbers() {
+            const fontSize = Math.max(16, canvasSize / 16);
+            ctx.font = `bold ${fontSize}px Caveat, cursive`;
+            ctx.fillStyle = '#374151';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            const numbers = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90];
+            for (let i = 0; i < 10; i++) {
+                const angle = (i * 36 - 90) * Math.PI / 180;
+                const radius = clockRadius - clockRadius * 0.25;
+                const x = centerX + radius * Math.cos(angle);
+                const y = centerY + radius * Math.sin(angle);
+                
+                // Add slight rotation for sketchy effect with consistent seed
+                ctx.save();
+                const seedValue = (animationSeed + i * 17) % 1000;
+                const textRotation = (seedValue / 1000 - 0.5) * 0.15;
+                ctx.translate(x, y);
+                ctx.rotate(textRotation);
+                
+                // Add subtle shadow for depth
+                ctx.shadowColor = 'rgba(0,0,0,0.1)';
+                ctx.shadowBlur = 2;
+                ctx.shadowOffsetX = 1;
+                ctx.shadowOffsetY = 1;
+                
+                ctx.fillText(numbers[i], 0, 0);
+                ctx.restore();
+            }
+        }
+
+        /**
+         * Draws the progress arc showing elapsed time
+         */
+        function drawProgressArc() {
+            if (remainingTime < totalSeconds) {
+                const elapsedSeconds = totalSeconds - remainingTime;
+                const progress = elapsedSeconds / totalSeconds;
+                
+                const startAngle = -Math.PI / 2; // Start at top
+                const endAngle = startAngle + (progress * 2 * Math.PI);
+                
+                // Responsive arc dimensions
+                const arcRadius = clockRadius + clockRadius * 0.11;
+                const responsiveStrokeWidth = Math.max(3, 6 * (canvasSize / 400));
+                const dynamicRoughness = 0.8 + Math.sin(Date.now() / 3000) * 0.1;
+                const steps = Math.max(20, Math.floor(progress * 100));
+                
+                for (let i = 0; i < steps; i++) {
+                    const angle1 = startAngle + (i / steps) * (endAngle - startAngle);
+                    const angle2 = startAngle + ((i + 1) / steps) * (endAngle - startAngle);
+                    
+                    const x1 = centerX + arcRadius * Math.cos(angle1);
+                    const y1 = centerY + arcRadius * Math.sin(angle1);
+                    const x2 = centerX + arcRadius * Math.cos(angle2);
+                    const y2 = centerY + arcRadius * Math.sin(angle2);
+                    
+                    // Vary color intensity based on progress
+                    const intensity = Math.min(1, (i / steps) + 0.3);
+                    const green = Math.floor(185 * intensity);
+                    const strokeColor = `rgb(16, ${green}, 129)`;
+                    
+                    rc.line(x1, y1, x2, y2, {
+                        stroke: strokeColor,
+                        strokeWidth: responsiveStrokeWidth,
+                        roughness: dynamicRoughness,
+                        bowing: 0.8,
+                        seed: animationSeed + i
+                    });
+                }
+            }
+        }
+
+        /**
+         * Draws the clock hand
+         */
+        function drawHand() {
+            const elapsedSeconds = totalSeconds - remainingTime;
+            const rotation = (elapsedSeconds / totalSeconds) * 360 - 90;
+            const angle = rotation * Math.PI / 180;
+            
+            // Responsive hand dimensions
+            const responsiveHandLength = (clockRadius - 40) * (canvasSize / 400);
+            const responsiveStrokeWidth = Math.max(2, 4 * (canvasSize / 400));
+            const dynamicRoughness = 0.8 + Math.sin(Date.now() / 4000) * 0.1;
+            
+            const handEndX = centerX + responsiveHandLength * Math.cos(angle);
+            const handEndY = centerY + responsiveHandLength * Math.sin(angle);
+            
+            // Draw hand with subtle roughness
+            rc.line(centerX, centerY, handEndX, handEndY, {
+                stroke: '#ef4444',
+                strokeWidth: responsiveStrokeWidth,
+                roughness: dynamicRoughness,
+                bowing: 0.5,
+                seed: animationSeed + Math.floor(rotation)
+            });
+            
+            // Draw hand tip with minimal roughness to maintain circular shape
+            const tipSize = Math.max(4, 8 * (canvasSize / 400));
+            rc.circle(handEndX, handEndY, tipSize, {
+                fill: '#ef4444',
+                fillStyle: 'solid',
+                stroke: '#dc2626',
+                strokeWidth: Math.max(1, 2 * (canvasSize / 400)),
+                roughness: 0.2,
+                bowing: 0.05,
+                seed: animationSeed + Math.floor(rotation) + 100
+            });
+        }
+
+        /**
+         * Formats seconds into MM:SS format.
+         * @param {number} seconds - The total seconds.
+         * @returns {string} The formatted time string.
+         */
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        /**
+         * Updates the time display and redraws the clock
+         */
+        function updateDisplay() {
+            timeDisplay.textContent = formatTime(remainingTime);
+            drawClockFace();
+        }
+
+        /**
+         * Toggles the timer on and off.
+         */
+        function toggleTimer() {
+            isPaused = !isPaused;
+            if (!isPaused) {
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+                timer = setInterval(() => {
+                    remainingTime--;
+                    updateDisplay();
+                    if (remainingTime < 0) {
+                        clearInterval(timer);
+                        isPaused = true;
+                        playIcon.classList.remove('hidden');
+                        pauseIcon.classList.add('hidden');
+                        // Reset timer when completed
+                        remainingTime = WORK_TIME;
+                        updateDisplay();
+                        // Add completion notification
+                        showCompletionEffect();
+                    }
+                }, 1000);
+            } else {
+                clearInterval(timer);
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+            }
+        }
+
+        /**
+         * Resets the timer to the initial state.
+         */
+        function resetTimer() {
+            clearInterval(timer);
+            isPaused = true;
+            remainingTime = WORK_TIME;
+            playIcon.classList.remove('hidden');
+            pauseIcon.classList.add('hidden');
+            updateDisplay();
+        }
+
+        /**
+         * Shows a completion effect when timer finishes
+         */
+        function showCompletionEffect() {
+            // Add a subtle animation effect
+            canvas.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                canvas.style.transform = 'scale(1)';
+            }, 300);
+            
+            // Flash the progress arc
+            ctx.save();
+            ctx.globalAlpha = 0.3;
+            rc.circle(centerX, centerY, clockRadius * 2, {
+                fill: '#10b981',
+                fillStyle: 'solid',
+                roughness: 2
+            });
+            ctx.restore();
+            
+            setTimeout(() => {
+                updateDisplay();
+            }, 500);
+        }
+
+        // Window resize handler
+        function handleResize() {
+            updateCanvasSize();
+            updateDisplay();
+        }
+        
+        // Event listeners
+        startPauseBtn.addEventListener('click', toggleTimer);
+        resetBtn.addEventListener('click', resetTimer);
+        window.addEventListener('resize', handleResize);
+
+        // Initial setup
+        updateCanvasSize();
+        setTimeout(() => {
+            updateDisplay();
+        }, 100);
+        
+        // Animation loop for dynamic effects
+        let lastAnimationTime = Date.now();
+        setInterval(() => {
+            const now = Date.now();
+            
+            // 只在需要时更新，减少不必要的重绘
+            const shouldUpdateSeed = (now - lastAnimationTime) > 3000; // 每3秒更新一次seed
+            if (shouldUpdateSeed) {
+                animationSeed = Math.floor(Math.random() * 1000);
+                lastAnimationTime = now;
+            }
+            
+            // 对于外圈动画，即使暂停也要更新，但频率更低
+            if (!isPaused || (now % 3 === 0)) {
+                updateDisplay();
+            }
+        }, 50); // 降低到50ms，让动画更流畅但不会太频繁
+
+    </script>
+</body>
+</html>

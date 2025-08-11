@@ -1,0 +1,70 @@
+import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+import tailwindcss from '@tailwindcss/vite';
+import { defineConfig } from 'vite';
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
+const host = process.env.TAURI_DEV_HOST;
+
+// https://vitejs.dev/config/
+export default defineConfig(() => ({
+  // Vite plugins
+  plugins: [tailwindcss()],
+
+  // Path resolution
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, 'src'),
+      '@/components': resolve(__dirname, 'src/components'),
+      '@/services': resolve(__dirname, 'src/services'),
+      '@/types': resolve(__dirname, 'src/types'),
+      '@/styles': resolve(__dirname, 'src/styles'),
+    },
+  },
+
+  // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
+  //
+  // 1. prevent vite from obscuring rust errors
+  clearScreen: false,
+  // 2. tauri expects a fixed port, fail if that port is not available
+  server: {
+    port: 1420,
+    strictPort: true,
+    host: host || false,
+    hmr: host
+      ? {
+          protocol: 'ws',
+          host,
+          port: 1421,
+        }
+      : true,
+    watch: {
+      // 3. tell vite to ignore watching `src-tauri` and `.yoyo`
+      ignored: ['**/src-tauri/**', '**/.yoyo/**'],
+    },
+  },
+
+  // Build configuration
+  build: {
+    target: 'es2022',
+    minify: 'esbuild' as const,
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          tauri: ['@tauri-apps/api'],
+        },
+      },
+    },
+  },
+
+  // Define global constants
+  define: {
+    __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
+  },
+
+  // CSS configuration
+  css: {
+    devSourcemap: true,
+  },
+}));

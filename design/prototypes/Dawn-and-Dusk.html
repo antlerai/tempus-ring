@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dawn & Dusk - 晨昏时钟</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .font-mono {
+            font-family: 'Roboto Mono', monospace;
+        }
+        /* Dawn theme background */
+        .dawn-bg {
+            background:
+                radial-gradient(1200px 600px at 30% 20%, rgba(255,255,255,0.95), rgba(241,245,249,0.92) 40%, rgba(226,232,240,0.88) 100%),
+                #f5f7fb;
+        }
+        .clock-gradient {
+            background: conic-gradient(
+                from 0deg,
+                #f8fafc 0deg 36deg,    /* 1/10 - slate-50 (lightest, where pointer starts) */
+                #f1f5f9 36deg 72deg,   /* 2/10 - slate-100 */
+                #e2e8f0 72deg 108deg,  /* 3/10 - slate-200 */
+                #cbd5e1 108deg 144deg, /* 4/10 - slate-300 */
+                #94a3b8 144deg 180deg, /* 5/10 - slate-400 */
+                #64748b 180deg 216deg, /* 6/10 - slate-500 */
+                #475569 216deg 252deg, /* 7/10 - slate-600 */
+                #334155 252deg 288deg, /* 8/10 - slate-700 */
+                #1e293b 288deg 324deg, /* 9/10 - slate-800 */
+                #0f172a 324deg 360deg  /* 10/10 - slate-900 (darkest, left of pointer start) */
+            );
+            box-shadow: 
+                0 25px 50px -12px rgba(15, 23, 42, 0.25), /* shadow-2xl like */
+                inset 0 3px 4px rgba(255, 255, 255, 0.1), /* inner highlight */
+                inset 0 -4px 6px rgba(15, 23, 42, 0.2); /* inner shadow */
+        }
+        #hand {
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
+        }
+        #hand::after {
+            content: '';
+            position: absolute;
+            top: -25px; /* move triangle outside so the tip is sharp */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 25px solid #f59e0b; /* amber-500 */
+            filter: drop-shadow(0px -2px 2px rgba(0,0,0,0.2));
+        }
+        #center-dot {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2), inset 0 1px 2px rgba(255,255,255,0.5);
+        }
+    </style>
+</head>
+<body class="dawn-bg h-screen w-screen flex items-center justify-center overflow-hidden">
+
+    <div class="flex flex-col items-center gap-12">
+        <div class="relative w-80 h-80 rounded-full shadow-xl flex items-center justify-center clock-gradient">
+            <div id="clock-face" class="relative w-[95%] h-[95%] bg-transparent rounded-full">
+                <!-- Hand -->
+                <div id="hand" class="absolute bottom-1/2 left-1/2 w-[4px] h-[120px] bg-amber-500 origin-bottom transform -translate-x-1/2 rotate-0 z-10 transition-transform duration-500 linear shadow-lg shadow-amber-500/25"></div>
+                <!-- Center Dot -->
+                <div id="center-dot" class="absolute top-1/2 left-1/2 w-[15px] h-[15px] bg-amber-500 rounded-full transform -translate-x-1/2 -translate-y-1/2 z-20"></div>
+            </div>
+        </div>
+        
+        <div id="time-display" class="font-mono text-5xl font-bold text-slate-900 tracking-wide">25:00</div>
+
+        <div class="flex items-center gap-6">
+            <button id="reset-btn" class="bg-white/60 backdrop-blur-sm border border-slate-200 text-slate-900 rounded-xl p-3 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md hover:border-slate-300 active:translate-y-0 active:scale-95 active:shadow-inner">
+                <i data-lucide="rotate-cw" class="w-8 h-8"></i>
+            </button>
+            <button id="start-pause-btn" class="bg-white/60 backdrop-blur-sm border border-slate-200 text-slate-900 rounded-xl p-3 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md hover:border-slate-300 active:translate-y-0 active:scale-95 active:shadow-inner">
+                <i id="play-icon" data-lucide="play" class="w-8 h-8"></i>
+                <i id="pause-icon" data-lucide="pause" class="w-8 h-8 hidden"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const WORK_TIME = 25 * 60; // 25 minutes
+        const timeDisplay = document.getElementById('time-display');
+        const hand = document.getElementById('hand');
+        const startPauseBtn = document.getElementById('start-pause-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const playIcon = document.getElementById('play-icon');
+        const pauseIcon = document.getElementById('pause-icon');
+        const clockFace = document.getElementById('clock-face');
+
+        let timer = null;
+        let totalSeconds = WORK_TIME;
+        let remainingTime = WORK_TIME;
+        let isPaused = true;
+
+        /**
+         * Creates the tick marks on the clock face.
+         */
+        function createTicks() {
+            // Use clientWidth to exclude border width from calculations
+            const faceWidth = clockFace.clientWidth;
+            const radius = faceWidth / 2;
+            const existingTicks = clockFace.querySelectorAll('.tick');
+            existingTicks.forEach(t => t.remove());
+
+            for (let i = 0; i < 100; i++) {
+                const tick = document.createElement('div');
+                tick.className = 'tick absolute';
+                tick.style.backgroundColor = 'rgba(51, 65, 85, 0.35)'; // slate-700 at 35%
+                const isMajor = i % 10 === 0;
+                const tickLength = isMajor ? 12 : 8; // px
+                const tickWidth = isMajor ? 3 : 1;   // px
+
+                // Ensure exact px sizes to avoid Tailwind class width rounding
+                tick.style.width = `${tickWidth}px`;
+                tick.style.height = `${tickLength}px`;
+
+                // Angle in radians with -90deg offset so i=0 is at top
+                const angleRad = (i * 3.6 - 90) * Math.PI / 180;
+
+                // Center of tick lies inside by half its length, so outer end touches edge
+                const rCenter = radius - tickLength / 2;
+                const cx = radius + rCenter * Math.cos(angleRad);
+                const cy = radius + rCenter * Math.sin(angleRad);
+
+                tick.style.left = `${cx}px`;
+                tick.style.top = `${cy}px`;
+                tick.style.transformOrigin = 'center center';
+                tick.style.transform = `translate(-50%, -50%) rotate(${i * 3.6}deg)`;
+
+                clockFace.appendChild(tick);
+            }
+        }
+
+        /**
+         * Formats seconds into MM:SS format.
+         * @param {number} seconds - The total seconds.
+         * @returns {string} The formatted time string.
+         */
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        /**
+         * Updates the time display and the clock hand.
+         */
+        function updateDisplay() {
+            timeDisplay.textContent = formatTime(remainingTime);
+            
+            const elapsedSeconds = totalSeconds - remainingTime;
+            const degreesPerSecond = 360 / totalSeconds;
+            const rotation = elapsedSeconds * degreesPerSecond;
+            
+            hand.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
+        }
+
+        /**
+         * Toggles the timer on and off.
+         */
+        function toggleTimer() {
+            isPaused = !isPaused;
+            if (!isPaused) {
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+                timer = setInterval(() => {
+                    remainingTime--;
+                    updateDisplay();
+                    if (remainingTime < 0) {
+                        clearInterval(timer);
+                        isPaused = true;
+                        playIcon.classList.remove('hidden');
+                        pauseIcon.classList.add('hidden');
+                        // Optionally reset or handle completion
+                        remainingTime = WORK_TIME;
+                        updateDisplay();
+                    }
+                }, 1000);
+            } else {
+                clearInterval(timer);
+                playIcon.classList.remove('hidden');
+                pauseIcon.classList.add('hidden');
+            }
+        }
+
+        /**
+         * Resets the timer to the initial state.
+         */
+        function resetTimer() {
+            clearInterval(timer);
+            isPaused = true;
+            remainingTime = WORK_TIME;
+            playIcon.classList.remove('hidden');
+            pauseIcon.classList.add('hidden');
+            updateDisplay();
+        }
+
+        startPauseBtn.addEventListener('click', toggleTimer);
+        resetBtn.addEventListener('click', resetTimer);
+
+        // Initial setup
+        setTimeout(() => {
+            createTicks();
+            updateDisplay();
+        }, 0);
+        
+        window.addEventListener('resize', createTicks);
+
+    </script>
+</body>
+</html>
