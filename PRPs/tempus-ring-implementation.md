@@ -88,6 +88,11 @@ Build a fully-featured cross-platform Pomodoro timer application with:
 - file: PRPs/INSTALL.md
   why: Complete feature requirements and specifications
 
+# CRITICAL - Theme Implementation Guide
+- file: PRPs/theme-implementation.md
+  why: Complete theme design specifications and CSS implementation guidelines for all 6 themes
+  note: Contains detailed visual specs, color palettes, rendering methods, and CSS code for each theme
+
 # External Documentation
 - url: https://v2.tauri.app/start/migrate/from-tauri-1/
   why: Tauri 2.0 migration guide for system integration
@@ -250,8 +255,8 @@ async fn start_timer(duration: u32) -> Result<String, String> {
 t('timer.start') // GOOD
 t('timer_start') // BAD
 
-// 6. File Size - Refactor if > 500 lines
-// Split into sub-modules or extract helpers
+// 6. Code File Size - Refactor code files if > 500 lines
+// Split into sub-modules or extract helpers (applies to .ts/.rs/.css files)
 
 // 7. Canvas High-DPI - Must handle devicePixelRatio
 const dpr = window.devicePixelRatio || 1;
@@ -278,6 +283,8 @@ expect(destroySpy).toHaveBeenCalled();
 ```
 
 ## Implementation Blueprint
+
+> **THEME IMPLEMENTATION GUIDE**: All theme-related details (visual specifications, color palettes, CSS code, rendering methods) are documented in `PRPs/theme-implementation.md`. This includes complete design specifications for all 6 themes. When tasks mention theme implementation, always refer to this guide for specific requirements.
 
 ### Task List (Sequential Execution)
 
@@ -317,9 +324,10 @@ Task 4: Implement DOM Renderer
   CREATE src/components/renderers/dom-renderer.ts:
     - IMPLEMENT TimerRenderer interface
     - CREATE circular progress with CSS transforms
-    - ADD tick marks using positioned divs
+    - ADD tick marks using positioned divs (100 ticks, major every 10)
     - HANDLE resize with ResizeObserver
     - USE CSS variables for theming
+    - IMPLEMENT DOM theme specifications from theme guide
 
 Task 5: Create Main Application
   MODIFY src/main.ts:
@@ -333,16 +341,17 @@ Task 5: Create Main Application
 Task 6: Implement SVG Renderer
   CREATE src/components/renderers/svg-renderer.ts:
     - USE SVG circle for progress ring
-    - INTEGRATE rough.js for hand-drawn effects
-    - CREATE tick marks with SVG lines
-    - IMPLEMENT smooth animations with SMIL
+    - IMPLEMENT SVG filters and effects from theme guide
+    - CREATE sketchy aesthetics using specified techniques
+    - USE appropriate fonts and styling per theme requirements
 
 Task 7: Implement Canvas Renderer
   CREATE src/components/renderers/canvas-renderer.ts:
-    - HANDLE high-DPI displays
-    - USE rough.js canvas API
-    - IMPLEMENT custom drawing for each theme
-    - ADD requestAnimationFrame for smooth updates
+    - HANDLE high-DPI displays with devicePixelRatio
+    - USE rough.js canvas API for organic shapes
+    - IMPLEMENT Canvas theme specifications from theme guide
+    - CREATE responsive sizing based on screen dimensions
+    - USE requestAnimationFrame for smooth 60fps updates
 
 Task 8: Theme Switching UI
   CREATE src/components/theme-selector.ts:
@@ -480,10 +489,12 @@ export class TimerService extends EventEmitter {
   }
 }
 
-// Task 4: DOM Renderer
+// Task 4: DOM Renderer with Theme Support
 export class DOMRenderer implements TimerRenderer {
   private container: HTMLElement;
   private progressRing: HTMLElement;
+  private hand: HTMLElement;
+  private currentTheme: string;
   
   constructor(container: HTMLElement) {
     // PATTERN: Always validate inputs
@@ -493,21 +504,119 @@ export class DOMRenderer implements TimerRenderer {
     this.initialize();
   }
   
+  private createTicks(count: number = 100): void {
+    const clockFace = this.container.querySelector('.clock-face');
+    const radius = clockFace.clientWidth / 2;
+    
+    for (let i = 0; i < count; i++) {
+      const tick = document.createElement('div');
+      tick.className = 'tick absolute';
+      
+      const isMajor = i % 10 === 0;
+      const tickLength = isMajor ? 12 : 8;
+      const tickWidth = isMajor ? 3 : 1;
+      
+      tick.style.width = `${tickWidth}px`;
+      tick.style.height = `${tickLength}px`;
+      
+      const angleRad = (i * 3.6 - 90) * Math.PI / 180;
+      const rCenter = radius - tickLength / 2;
+      const cx = radius + rCenter * Math.cos(angleRad);
+      const cy = radius + rCenter * Math.sin(angleRad);
+      
+      tick.style.left = `${cx}px`;
+      tick.style.top = `${cy}px`;
+      tick.style.transform = `translate(-50%, -50%) rotate(${i * 3.6}deg)`;
+      
+      clockFace.appendChild(tick);
+    }
+  }
+  
   render(progress: number, theme: ThemeConfig): void {
     // CRITICAL: Use CSS variables, not direct styles
     const rotation = progress * 360;
-    this.progressRing.style.setProperty('--progress-rotation', `${rotation}deg`);
+    this.hand.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
     
-    // PATTERN: Update CSS variables for theme
-    Object.entries(theme.colors).forEach(([key, value]) => {
-      this.container.style.setProperty(`--color-${key}`, value);
-    });
+    // Apply theme-specific classes (see theme guide for details)
+    this.container.className = `timer-container theme-${theme.name}`;
+    
+    // Apply theme-specific features based on theme configuration
+    if (theme.clockGradient) {
+      const clockEl = this.container.querySelector('.clock-gradient');
+      if (clockEl) {
+        clockEl.style.background = theme.clockGradient;
+      }
+    }
   }
   
   destroy(): void {
     // CRITICAL: Clean up all resources
     this.resizeObserver?.disconnect();
     this.container.innerHTML = '';
+  }
+}
+
+// Task 6: SVG Renderer with Theme Effects
+export class SVGRenderer implements TimerRenderer {
+  private svg: SVGElement;
+  private rough: any; // Rough.js instance
+  
+  render(progress: number, theme: ThemeConfig): void {
+    // Apply theme-specific effects (see theme guide for details)
+    switch (theme.renderer) {
+      case 'SVG':
+        this.applyThemeEffects(theme);
+        this.drawProgress(progress, theme);
+        break;
+    }
+  }
+  
+  private applyThemeEffects(theme: ThemeConfig): void {
+    // Implement theme-specific SVG effects from theme guide:
+    // - Filter specifications, stroke effects, fonts, positioning
+    
+    if (theme.effects?.wobbleFilter) {
+      this.createWobbleFilter(theme.effects);
+    }
+    
+    if (theme.sketchyEffects?.doubleStroke) {
+      this.addSketchyStroke(theme);
+    }
+  }
+}
+
+// Task 7: Canvas Renderer with Dynamic Effects
+export class CanvasRenderer implements TimerRenderer {
+  private canvas: HTMLCanvasElement;
+  private ctx: CanvasRenderingContext2D;
+  private rc: any; // Rough canvas instance
+  private animationParams: any;
+  
+  render(progress: number, theme: ThemeConfig): void {
+    // Clear and setup for high DPI
+    const dpr = window.devicePixelRatio || 1;
+    this.ctx.scale(dpr, dpr);
+    
+    // Apply theme-specific canvas effects (see theme guide)
+    if (theme.renderer === 'Canvas') {
+      this.applyThemeEffects(theme);
+      this.drawWithTheme(progress, theme);
+    }
+  }
+  
+  private applyThemeEffects(theme: ThemeConfig): void {
+    // Implement theme-specific canvas effects from theme guide:
+    // - Dynamic animations, rough.js config, textures, sizing
+    
+    if (theme.dynamicEffects?.outerCircleAnimation) {
+      this.updateDynamicParams(theme.dynamicEffects);
+    }
+  }
+  
+  private drawWithTheme(progress: number, theme: ThemeConfig): void {
+    // Use theme configuration for rendering (see theme guide)
+    const options = theme.roughOptions || {};
+    this.rc.circle(this.centerX, this.centerY, this.clockRadius * 2, options);
   }
 }
 ```
@@ -661,7 +770,7 @@ pnpm tauri:build
 - ❌ Don't skip validation loops
 - ❌ Don't manipulate DOM styles directly (except Canvas)
 - ❌ Don't hardcode strings (use i18n)
-- ❌ Don't create files over 500 lines
+- ❌ Don't create code files (.ts/.rs/.css) over 500 lines
 - ❌ Don't use npm/yarn (use pnpm only)
 - ❌ Don't bypass the layered architecture
 - ❌ Don't forget to handle theme/language switching
@@ -684,6 +793,9 @@ pnpm tauri:build
 - All critical context and gotchas documented
 - Test-driven approach with examples
 - Clear anti-patterns to avoid
+- **NEW**: Precise theme specifications from HTML prototypes
+- **NEW**: Rendering method assignments per theme
+- **NEW**: Complete CSS implementation guidelines
 
 **Improvements Made**:
 
@@ -691,6 +803,14 @@ pnpm tauri:build
 - Detailed component modularity with atomic design principles
 - Enhanced i18n with type-safe implementation details
 - Emphasized renderer interface as cornerstone of architecture
-- Now includes 22 tasks (was 20) for more thorough implementation
+- Added detailed theme design specifications from prototypes
+- Included theme-specific CSS with exact color values and effects
+- Provided renderer implementation examples for each theme type
+- Mapped themes to appropriate rendering methods (DOM/SVG/Canvas)
+- Now includes 20 tasks for comprehensive implementation
 
-This enhanced PRP provides comprehensive context for an AI agent to successfully implement the Tempus Ring Pomodoro timer with a centralized state management system, modular components, and clear architectural patterns.
+**Theme Implementation Coverage**:
+
+All 6 themes are fully specified in the theme implementation guide with complete visual specifications, color palettes, rendering methods, and CSS implementation guidelines. Each theme is mapped to its appropriate rendering method (DOM/SVG/Canvas) with detailed technical requirements.
+
+This enhanced PRP provides comprehensive context for an AI agent to successfully implement the Tempus Ring Pomodoro timer with precise visual fidelity to the prototype designs.

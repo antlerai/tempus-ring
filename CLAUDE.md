@@ -22,7 +22,6 @@ src/
 ├── services/      # Business logic, state management (e.g., ThemeManager)
 ├── factories/     # Object creation & instantiation (e.g., TimerFactory)
 ├── components/    # UI components and renderers
-├── utils/         # Pure, reusable helper functions
 ├── i18n/          # Internationalization (locales, config)
 └── styles/        # Global styles, themes, component-specific styles
 ```
