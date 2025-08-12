@@ -1,0 +1,28 @@
+{
+  "timer": {
+    "start": "タイマー開始",
+    "pause": "一時停止",
+    "reset": "リセット",
+    "duration": "時間：{{minutes}} 分",
+    "completed": "タイマー完了！"
+  },
+  "themes": {
+    "cloudlight-minimal": "クラウドライト ミニマル",
+    "nightfall": "ナイトフォール",
+    "hand-drawn-sketch": "手描きスケッチ",
+    "artistic-sketch": "アーティスティック スケッチ",
+    "wabi-sabi": "侘寂",
+    "dawn-and-dusk": "夜明けと夕暮れ"
+  },
+  "settings": {
+    "language": "言語",
+    "theme": "テーマ",
+    "notifications": "通知",
+    "duration": "タイマー時間"
+  },
+  "common": {
+    "minutes": "分",
+    "seconds": "秒",
+    "hours": "時間"
+  }
+}

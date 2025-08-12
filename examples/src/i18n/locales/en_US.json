@@ -1,0 +1,28 @@
+{
+  "timer": {
+    "start": "Start Timer",
+    "pause": "Pause",
+    "reset": "Reset",
+    "duration": "Duration: {{minutes}} minutes",
+    "completed": "Timer Completed!"
+  },
+  "themes": {
+    "cloudlight-minimal": "Cloudlight Minimal",
+    "nightfall": "Nightfall",
+    "hand-drawn-sketch": "Hand-Drawn Sketch",
+    "artistic-sketch": "Artistic Sketch",
+    "wabi-sabi": "Wabi-Sabi",
+    "dawn-and-dusk": "Dawn and Dusk"
+  },
+  "settings": {
+    "language": "Language",
+    "theme": "Theme",
+    "notifications": "Notifications",
+    "duration": "Timer Duration"
+  },
+  "common": {
+    "minutes": "minutes",
+    "seconds": "seconds",
+    "hours": "hours"
+  }
+}

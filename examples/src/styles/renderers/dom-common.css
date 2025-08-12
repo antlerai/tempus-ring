@@ -1,0 +1,55 @@
+/* DOM渲染器基础样式 */
+/* DOM元素的结构和布局样式 */
+
+.timer-dom {
+  @apply relative;
+}
+
+.timer-dom .progress-ring {
+  @apply absolute inset-0 rounded-full;
+  border: var(--ring-width, 4px) solid transparent;
+  border-top-color: var(--primary-color);
+  transform: rotate(-90deg);
+  transition: transform 0.3s ease;
+}
+
+.timer-dom .tick-marks {
+  @apply absolute inset-0;
+}
+
+.timer-dom .tick-mark {
+  @apply absolute w-0.5 bg-current;
+  height: var(--tick-length, 12px);
+  left: 50%;
+  top: 0;
+  transform-origin: 50% var(--timer-radius, 128px);
+}
+
+.timer-dom .tick-mark:nth-child(5n) {
+  @apply w-1;
+  height: var(--major-tick-length, 20px);
+}
+
+.timer-dom .clock-hands {
+  @apply absolute inset-0 flex items-center justify-center;
+}
+
+.timer-dom .hand {
+  @apply absolute bg-current;
+  transform-origin: 50% 100%;
+}
+
+.timer-dom .hour-hand {
+  width: 3px;
+  height: var(--hour-hand-length, 60px);
+}
+
+.timer-dom .minute-hand {
+  width: 2px;
+  height: var(--minute-hand-length, 80px);
+}
+
+.timer-dom .second-hand {
+  width: 1px;
+  height: var(--second-hand-length, 90px);
+}

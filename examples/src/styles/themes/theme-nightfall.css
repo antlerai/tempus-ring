@@ -1,0 +1,94 @@
+/* Nightfall 主题 - CSS变量定义 */
+/* 基于 Nightfall.html 原型设计 - 暗夜时钟 */
+
+.theme-nightfall {
+  /* 主色调 - 深色调 */
+  --primary-color: #e2e8f0; /* slate-200 */
+  --secondary-color: #94a3b8; /* slate-400 */
+  --accent-color: #fb923c; /* orange-400 指针色 */
+  --background-color: #0f172a; /* slate-900 */
+
+  /* 文本颜色 */
+  --text-primary: #ffffff;
+  --text-secondary: #e2e8f0;
+  --text-muted: #94a3b8;
+
+  /* 界面颜色 */
+  --surface-color: #1e293b; /* slate-800 */
+  --border-color: #475569; /* slate-600 */
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --button-bg: #334155; /* slate-700 */
+  --button-hover: #475569; /* slate-600 */
+  --button-text: #e2e8f0; /* slate-200 */
+
+  /* 特殊渐变背景 - 昼夜渐变效果 */
+  --clock-gradient: conic-gradient(
+    /* Light side */
+    #e2e8f0 90deg,
+    #e2e8f0 126deg /* slate-200 */,
+    #cbd5e1 126deg,
+    #cbd5e1 162deg /* slate-300 */,
+    #94a3b8 162deg,
+    #94a3b8 198deg /* slate-400 */,
+    #64748b 198deg,
+    #64748b 234deg /* slate-500 */,
+    #475569 234deg,
+    #475569 270deg /* slate-600 */,
+    /* Dark side */
+    #334155 270deg,
+    #334155 306deg /* slate-700 */,
+    #1e293b 306deg,
+    #1e293b 342deg /* slate-800 */,
+    #0f172a 342deg,
+    #0f172a 360deg /* slate-900 */,
+    #0f172a 0deg,
+    #0f172a 18deg /* slate-900 */,
+    #1e293b 18deg,
+    #1e293b 54deg /* slate-800 */,
+    #334155 54deg,
+    #334155 90deg /* slate-700 */
+  );
+  --body-background: #000000;
+
+  /* 状态颜色 */
+  --success-color: #22c55e;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+
+  /* 尺寸变量 - 与Cloudlight相同 */
+  --timer-size: 320px;
+  --timer-radius: 160px;
+  --ring-width: 8px;
+  --inner-ring-width: 2px;
+  --tick-length: 8px;
+  --major-tick-length: 12px;
+  --hand-width: 2px;
+  --hand-length: 45%;
+  --center-dot-size: 12px;
+
+  /* 刻度颜色 - 半透明效果 */
+  --tick-color: rgba(226, 232, 240, 0.7); /* slate-200/70 */
+  --major-tick-color: #e2e8f0; /* slate-200 */
+
+  /* 字体配置 */
+  --font-family: 'Inter', sans-serif;
+  --font-mono: 'Roboto Mono', monospace;
+  --time-font-size: 3rem;
+
+  /* 动画配置 */
+  --animation-duration: 1500s;
+  --transition-duration: 200ms;
+  --hand-transition: transform 1000ms linear;
+
+  /* 按钮样式 - 深色主题 */
+  --button-padding: 12px;
+  --button-radius: 12px;
+  --button-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --button-hover-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  --button-hover-translate: -2px;
+  --button-border: 1px solid var(--border-color);
+
+  /* 发光效果 */
+  --glow-color: rgba(251, 146, 60, 0.3); /* orange-400 with opacity */
+  --center-dot-glow: 0 0 10px var(--glow-color);
+}

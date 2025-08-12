@@ -16,7 +16,6 @@ export default defineConfig(() => ({
     alias: {
       '@': resolve(__dirname, 'src'),
       '@/components': resolve(__dirname, 'src/components'),
-      '@/services': resolve(__dirname, 'src/services'),
       '@/types': resolve(__dirname, 'src/types'),
       '@/styles': resolve(__dirname, 'src/styles'),
     },
@@ -39,14 +38,23 @@ export default defineConfig(() => ({
         }
       : true,
     watch: {
-      // 3. tell vite to ignore watching `src-tauri` and `.yoyo`
-      ignored: ['**/src-tauri/**', '**/.yoyo/**'],
+      // 3. tell vite to ignore watching
+      ignored: [
+        '**/src-tauri/**',
+        '**/.yoyo/**',
+        '**/examples/**',
+        '**/PRPs/**',
+        '**/scripts/**',
+        '**/design/**',
+        '**/docs/**',
+        '**/.dev/**',
+      ],
     },
   },
 
   // Build configuration
   build: {
-    target: 'es2022',
+    target: 'es2020',
     minify: 'esbuild' as const,
     sourcemap: false,
     rollupOptions: {

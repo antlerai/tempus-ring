@@ -6,7 +6,8 @@
     "useIgnoreFile": true
   },
   "files": {
-    "ignoreUnknown": false
+    "ignoreUnknown": true,
+    "includes": ["src/**/*", "examples/**/*", "*.ts", "*.js", "*.json", "*.mjs"]
   },
   "formatter": {
     "enabled": true,
@@ -21,21 +22,56 @@
       "style": {
         "noNonNullAssertion": "off",
         "useConst": "error",
-        "useTemplate": "error"
+        "useTemplate": "error",
+        "useImportType": "error",
+        "useExportType": "error",
+        "useNodejsImportProtocol": "error",
+        "useNumberNamespace": "error"
       },
       "suspicious": {
         "noExplicitAny": "error",
-        "noArrayIndexKey": "warn"
+        "noArrayIndexKey": "warn",
+        "noMisleadingCharacterClass": "error",
+        "noThenProperty": "error"
       },
       "correctness": {
         "noUnusedVariables": "error",
-        "useExhaustiveDependencies": "warn"
+        "useExhaustiveDependencies": "warn",
+        "noUnusedImports": "error",
+        "useHookAtTopLevel": "error"
       },
       "complexity": {
-        "noExcessiveCognitiveComplexity": "warn"
+        "noExcessiveCognitiveComplexity": "warn",
+        "noForEach": "warn",
+        "useOptionalChain": "error"
+      },
+      "performance": {
+        "noAccumulatingSpread": "warn",
+        "noDelete": "error"
       }
     }
   },
+  "overrides": [
+    {
+      "includes": [
+        "**/*.test.ts",
+        "**/*.test.js",
+        "**/*.spec.ts",
+        "**/*.spec.js",
+        "**/tests/**/*",
+        "**/test/**/*",
+        "**/__tests__/**/*",
+        "**/mocks/**/*"
+      ],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noExplicitAny": "off"
+          }
+        }
+      }
+    }
+  ],
   "css": {
     "parser": {
       "allowWrongLineComments": false
@@ -43,7 +79,12 @@
     "formatter": {
       "enabled": true,
       "quoteStyle": "single",
-      "lineWidth": 120
+      "lineWidth": 120,
+      "indentStyle": "space",
+      "indentWidth": 2
+    },
+    "linter": {
+      "enabled": true
     }
   },
   "javascript": {

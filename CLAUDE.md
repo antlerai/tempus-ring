@@ -1,66 +1,84 @@
-## 🔄 Project Awareness & Context
+# AI Development Guidelines
 
-- **始终在新对话开始时阅读 `PLANNING.md`**，以了解项目的架构、目标、风格和约束。
-- **在开始新任务前检查 `TASK.md`**。如果任务未列出，请添加简要描述和今天的日期。
-- **使用一致的命名约定、文件结构和架构模式**，如 `PLANNING.md` 中所述。
-- **执行 Python 命令时始终使用 venv_linux**（虚拟环境），包括单元测试。
+## 1. Core Principles
 
-## 🧱 Code Structure & Modularity
+- **Project Context:** Always read `PLANNING.md` and `TASK.md` before starting.
+- **Package Manager:** Use `pnpm` for all commands.
+- **Development:** Use `pnpm dev` (web) and `pnpm tauri dev` (desktop).
 
-- **Never create a file longer than 500 lines of code.** If a file approaches this limit, refactor by splitting it into modules or helper files.
-- **Organize code into clearly separated modules**, grouped by feature or responsibility.
-  For agents this looks like:
-  - `agent.py` - Main agent definition and execution logic
-  - `tools.py` - Tool functions used by the agent
-  - `prompts.py` - System prompts
-- **Use clear, consistent imports** (prefer relative imports within packages).
-- **Use python_dotenv and load_env()** for environment variables.
+- **Modularity:** Keep files under 500 lines. Refactor if larger.
+- **Clarity:** Ask for clarification if requirements are unclear.
 
-## 🧪 Testing & Reliability
+## 2. Code Architecture & Style
 
-- **Always create Pytest unit tests for new features** (functions, classes, routes, etc).
-- **After updating any logic**, check whether existing unit tests need to be updated. If so, do it.
-- **Tests should live in a `/tests` folder** mirroring the main app structure.
-  - Include at least:
-    - 1 test for expected use
-    - 1 edge case
-    - 1 failure case
+- **Layered Structure:** `types` → `services` → `factories` → `components`.
+- **Dependency Flow:** High-level modules depend on abstractions in `types`.
 
-## ✅ Task Completion
+### Project Structure
 
-- **Mark completed tasks in `TASK.md`** immediately after finishing them.
-- Add new sub-tasks or TODOs discovered during development to `TASK.md` under a “Discovered During Work” section.
+```txt
+src/
+├── types/         # Interfaces, type declarations, abstract classes
+├── services/      # Business logic, state management (e.g., ThemeManager)
+├── factories/     # Object creation & instantiation (e.g., TimerFactory)
+├── components/    # UI components and renderers
+├── utils/         # Pure, reusable helper functions
+├── i18n/          # Internationalization (locales, config)
+└── styles/        # Global styles, themes, component-specific styles
+```
 
-## 📎 Style & Conventions
+### Naming Conventions
 
-- **Use Python** as the primary language.
-- **Follow PEP8**, use type hints, and format with `black`.
-- **Use `pydantic` for data validation**.
-- Use `FastAPI` for APIs and `SQLAlchemy` or `SQLModel` for ORM if applicable.
-- Write **docstrings for every function** using the Google style:
+- **Files:** `kebab-case` (e.g., `timer-component.ts`)
+- **Classes/Interfaces:** `PascalCase` (e.g., `TimerRenderer`)
+- **Functions/Variables:** `camelCase` (e.g., `startTimer`)
+- **Constants:** `UPPER_SNAKE_CASE` (e.g., `DEFAULT_DURATION`)
 
-  ```python
-  def example():
-      """
-      Brief summary.
+### Frontend (TypeScript)
 
-      Args:
-          param1 (type): Description.
+- **Language:** Use TypeScript with strict checking and modern ES features (ESM).
+- **Domain Errors:** Use custom Error classes for domain-specific errors.
+- **Formatting:** Use Biome (`pnpm format`).
+- **Styling:** Use Tailwind CSS primarily; avoid custom CSS where possible.
+- **State Management:** Use a simple state machine pattern in `services` for core logic (e.g., timer states: `idle`, `running`, `paused`).
 
-      Returns:
-          type: Description.
-      """
+### Backend (Rust/Tauri)
+
+- **Conventions:** Follow standard Rust conventions (`snake_case`).
+- **Commands:** Use `#[tauri::command]` for functions callable from the frontend.
+- **State Management:** Use `tauri::State<T>` to manage and share state across commands.
+- **Events:** Use `app.emit_all("event-name", payload)` to send events from backend to frontend for asynchronous updates (e.g., timer ticks).
+- **Error Handling:** Use `Result<T, E>` for all fallible operations.
+
+### Documentation
+
+- **JSDoc:** Comment all public functions/classes. For complex logic, add comments explaining the "why".
+
+  ```typescript
+  /**
+   * Manages theme switching and configuration.
+   * @param themeName The name of the theme to switch to.
+   * @returns A promise that resolves when the theme is loaded.
+   */
+  async switchTheme(themeName: string): Promise<void> { /* ... */ }
   ```
 
-### 📚 Documentation & Explainability
+## 3. Advanced Concepts
 
-- **Update `README.md`** when new features are added, dependencies change, or setup steps are modified.
-- **Comment non-obvious code** and ensure everything is understandable to a mid-level developer.
-- When writing complex logic, **add an inline `# Reason:` comment** explaining the why, not just the what.
+### Cross-Platform Compatibility
 
-## 🧠 AI Behavior Rules
+- **Backend:** Use conditional compilation (`#[cfg(target_os = "macos")]`) in Rust for OS-specific logic.
+- **Frontend:** Use the Tauri `os` module for platform-specific TypeScript code when necessary.
 
-- **Never assume missing context. Ask questions if uncertain.**
-- **Never hallucinate libraries or functions** – only use known, verified Python packages.
-- **Always confirm file paths and module names** exist before referencing them in code or tests.
-- **Never delete or overwrite existing code** unless explicitly instructed to or if part of a task from `TASK.md`.
+## 4. Testing & Internationalization
+
+### Testing
+
+- **Framework:** Use Vitest for all unit tests.
+
+### Internationalization (i18n)
+
+- **Structure:** Keys are nested in JSON files (e.g., `src/i18n/locales/en.json`).
+- **Keys:** Use dot notation for clarity (e.g., `timer.start`).
+- **Integration:** Use the `t('key', { dynamicValue })` function in components.
+- **Fallback:** English is the default language for missing translations.

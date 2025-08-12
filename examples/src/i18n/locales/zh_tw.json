@@ -1,0 +1,28 @@
+{
+  "timer": {
+    "start": "開始計時",
+    "pause": "暫停",
+    "reset": "重置",
+    "duration": "時長：{{minutes}} 分鐘",
+    "completed": "計時完成！"
+  },
+  "themes": {
+    "cloudlight-minimal": "雲光極簡",
+    "nightfall": "夜幕降臨",
+    "hand-drawn-sketch": "手繪素描",
+    "artistic-sketch": "藝術素描",
+    "wabi-sabi": "侘寂美學",
+    "dawn-and-dusk": "晨昏時光"
+  },
+  "settings": {
+    "language": "語言",
+    "theme": "主題",
+    "notifications": "通知",
+    "duration": "計時時長"
+  },
+  "common": {
+    "minutes": "分鐘",
+    "seconds": "秒",
+    "hours": "小時"
+  }
+}

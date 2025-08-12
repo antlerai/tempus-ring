@@ -1,0 +1,75 @@
+/* 通用基础样式 - 布局、尺寸、动画 */
+/* 所有主题共享的结构样式，不包含颜色 */
+
+.timer-container {
+  @apply relative flex items-center justify-center;
+  width: var(--timer-size, 256px);
+  height: var(--timer-size, 256px);
+}
+
+.timer-button {
+  @apply px-4 py-2 rounded-lg font-medium transition-colors duration-200;
+  min-width: 80px;
+}
+
+.timer-display {
+  @apply rounded-full border-4 transition-all duration-300;
+  width: var(--timer-size, 256px);
+  height: var(--timer-size, 256px);
+}
+
+.timer-text {
+  @apply absolute inset-0 flex items-center justify-center font-mono text-2xl font-bold;
+}
+
+.settings-panel {
+  @apply p-4 rounded-lg shadow-lg;
+  min-width: 300px;
+}
+
+.control-group {
+  @apply flex gap-2 justify-center mt-4;
+}
+
+/* 动画定义 */
+@keyframes pulse-ring {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+@keyframes rotate-clockwise {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotate-counterclockwise {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+.timer-animation-pulse {
+  animation: pulse-ring 2s ease-in-out infinite;
+}
+
+.timer-animation-rotate-cw {
+  animation: rotate-clockwise var(--animation-duration, 1500s) linear;
+}
+
+.timer-animation-rotate-ccw {
+  animation: rotate-counterclockwise var(--animation-duration, 1500s) linear;
+}

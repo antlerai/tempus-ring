@@ -1,0 +1,47 @@
+/* DOM渲染器 - 浅色主题样式 */
+/* DOM元素在浅色主题下的颜色样式 */
+
+.theme-light .timer-dom .progress-ring {
+  border-top-color: var(--primary-color);
+  border-right-color: var(--primary-color);
+}
+
+.theme-light .timer-dom .tick-mark {
+  color: var(--secondary-color);
+}
+
+.theme-light .timer-dom .tick-mark:nth-child(5n) {
+  color: var(--primary-color);
+}
+
+.theme-light .timer-dom .hand {
+  color: var(--primary-color);
+}
+
+.theme-light .timer-dom .second-hand {
+  color: var(--accent-color);
+}
+
+.theme-light .timer-display {
+  background-color: var(--surface-color);
+  border-color: var(--border-color);
+  box-shadow: 0 4px 6px var(--shadow-color);
+}
+
+.theme-light .timer-text {
+  color: var(--text-primary);
+}
+
+.theme-light .timer-button {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.theme-light .timer-button:hover {
+  background-color: #2563eb;
+}
+
+.theme-light .settings-panel {
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+}

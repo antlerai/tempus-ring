@@ -1,0 +1,65 @@
+/* SVG渲染器基础样式 */
+/* SVG元素的基础样式和动画 */
+
+.timer-svg {
+  @apply w-full h-full;
+  overflow: visible;
+}
+
+.timer-svg .progress-circle {
+  fill: none;
+  stroke-width: var(--ring-width, 4);
+  stroke-linecap: round;
+  transform-origin: center;
+  transform: rotate(-90deg);
+  transition: stroke-dashoffset 0.3s ease;
+}
+
+.timer-svg .background-circle {
+  fill: none;
+  stroke-width: var(--ring-width, 4);
+  stroke: var(--background-color);
+  opacity: 0.2;
+}
+
+.timer-svg .tick-group {
+  transform-origin: center;
+}
+
+.timer-svg .tick-line {
+  stroke-width: 1;
+  stroke: var(--secondary-color);
+}
+
+.timer-svg .major-tick {
+  stroke-width: 2;
+  stroke: var(--primary-color);
+}
+
+.timer-svg .clock-hands-group {
+  transform-origin: center;
+}
+
+.timer-svg .hand {
+  stroke-linecap: round;
+  transform-origin: center bottom;
+}
+
+.timer-svg .hour-hand {
+  stroke-width: 3;
+  stroke: var(--primary-color);
+}
+
+.timer-svg .minute-hand {
+  stroke-width: 2;
+  stroke: var(--primary-color);
+}
+
+.timer-svg .second-hand {
+  stroke-width: 1;
+  stroke: var(--accent-color);
+}
+
+.timer-svg .center-dot {
+  fill: var(--primary-color);
+}

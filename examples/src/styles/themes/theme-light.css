@@ -1,0 +1,45 @@
+/* Cloudlight Minimal 主题 - CSS变量定义 */
+/* 基于 Cloudlight-Minimal.html 原型设计 */
+
+.theme-cloudlight-minimal {
+  /* 主色调 - 极简灰色调 */
+  --primary-color: #374151;
+  --secondary-color: #9ca3af;
+  --accent-color: #ef4444; /* 红色指针 */
+  --background-color: #ffffff;
+
+  /* 文本颜色 */
+  --text-primary: #374151;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+
+  /* 界面颜色 */
+  --surface-color: #f9fafb;
+  --border-color: #e5e7eb;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --button-bg: #f3f4f6;
+  --button-hover: #e5e7eb;
+
+  /* 渐变背景 */
+  --clock-gradient: linear-gradient(145deg, #ffffff, #e6e6e6);
+  --body-background: #f3f4f6;
+
+  /* 状态颜色 */
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --error-color: #ef4444;
+
+  /* 尺寸和样式 */
+  --timer-size: 320px;
+  --ring-width: 8px;
+  --tick-length: 8px;
+  --major-tick-length: 12px;
+  --hand-width: 2px;
+  --center-dot-size: 12px;
+  --time-font-size: 3rem;
+
+  /* 动画和交互 */
+  --animation-duration: 1500s; /* 25分钟 */
+  --hand-transition: transform 1000ms linear;
+  --button-hover-translate: -2px;
+}
