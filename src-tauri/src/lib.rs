@@ -1,5 +1,5 @@
-mod commands;
-mod services;
+pub mod commands;
+pub mod services;
 mod tray;
 
 use commands::{
