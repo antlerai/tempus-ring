@@ -25,7 +25,7 @@ export interface TimerSession {
 
 export interface TimerData {
   state: TimerState;
-  currentSession?: TimerSession;
+  currentSession: TimerSession | undefined;
   remainingTime: number;
   progress: number;
   completedSessions: number;
