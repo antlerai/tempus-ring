@@ -1,3 +1,4 @@
+import './styles/global.css';
 import { i18n } from './i18n';
 import { ThemeManager } from './services/theme-manager';
 import { TimerService } from './services/timer-service';
