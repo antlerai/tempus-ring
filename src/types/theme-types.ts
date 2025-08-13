@@ -63,7 +63,7 @@ export const THEME_NAMES = {
 
 export type ThemeName = (typeof THEME_NAMES)[keyof typeof THEME_NAMES];
 
-export interface ThemeManagerEvents {
+export interface ThemeManagerEvents extends Record<string, unknown> {
   'theme:changed': { from: string; to: string };
   'theme:loaded': { theme: string };
   'theme:error': { theme: string; error: string };
