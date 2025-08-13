@@ -2,7 +2,7 @@
 
 ## 1. Core Principles
 
-- **Project Context:** Always read `PLANNING.md` and `TASK.md` before starting.
+- **Project Context:** Always follow the PRP (Product Requirement Prompt) workflow. A comprehensive PRP file, generated via `/generate-prp`, is required before starting implementation with `/execute-prp`.
 - **Package Manager:** Use `pnpm` for all commands.
 - **Development:** Use `pnpm dev` (web) and `pnpm tauri dev` (desktop).
 

@@ -30,3 +30,6 @@ dist-ssr
 
 # YoYo AI version control directory
 .yoyo/
+
+# other AI rules
+.kiro/

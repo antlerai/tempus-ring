@@ -114,6 +114,74 @@ pnpm test
 
 这些示例为 AI 编程助手和开发者提供了清晰的实现指南，确保代码的可扩展性和可维护性。
 
+## DESIGN PROTOTYPES
+
+`design/prototypes/` 文件夹包含了6种主题的完整HTML原型设计，这些原型是主题实现的视觉参考和技术规范：
+
+### 主题原型文件
+
+- **`Artistic-Sketch.html`** - 艺术素描主题原型
+  - 使用Canvas渲染器实现
+  - 具有艺术感的手绘风格效果
+  - 动态笔触和纹理表现
+
+- **`Cloudlight-Minimal.html`** - 云光极简主题原型
+  - 使用DOM渲染器实现
+  - 简洁的现代设计风格
+  - 柔和的渐变和阴影效果
+
+- **`Dawn-and-Dusk.html`** - 黎明黄昏主题原型
+  - 使用DOM渲染器实现
+  - 温暖的色彩过渡效果
+  - 时间感知的颜色变化
+
+- **`Hand-Drawn-Sketch.html`** - 手绘素描主题原型
+  - 使用SVG渲染器实现
+  - 模拟手绘线条的不规则效果
+  - 使用Rough.js库实现素描风格
+
+- **`Nightfall.html`** - 夜幕主题原型
+  - 使用DOM渲染器实现
+  - 深色主题设计
+  - 星空和夜晚氛围效果
+
+- **`WabiSabi.html`** - 侘寂美学主题原型
+  - 使用Canvas渲染器实现
+  - 日式美学的不完美之美
+  - 自然纹理和有机形状
+
+### 原型设计规范
+
+每个HTML原型文件包含：
+
+- **完整的视觉设计**：颜色、字体、布局、动画效果
+- **渲染器映射**：明确指定使用DOM、SVG或Canvas渲染方式
+- **CSS变量定义**：主题相关的颜色和样式变量
+- **交互效果**：鼠标悬停、点击反馈等用户交互
+- **响应式设计**：适配不同屏幕尺寸的布局调整
+
+### 实现指导
+
+在实施主题系统时，应该：
+
+1. **参考原型设计**：严格按照HTML原型的视觉效果实现
+2. **提取CSS变量**：将原型中的颜色、尺寸等提取为CSS变量
+3. **选择正确渲染器**：根据原型的复杂度选择合适的渲染方式
+4. **保持视觉一致性**：确保最终实现与原型设计高度一致
+
+### 快速预览
+
+```bash
+# 在浏览器中预览所有主题原型
+open design/prototypes/*.html
+
+# 或者逐个查看特定主题
+open design/prototypes/WabiSabi.html
+open design/prototypes/Cloudlight-Minimal.html
+```
+
+这些原型设计为AI编程助手提供了精确的视觉参考，确保主题实现的准确性和一致性。
+
 ## DOCUMENTATION
 
 - Model Context Protocol (MCP) 两种协议 stdio 和 Streamable HTTP 的介绍：<https://modelcontextprotocol.io/specification/2025-06-18/basic/transports/>

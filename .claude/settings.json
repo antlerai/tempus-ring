@@ -1,0 +1,47 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' | while read file_path; do if [[ \"$file_path\" =~ \\.(ts|js|json|css)$ ]] && [[ ! \"$file_path\" =~ src-tauri/ ]]; then echo \"Formatting $file_path with Biome...\"; pnpm format \"$file_path\" 2>/dev/null || true; fi; done",
+            "timeout": 30
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' | while read file_path; do if [[ \"$file_path\" =~ src-tauri/.*\\.rs$ ]]; then echo \"Formatting Rust code...\"; cd src-tauri && cargo fmt 2>/dev/null || true; fi; done",
+            "timeout": 30
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path' | while read file_path; do if [[ \"$file_path\" =~ \\.(ts|js)$ ]] && [[ ! \"$file_path\" =~ src-tauri/ ]]; then echo \"Type checking $file_path...\"; pnpm type-check 2>/dev/null && echo \"✅ Type check passed\" || echo \"⚠️ Type check failed for $file_path\"; fi; done",
+            "timeout": 60
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '🔍 Running quick build verification...' && timeout 120 pnpm build > /dev/null 2>&1 && echo '✅ Build successful - all changes verified' || echo '❌ Build failed - please review your changes'",
+            "timeout": 150
+          }
+        ]
+      }
+    ]
+  }
+}
