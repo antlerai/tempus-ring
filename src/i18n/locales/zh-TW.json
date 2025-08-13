@@ -1,0 +1,86 @@
+{
+  "timer": {
+    "start": "開始",
+    "pause": "暫停",
+    "resume": "繼續",
+    "reset": "重置",
+    "work": "工作",
+    "shortBreak": "短休息",
+    "longBreak": "長休息",
+    "session": "番茄鐘",
+    "sessions": "個番茄鐘",
+    "completed": "已完成",
+    "remaining": "剩餘",
+    "timeFormat": {
+      "minutes": "{count}分",
+      "seconds": "{count}秒",
+      "minutesSeconds": "{minutes}:{seconds}"
+    }
+  },
+  "settings": {
+    "title": "設定",
+    "theme": "主題",
+    "language": "語言",
+    "durations": "時長設定",
+    "workDuration": "工作時長",
+    "shortBreakDuration": "短休息時長",
+    "longBreakDuration": "長休息時長",
+    "sessionsUntilLongBreak": "長休息前的番茄鐘數",
+    "autoStart": "自動開始",
+    "autoStartBreaks": "自動開始休息",
+    "autoStartPomodoros": "自動開始番茄鐘",
+    "notifications": "通知",
+    "sound": "聲音",
+    "desktop": "桌面通知"
+  },
+  "themes": {
+    "wabisabi": "侘寂",
+    "cloudlight": "雲光",
+    "dawnDusk": "晨昏",
+    "nightfall": "夜幕",
+    "artistic": "藝術手繪",
+    "handDrawn": "手繪風格"
+  },
+  "languages": {
+    "en": "English",
+    "zh-CN": "简体中文",
+    "zh-TW": "繁體中文",
+    "ja": "日本語"
+  },
+  "notifications": {
+    "workComplete": {
+      "title": "工作完成！",
+      "body": "該休息了。您已完成 {sessions} 個番茄鐘。"
+    },
+    "breakComplete": {
+      "title": "休息完成！",
+      "body": "準備好繼續工作了嗎？"
+    },
+    "longBreakComplete": {
+      "title": "長休息完成！",
+      "body": "恢復活力，準備開始新一輪！"
+    }
+  },
+  "stats": {
+    "title": "統計",
+    "today": "今天",
+    "thisWeek": "本週",
+    "thisMonth": "本月",
+    "totalSessions": "總番茄鐘數",
+    "totalTime": "總時間",
+    "averageSession": "平均時長",
+    "streak": "當前連續",
+    "export": "匯出資料"
+  },
+  "common": {
+    "save": "儲存",
+    "cancel": "取消",
+    "close": "關閉",
+    "ok": "確定",
+    "yes": "是",
+    "no": "否",
+    "loading": "載入中...",
+    "error": "錯誤",
+    "success": "成功"
+  }
+}

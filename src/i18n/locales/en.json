@@ -1,0 +1,86 @@
+{
+  "timer": {
+    "start": "Start",
+    "pause": "Pause",
+    "resume": "Resume",
+    "reset": "Reset",
+    "work": "Work",
+    "shortBreak": "Short Break",
+    "longBreak": "Long Break",
+    "session": "Session",
+    "sessions": "Sessions",
+    "completed": "Completed",
+    "remaining": "Remaining",
+    "timeFormat": {
+      "minutes": "{count}m",
+      "seconds": "{count}s",
+      "minutesSeconds": "{minutes}:{seconds}"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "theme": "Theme",
+    "language": "Language",
+    "durations": "Durations",
+    "workDuration": "Work Duration",
+    "shortBreakDuration": "Short Break Duration",
+    "longBreakDuration": "Long Break Duration",
+    "sessionsUntilLongBreak": "Sessions Until Long Break",
+    "autoStart": "Auto Start",
+    "autoStartBreaks": "Auto Start Breaks",
+    "autoStartPomodoros": "Auto Start Pomodoros",
+    "notifications": "Notifications",
+    "sound": "Sound",
+    "desktop": "Desktop Notifications"
+  },
+  "themes": {
+    "wabisabi": "Wabi-Sabi",
+    "cloudlight": "Cloudlight",
+    "dawnDusk": "Dawn & Dusk",
+    "nightfall": "Nightfall",
+    "artistic": "Artistic Sketch",
+    "handDrawn": "Hand Drawn"
+  },
+  "languages": {
+    "en": "English",
+    "zh-CN": "简体中文",
+    "zh-TW": "繁體中文",
+    "ja": "日本語"
+  },
+  "notifications": {
+    "workComplete": {
+      "title": "Work Session Complete!",
+      "body": "Time for a break. You've completed {sessions} session(s)."
+    },
+    "breakComplete": {
+      "title": "Break Complete!",
+      "body": "Ready to get back to work?"
+    },
+    "longBreakComplete": {
+      "title": "Long Break Complete!",
+      "body": "Refreshed and ready for another cycle!"
+    }
+  },
+  "stats": {
+    "title": "Statistics",
+    "today": "Today",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month",
+    "totalSessions": "Total Sessions",
+    "totalTime": "Total Time",
+    "averageSession": "Average Session",
+    "streak": "Current Streak",
+    "export": "Export Data"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "ok": "OK",
+    "yes": "Yes",
+    "no": "No",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  }
+}
