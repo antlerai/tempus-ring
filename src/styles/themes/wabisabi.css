@@ -1,0 +1,216 @@
+/* WabiSabi Theme - Hand-drawn aesthetic with Canvas renderer */
+/* Based on WabiSabi.html prototype design */
+
+.theme-wabisabi {
+  /* Primary color palette - warm, earthy tones */
+  --primary-color: #8b4513; /* saddle brown */
+  --secondary-color: #cd853f; /* peru */
+  --accent-color: #dc143c; /* crimson for highlights */
+  --background-color: #faf0e6; /* linen */
+
+  /* Text colors - warm and readable */
+  --text-primary: #2f1b14; /* dark brown */
+  --text-secondary: #5d4037; /* brown */
+  --text-muted: #8d6e63; /* light brown */
+
+  /* Interface colors */
+  --surface-color: #f5f5dc; /* beige */
+  --border-color: #deb887; /* burlywood */
+  --shadow-color: rgba(139, 69, 19, 0.2); /* saddle brown with opacity */
+  --button-bg: #f4a460; /* sandy brown */
+  --button-hover: #cd853f; /* peru */
+  --button-text: #2f1b14; /* dark brown */
+
+  /* Canvas-specific colors */
+  --canvas-background: #faf0e6; /* linen */
+  --canvas-stroke: #8b4513; /* saddle brown */
+  --canvas-fill: rgba(244, 164, 96, 0.1); /* sandy brown with low opacity */
+
+  /* Status colors - muted to fit aesthetic */
+  --success-color: #8fbc8f; /* dark sea green */
+  --warning-color: #daa520; /* goldenrod */
+  --error-color: #cd5c5c; /* indian red */
+
+  /* Sizing and layout */
+  --timer-size: 320px;
+  --timer-size-mobile: 280px;
+  --timer-size-small: 240px;
+  --ring-width: 6px;
+  --tick-length: 6px;
+  --major-tick-length: 10px;
+  --hand-width: 3px;
+  --center-dot-size: 8px;
+
+  /* Typography */
+  --font-family: 'Georgia', 'Times New Roman', serif;
+  --font-mono: 'Courier New', monospace;
+  --time-font-size: 2.8rem;
+  --time-font-size-mobile: 2.3rem;
+  --time-font-size-small: 1.8rem;
+
+  /* Rough.js Canvas effects */
+  --roughness: 2.5; /* Hand-drawn roughness level */
+  --stroke-width: 2;
+  --fill-style: 'hachure'; /* Hand-drawn fill pattern */
+  --hachure-gap: 4;
+  --hachure-angle: 45;
+  --curve-step-count: 9; /* Adds organic curves */
+  --curve-tightness: 0.5;
+
+  /* Animation settings - slower for organic feel */
+  --animation-duration: 1500s; /* 25 minutes */
+  --transition-duration: 400ms; /* Slower transitions */
+  --hand-transition: transform 1200ms ease-out;
+
+  /* Button styling - organic feel */
+  --button-padding: 10px 16px;
+  --button-radius: 8px;
+  --button-border: 2px solid var(--border-color);
+  --button-shadow: 2px 2px 4px var(--shadow-color);
+  --button-hover-shadow: 3px 3px 6px var(--shadow-color);
+  --button-hover-translate: -1px;
+
+  /* Tick marks - hand-drawn style */
+  --tick-color: rgba(139, 69, 19, 0.6); /* saddle brown with opacity */
+  --major-tick-color: var(--primary-color);
+
+  /* Glow effects - subtle warmth */
+  --glow-color: rgba(220, 20, 60, 0.3); /* crimson with opacity */
+  --center-dot-glow: 0 0 8px var(--glow-color);
+
+  /* Canvas-specific variables for Rough.js - individual properties */
+  --canvas-roughness: 2.5;
+  --canvas-stroke-width: 2;
+  --canvas-stroke-color: #8b4513;
+  --canvas-fill-color: rgba(244, 164, 96, 0.1);
+  --canvas-fill-style: hachure;
+  --canvas-hachure-gap: 4;
+  --canvas-hachure-angle: 45deg;
+  --canvas-curve-step-count: 9;
+  --canvas-curve-tightness: 0.5;
+
+  --canvas-line-roughness: 2;
+  --canvas-line-stroke-width: 1.5;
+  --canvas-line-stroke-color: #8b4513;
+
+  --canvas-progress-roughness: 2.5;
+  --canvas-progress-stroke-width: 6;
+  --canvas-progress-stroke-color: #dc143c;
+  --canvas-progress-fill-style: solid;
+  --canvas-progress-curve-step-count: 12;
+
+  /* Paper texture effect */
+  --paper-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+
+  /* Body background with texture */
+  --body-background: var(--background-color);
+  --body-background-image: var(--paper-texture);
+
+  /* Organic animations */
+  --organic-wobble: organic-wobble 3s ease-in-out infinite;
+  --organic-float: organic-float 4s ease-in-out infinite;
+}
+
+/* Canvas-specific styles for WabiSabi theme */
+.theme-wabisabi .canvas-timer {
+  background-color: var(--canvas-background);
+  background-image: var(--paper-texture);
+  border-radius: 50%;
+  box-shadow: inset 0 0 20px rgba(139, 69, 19, 0.1);
+}
+
+.theme-wabisabi .canvas-container {
+  filter: drop-shadow(2px 2px 4px var(--shadow-color));
+}
+
+/* Hand-drawn effect animations */
+@keyframes organic-wobble {
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(0.5deg) scale(1.002);
+  }
+  50% {
+    transform: rotate(-0.3deg) scale(0.998);
+  }
+  75% {
+    transform: rotate(0.7deg) scale(1.001);
+  }
+}
+
+@keyframes organic-float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+/* Apply organic animations to timer display */
+.theme-wabisabi .timer-display {
+  animation: var(--organic-wobble);
+}
+
+.theme-wabisabi .timer-container {
+  animation: var(--organic-float);
+}
+
+/* Button hover effects with organic feel */
+.theme-wabisabi .timer-button:hover {
+  transform: translateY(-1px) rotate(0.5deg);
+}
+
+/* Text with slight organic positioning */
+.theme-wabisabi .timer-text {
+  transform: rotate(-0.2deg);
+  text-shadow: 1px 1px 2px var(--shadow-color);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Settings panel with paper-like appearance */
+.theme-wabisabi .settings-panel {
+  background-image: var(--paper-texture);
+  box-shadow:
+    2px 2px 8px var(--shadow-color),
+    inset 0 0 20px rgba(139, 69, 19, 0.05);
+  border: 1px solid var(--border-color);
+}
+
+/* Form elements with hand-drawn borders */
+.theme-wabisabi .settings-select,
+.theme-wabisabi .settings-input {
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  background-image: var(--paper-texture);
+  box-shadow: inset 1px 1px 3px rgba(139, 69, 19, 0.1);
+}
+
+.theme-wabisabi .settings-select:focus,
+.theme-wabisabi .settings-input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow:
+    inset 1px 1px 3px rgba(139, 69, 19, 0.1),
+    0 0 0 2px rgba(220, 20, 60, 0.2);
+}
+
+/* Disable smooth animations for accessibility if preferred */
+@media (prefers-reduced-motion: reduce) {
+  .theme-wabisabi .timer-display,
+  .theme-wabisabi .timer-container {
+    animation: none;
+  }
+
+  .theme-wabisabi .timer-button:hover {
+    transform: translateY(-1px);
+  }
+
+  .theme-wabisabi .timer-text {
+    transform: none;
+  }
+}

@@ -1,0 +1,325 @@
+/* Common theme base styles - layout, sizing, animations */
+/* Shared structural styles across all themes, no colors */
+
+.timer-container {
+  @apply relative flex items-center justify-center;
+  width: var(--timer-size, 320px);
+  height: var(--timer-size, 320px);
+}
+
+.timer-display {
+  @apply rounded-full transition-all duration-300;
+  width: var(--timer-size, 320px);
+  height: var(--timer-size, 320px);
+  border-width: var(--ring-width, 8px);
+  border-style: solid;
+  border-color: var(--border-color);
+}
+
+.timer-text {
+  @apply absolute inset-0 flex items-center justify-center font-mono font-bold;
+  font-size: var(--time-font-size, 3rem);
+  color: var(--text-primary);
+  font-family: var(--font-mono, 'Roboto Mono', monospace);
+}
+
+.timer-progress-ring {
+  @apply absolute inset-0 rounded-full;
+  width: var(--timer-size, 320px);
+  height: var(--timer-size, 320px);
+  border-width: var(--ring-width, 8px);
+  border-style: solid;
+  border-color: transparent;
+  border-top-color: var(--accent-color);
+  transform-origin: center;
+  transition: transform var(--transition-duration, 200ms) ease-out;
+}
+
+.timer-button {
+  @apply px-4 py-2 rounded-lg font-medium transition-all duration-200;
+  min-width: 80px;
+  background-color: var(--button-bg);
+  color: var(--button-text, var(--text-primary));
+  border: var(--button-border, none);
+  border-radius: var(--button-radius, 8px);
+  padding: var(--button-padding, 12px);
+  box-shadow: var(--button-shadow, none);
+}
+
+.timer-button:hover {
+  background-color: var(--button-hover);
+  transform: translateY(var(--button-hover-translate, -2px));
+  box-shadow: var(--button-hover-shadow, var(--button-shadow, none));
+}
+
+.timer-button:active {
+  transform: translateY(0px);
+}
+
+.timer-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.settings-panel {
+  @apply p-4 rounded-lg shadow-lg;
+  min-width: 300px;
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.control-group {
+  @apply flex gap-2 justify-center mt-4;
+}
+
+.settings-group {
+  @apply mb-4;
+}
+
+.settings-label {
+  @apply block text-sm font-medium mb-2;
+  color: var(--text-secondary);
+}
+
+.settings-select {
+  @apply w-full px-3 py-2 rounded border;
+  background-color: var(--background-color);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+.settings-input {
+  @apply w-full px-3 py-2 rounded border;
+  background-color: var(--background-color);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+/* Timer tick marks */
+.timer-tick {
+  position: absolute;
+  background-color: var(--tick-color, var(--secondary-color));
+  transform-origin: bottom center;
+}
+
+.timer-tick-major {
+  background-color: var(--major-tick-color, var(--primary-color));
+  width: 2px;
+  height: var(--major-tick-length, 12px);
+}
+
+.timer-tick-minor {
+  background-color: var(--tick-color, var(--secondary-color));
+  width: 1px;
+  height: var(--tick-length, 8px);
+}
+
+/* Timer hands for clock mode */
+.timer-hand {
+  position: absolute;
+  background-color: var(--accent-color);
+  transform-origin: bottom center;
+  transition: var(--hand-transition, transform 1000ms linear);
+  border-radius: 1px;
+}
+
+.timer-hand-hour {
+  width: var(--hand-width, 2px);
+  height: calc(var(--hand-length, 45%) * 0.6);
+}
+
+.timer-hand-minute {
+  width: var(--hand-width, 2px);
+  height: var(--hand-length, 45%);
+}
+
+.timer-center-dot {
+  @apply absolute rounded-full;
+  width: var(--center-dot-size, 12px);
+  height: var(--center-dot-size, 12px);
+  background-color: var(--accent-color);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: var(--center-dot-glow, none);
+}
+
+/* Animation definitions */
+@keyframes pulse-ring {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+@keyframes rotate-clockwise {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotate-counterclockwise {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Animation classes */
+.timer-animation-pulse {
+  animation: pulse-ring 2s ease-in-out infinite;
+}
+
+.timer-animation-rotate-cw {
+  animation: rotate-clockwise var(--animation-duration, 1500s) linear;
+}
+
+.timer-animation-rotate-ccw {
+  animation: rotate-counterclockwise var(--animation-duration, 1500s) linear;
+}
+
+.timer-animation-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+.timer-animation-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+.timer-animation-shimmer {
+  background: linear-gradient(90deg, transparent 25%, var(--accent-color) 50%, transparent 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .timer-container {
+    width: var(--timer-size-mobile, 280px);
+    height: var(--timer-size-mobile, 280px);
+  }
+
+  .timer-display {
+    width: var(--timer-size-mobile, 280px);
+    height: var(--timer-size-mobile, 280px);
+  }
+
+  .timer-progress-ring {
+    width: var(--timer-size-mobile, 280px);
+    height: var(--timer-size-mobile, 280px);
+  }
+
+  .timer-text {
+    font-size: var(--time-font-size-mobile, 2.5rem);
+  }
+
+  .settings-panel {
+    min-width: auto;
+    width: 100%;
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .timer-container {
+    width: var(--timer-size-small, 240px);
+    height: var(--timer-size-small, 240px);
+  }
+
+  .timer-display {
+    width: var(--timer-size-small, 240px);
+    height: var(--timer-size-small, 240px);
+  }
+
+  .timer-progress-ring {
+    width: var(--timer-size-small, 240px);
+    height: var(--timer-size-small, 240px);
+  }
+
+  .timer-text {
+    font-size: var(--time-font-size-small, 2rem);
+  }
+
+  .control-group {
+    @apply flex-col gap-3;
+  }
+
+  .timer-button {
+    @apply w-full;
+  }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .timer-animation-pulse,
+  .timer-animation-rotate-cw,
+  .timer-animation-rotate-ccw,
+  .timer-animation-shimmer {
+    animation: none;
+  }
+
+  .timer-button,
+  .timer-display,
+  .timer-progress-ring {
+    transition: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .timer-display {
+    border-width: calc(var(--ring-width, 8px) + 2px);
+  }
+
+  .timer-button {
+    border: 2px solid var(--text-primary);
+  }
+
+  .timer-tick-minor,
+  .timer-tick-major {
+    background-color: var(--text-primary);
+  }
+}

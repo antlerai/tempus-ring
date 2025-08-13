@@ -1,0 +1,418 @@
+/* Nightfall Theme - Dark night sky aesthetic */
+/* Based on Nightfall.html prototype design */
+
+.theme-nightfall {
+  /* Primary color palette - dark night sky tones */
+  --primary-color: #e2e8f0; /* slate-200 */
+  --secondary-color: #94a3b8; /* slate-400 */
+  --accent-color: #fb923c; /* orange-400 - warm star color */
+  --background-color: #0f172a; /* slate-900 */
+
+  /* Text colors - light on dark */
+  --text-primary: #ffffff; /* white */
+  --text-secondary: #e2e8f0; /* slate-200 */
+  --text-muted: #94a3b8; /* slate-400 */
+
+  /* Interface colors - dark theme */
+  --surface-color: #1e293b; /* slate-800 */
+  --border-color: #475569; /* slate-600 */
+  --shadow-color: rgba(0, 0, 0, 0.4);
+  --button-bg: #334155; /* slate-700 */
+  --button-hover: #475569; /* slate-600 */
+  --button-text: #e2e8f0; /* slate-200 */
+
+  /* Status colors - muted for dark theme */
+  --success-color: #22c55e; /* green-500 */
+  --warning-color: #f59e0b; /* amber-500 */
+  --error-color: #ef4444; /* red-500 */
+
+  /* Sizing and layout */
+  --timer-size: 320px;
+  --timer-size-mobile: 280px;
+  --timer-size-small: 240px;
+  --ring-width: 8px;
+  --tick-length: 8px;
+  --major-tick-length: 12px;
+  --hand-width: 2px;
+  --center-dot-size: 12px;
+
+  /* Typography - clean and readable in dark */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'Roboto Mono', 'SF Mono', 'Monaco', monospace;
+  --time-font-size: 3rem;
+  --time-font-size-mobile: 2.5rem;
+  --time-font-size-small: 2rem;
+
+  /* Animation settings */
+  --animation-duration: 1500s; /* 25 minutes */
+  --transition-duration: 200ms;
+  --hand-transition: transform 1000ms linear;
+
+  /* Button styling - dark theme */
+  --button-padding: 12px 20px;
+  --button-radius: 12px;
+  --button-border: 1px solid var(--border-color);
+  --button-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --button-hover-shadow: 0 8px 12px rgba(0, 0, 0, 0.4);
+  --button-hover-translate: -2px;
+
+  /* Night sky gradient - complex conic gradient for day/night cycle */
+  --night-sky-gradient: conic-gradient(
+    /* Light side - dawn/day */
+    #e2e8f0 90deg /* slate-200 */,
+    #e2e8f0 126deg,
+    #cbd5e1 126deg /* slate-300 */,
+    #cbd5e1 162deg,
+    #94a3b8 162deg /* slate-400 */,
+    #94a3b8 198deg,
+    #64748b 198deg /* slate-500 */,
+    #64748b 234deg,
+    #475569 234deg /* slate-600 */,
+    #475569 270deg,
+    /* Dark side - dusk/night */
+    #334155 270deg /* slate-700 */,
+    #334155 306deg,
+    #1e293b 306deg /* slate-800 */,
+    #1e293b 342deg,
+    #0f172a 342deg /* slate-900 */,
+    #0f172a 360deg,
+    #0f172a 0deg,
+    #0f172a 18deg,
+    #1e293b 18deg /* slate-800 */,
+    #1e293b 54deg,
+    #334155 54deg /* slate-700 */,
+    #334155 90deg
+  );
+
+  --clock-gradient: var(--night-sky-gradient);
+  --body-background: #000000; /* pure black */
+
+  /* Tick mark colors with transparency */
+  --tick-color: rgba(226, 232, 240, 0.7); /* slate-200/70 */
+  --major-tick-color: var(--primary-color);
+
+  /* Star-like glow effects */
+  --glow-color: rgba(251, 146, 60, 0.6); /* orange-400 with higher opacity */
+  --center-dot-glow: 0 0 16px var(--glow-color), 0 0 32px rgba(251, 146, 60, 0.3);
+  --star-glow: 0 0 4px var(--glow-color);
+
+  /* Starfield background effect */
+  --stars-small:
+    radial-gradient(1px 1px at 20px 30px, #fff, transparent), radial-gradient(1px 1px at 40px 70px, #fff, transparent),
+    radial-gradient(1px 1px at 90px 40px, #fff, transparent), radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+    radial-gradient(1px 1px at 160px 30px, #fff, transparent);
+
+  --stars-medium:
+    radial-gradient(2px 2px at 60px 50px, #e2e8f0, transparent),
+    radial-gradient(2px 2px at 120px 20px, #e2e8f0, transparent),
+    radial-gradient(2px 2px at 180px 90px, #e2e8f0, transparent);
+
+  --stars-large:
+    radial-gradient(3px 3px at 100px 10px, #fb923c, transparent),
+    radial-gradient(3px 3px at 150px 100px, #fb923c, transparent);
+
+  /* Constellation patterns */
+  --constellation-opacity: 0.3;
+  --constellation-color: var(--secondary-color);
+}
+
+/* Dark theme body background with starfield */
+.theme-nightfall {
+  background: var(--stars-large), var(--stars-medium), var(--stars-small), linear-gradient(to bottom, #0f172a, #000000);
+  background-size:
+    200px 200px,
+    150px 150px,
+    100px 100px,
+    100% 100%;
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+/* Timer display with night sky effect */
+.theme-nightfall .timer-display {
+  background: var(--clock-gradient);
+  border-color: var(--border-color);
+  box-shadow:
+    0 0 20px rgba(251, 146, 60, 0.2),
+    inset 0 0 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+/* Add subtle starfield to timer background */
+.theme-nightfall .timer-display::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(1px 1px at 30% 20%, rgba(255, 255, 255, 0.8), transparent),
+    radial-gradient(1px 1px at 70% 60%, rgba(255, 255, 255, 0.6), transparent),
+    radial-gradient(1px 1px at 50% 80%, rgba(255, 255, 255, 0.7), transparent),
+    radial-gradient(2px 2px at 80% 30%, rgba(251, 146, 60, 0.5), transparent);
+  pointer-events: none;
+}
+
+/* Progress ring with glowing effect */
+.theme-nightfall .timer-progress-ring {
+  border-top-color: var(--accent-color);
+  filter: drop-shadow(0 0 8px var(--accent-color)) drop-shadow(0 0 16px rgba(251, 146, 60, 0.3));
+}
+
+/* Glowing text effect */
+.theme-nightfall .timer-text {
+  color: var(--text-primary);
+  text-shadow:
+    0 0 10px rgba(255, 255, 255, 0.5),
+    0 0 20px rgba(251, 146, 60, 0.3),
+    0 2px 4px rgba(0, 0, 0, 0.8);
+  font-weight: 700;
+}
+
+/* Dark theme buttons with glow */
+.theme-nightfall .timer-button {
+  background: linear-gradient(135deg, var(--button-bg), var(--surface-color));
+  border: var(--button-border);
+  color: var(--button-text);
+  box-shadow: var(--button-shadow);
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-nightfall .timer-button::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(251, 146, 60, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity var(--transition-duration) ease;
+}
+
+.theme-nightfall .timer-button:hover::before {
+  opacity: 1;
+}
+
+.theme-nightfall .timer-button:hover {
+  background: linear-gradient(135deg, var(--button-hover), var(--button-bg));
+  transform: translateY(var(--button-hover-translate));
+  box-shadow:
+    var(--button-hover-shadow),
+    0 0 20px rgba(251, 146, 60, 0.2);
+}
+
+/* Primary button with orange glow */
+.theme-nightfall .timer-button.primary {
+  background: linear-gradient(135deg, var(--accent-color), #ea580c);
+  color: #000000;
+  border-color: var(--accent-color);
+  box-shadow:
+    var(--button-shadow),
+    0 0 15px rgba(251, 146, 60, 0.4);
+}
+
+.theme-nightfall .timer-button.primary:hover {
+  background: linear-gradient(135deg, #ea580c, var(--accent-color));
+  box-shadow:
+    var(--button-hover-shadow),
+    0 0 25px rgba(251, 146, 60, 0.6);
+}
+
+/* Settings panel with dark glass effect */
+.theme-nightfall .settings-panel {
+  background: rgba(30, 41, 59, 0.9); /* slate-800 with transparency */
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.4),
+    0 10px 10px -5px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(226, 232, 240, 0.1);
+}
+
+/* Dark form elements */
+.theme-nightfall .settings-select,
+.theme-nightfall .settings-input {
+  background: var(--surface-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  transition: all var(--transition-duration) ease;
+}
+
+.theme-nightfall .settings-select:focus,
+.theme-nightfall .settings-input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow:
+    0 0 0 3px rgba(251, 146, 60, 0.1),
+    0 0 10px rgba(251, 146, 60, 0.2);
+  background: var(--background-color);
+}
+
+.theme-nightfall .settings-select:hover,
+.theme-nightfall .settings-input:hover {
+  border-color: var(--secondary-color);
+  background: var(--background-color);
+}
+
+/* Labels with subtle glow */
+.theme-nightfall .settings-label {
+  color: var(--text-secondary);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Glowing tick marks */
+.theme-nightfall .timer-tick-major {
+  background: var(--major-tick-color);
+  box-shadow: var(--star-glow);
+  border-radius: 1px;
+}
+
+.theme-nightfall .timer-tick-minor {
+  background: var(--tick-color);
+  box-shadow: 0 0 2px rgba(226, 232, 240, 0.5);
+  border-radius: 0.5px;
+}
+
+/* Glowing clock hands */
+.theme-nightfall .timer-hand {
+  background: linear-gradient(to top, var(--accent-color), #fed7aa);
+  box-shadow:
+    0 0 8px var(--accent-color),
+    0 0 16px rgba(251, 146, 60, 0.4);
+  border-radius: 1px;
+}
+
+/* Center dot with star effect */
+.theme-nightfall .timer-center-dot {
+  background: radial-gradient(circle, var(--accent-color), #ea580c);
+  box-shadow: var(--center-dot-glow);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Notification styles for dark theme */
+.theme-nightfall .notification {
+  background: rgba(30, 41, 59, 0.95);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.4),
+    0 10px 10px -5px rgba(0, 0, 0, 0.2);
+}
+
+.theme-nightfall .notification.success {
+  border-color: var(--success-color);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(34, 197, 94, 0.2);
+}
+
+.theme-nightfall .notification.warning {
+  border-color: var(--warning-color);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(245, 158, 11, 0.2);
+}
+
+.theme-nightfall .notification.error {
+  border-color: var(--error-color);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(239, 68, 68, 0.2);
+}
+
+/* Session counter with glow */
+.theme-nightfall .session-counter {
+  background: rgba(51, 65, 85, 0.8);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(5px);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Shooting star animation */
+@keyframes shooting-star {
+  0% {
+    transform: translateX(-100px) translateY(-100px) rotate(45deg);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100px) translateY(100px) rotate(45deg);
+    opacity: 0;
+  }
+}
+
+/* Twinkling stars animation */
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Apply twinkling to timer display stars */
+.theme-nightfall .timer-display::before {
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+/* Add occasional shooting star effect */
+.theme-nightfall::after {
+  content: '';
+  position: fixed;
+  top: 10%;
+  right: 10%;
+  width: 2px;
+  height: 2px;
+  background: linear-gradient(45deg, transparent, #fff, transparent);
+  border-radius: 50%;
+  animation: shooting-star 4s linear infinite;
+  animation-delay: 2s;
+  pointer-events: none;
+}
+
+/* Responsive dark theme adjustments */
+@media (max-width: 768px) {
+  .theme-nightfall {
+    background-size:
+      150px 150px,
+      100px 100px,
+      80px 80px,
+      100% 100%;
+  }
+
+  .theme-nightfall .settings-panel {
+    backdrop-filter: blur(8px);
+  }
+}
+
+/* High contrast mode adjustments */
+@media (prefers-contrast: high) {
+  .theme-nightfall {
+    --text-primary: #ffffff;
+    --border-color: #64748b; /* slate-500 */
+    --glow-color: rgba(251, 146, 60, 0.8);
+  }
+
+  .theme-nightfall .timer-text {
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+  }
+}
+
+/* Disable animations for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .theme-nightfall .timer-display::before,
+  .theme-nightfall::after {
+    animation: none;
+  }
+
+  .theme-nightfall .timer-button::before {
+    transition: none;
+  }
+}

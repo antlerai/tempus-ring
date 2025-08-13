@@ -1,0 +1,500 @@
+/* Hand-drawn Theme - Sketch-like SVG aesthetic */
+/* SVG renderer with hand-drawn elements and organic imperfections */
+
+.theme-hand-drawn {
+  /* Primary color palette - sketching materials */
+  --primary-color: #1f2937; /* gray-800 - pencil lead */
+  --secondary-color: #6b7280; /* gray-500 - light pencil */
+  --accent-color: #3b82f6; /* blue-500 - ink pen */
+  --background-color: #fffbeb; /* amber-50 - sketch paper */
+
+  /* Text colors - pencil and ink */
+  --text-primary: #111827; /* gray-900 */
+  --text-secondary: #374151; /* gray-700 */
+  --text-muted: #6b7280; /* gray-500 */
+
+  /* Interface colors - sketch paper aesthetic */
+  --surface-color: #fef7ed; /* orange-50 */
+  --border-color: #d1d5db; /* gray-300 */
+  --shadow-color: rgba(31, 41, 55, 0.15); /* gray-800 with low opacity */
+  --button-bg: #f9fafb; /* gray-50 */
+  --button-hover: #f3f4f6; /* gray-100 */
+  --button-text: var(--text-primary);
+
+  /* Status colors - marker/highlighter colors */
+  --success-color: #059669; /* emerald-600 */
+  --warning-color: #d97706; /* amber-600 */
+  --error-color: #dc2626; /* red-600 */
+
+  /* Sizing and layout */
+  --timer-size: 320px;
+  --timer-size-mobile: 280px;
+  --timer-size-small: 240px;
+  --ring-width: 6px;
+  --tick-length: 8px;
+  --major-tick-length: 14px;
+  --hand-width: 3px;
+  --center-dot-size: 8px;
+
+  /* Typography - handwriting style */
+  --font-family: 'Kalam', 'Caveat', 'Comic Neue', cursive;
+  --font-mono: 'Courier New', 'Courier', monospace;
+  --time-font-size: 2.4rem;
+  --time-font-size-mobile: 2rem;
+  --time-font-size-small: 1.6rem;
+
+  /* Animation settings - organic feel */
+  --animation-duration: 1500s; /* 25 minutes */
+  --transition-duration: 350ms; /* Slightly slower for organic feel */
+  --hand-transition: transform 1300ms ease-out;
+
+  /* Button styling - sketched buttons */
+  --button-padding: 10px 16px;
+  --button-radius: 8px;
+  --button-border: 2px solid var(--border-color);
+  --button-shadow: 2px 2px 4px var(--shadow-color);
+  --button-hover-shadow: 3px 3px 6px rgba(31, 41, 55, 0.2);
+  --button-hover-translate: -1px;
+
+  /* SVG-specific hand-drawn effects */
+  --svg-stroke-width: 2.5;
+  --svg-stroke-linecap: round;
+  --svg-stroke-linejoin: round;
+  --svg-stroke-dasharray: none; /* Will be overridden for hand-drawn effects */
+  --svg-fill-opacity: 0.1;
+
+  /* Hand-drawn imperfection values */
+  --sketch-roughness: 1.5; /* Moderate roughness for organic feel */
+  --sketch-jitter: 2px; /* Small random displacement */
+  --sketch-variation: 0.8; /* Line thickness variation */
+
+  /* Paper texture effect */
+  --paper-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cfilter id='paper-texture'%3E%3CfeTurbulence type='turbulence' baseFrequency='0.04' numOctaves='1' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper-texture)' opacity='0.02'/%3E%3C/svg%3E");
+
+  /* Grid lines for sketch paper */
+  --grid-lines:
+    linear-gradient(to right, rgba(209, 213, 219, 0.3) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(209, 213, 219, 0.3) 1px, transparent 1px);
+  --grid-size: 20px 20px;
+
+  /* Tick mark colors - pencil sketch */
+  --tick-color: var(--secondary-color);
+  --major-tick-color: var(--primary-color);
+
+  /* Hand-drawn glow effects - subtle */
+  --glow-color: rgba(59, 130, 246, 0.2); /* blue-500 with low opacity */
+  --center-dot-glow: 0 0 6px var(--glow-color);
+
+  /* Body background with paper texture */
+  --body-background: var(--background-color);
+  --body-background-image: var(--grid-lines), var(--paper-texture);
+}
+
+/* Paper background with grid lines */
+.theme-hand-drawn {
+  background: var(--grid-lines), var(--paper-texture), var(--background-color);
+  background-size:
+    var(--grid-size),
+    120px 120px,
+    100% 100%;
+  background-attachment: scroll, fixed, scroll;
+  min-height: 100vh;
+}
+
+/* SVG timer with hand-drawn styling */
+.theme-hand-drawn .svg-timer {
+  filter: drop-shadow(2px 2px 4px var(--shadow-color));
+}
+
+/* Timer display with sketch paper effect */
+.theme-hand-drawn .timer-display {
+  background: var(--paper-texture), var(--surface-color);
+  border: var(--ring-width) solid var(--border-color);
+  box-shadow:
+    inset 0 0 20px rgba(209, 213, 219, 0.1),
+    2px 2px 8px var(--shadow-color);
+  position: relative;
+}
+
+/* Add pencil marks and doodles around timer */
+.theme-hand-drawn .timer-display::before {
+  content: '';
+  position: absolute;
+  inset: -15px;
+  /* Small doodles around the timer */
+  background:
+    radial-gradient(
+      circle at 10% 20%,
+      transparent 8px,
+      rgba(31, 41, 55, 0.1) 9px,
+      rgba(31, 41, 55, 0.1) 10px,
+      transparent 11px
+    ),
+    radial-gradient(
+      circle at 90% 30%,
+      transparent 6px,
+      rgba(107, 114, 128, 0.15) 7px,
+      rgba(107, 114, 128, 0.15) 8px,
+      transparent 9px
+    ),
+    radial-gradient(
+      circle at 20% 85%,
+      transparent 5px,
+      rgba(31, 41, 55, 0.08) 6px,
+      rgba(31, 41, 55, 0.08) 7px,
+      transparent 8px
+    ),
+    radial-gradient(
+      circle at 85% 80%,
+      transparent 7px,
+      rgba(107, 114, 128, 0.12) 8px,
+      rgba(107, 114, 128, 0.12) 9px,
+      transparent 10px
+    );
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Progress ring with hand-drawn stroke */
+.theme-hand-drawn .timer-progress-ring {
+  border-top-color: var(--accent-color);
+  filter: drop-shadow(0 0 4px rgba(59, 130, 246, 0.2));
+}
+
+/* Hand-drawn text styling */
+.theme-hand-drawn .timer-text {
+  font-family: var(--font-family);
+  color: var(--text-primary);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-shadow: 1px 1px 2px var(--shadow-color);
+  /* Slight imperfection in positioning */
+  transform: rotate(-0.5deg) translateX(1px);
+}
+
+/* Hand-drawn buttons */
+.theme-hand-drawn .timer-button {
+  background: var(--paper-texture), var(--button-bg);
+  border: var(--button-border);
+  color: var(--button-text);
+  font-family: var(--font-family);
+  font-weight: 600;
+  box-shadow: var(--button-shadow);
+  position: relative;
+  /* Slight rotation for hand-drawn feel */
+  transform: rotate(0.3deg);
+}
+
+/* Add sketch marks to buttons */
+.theme-hand-drawn .timer-button::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border: 1px solid transparent;
+  border-radius: inherit;
+  background:
+    linear-gradient(45deg, transparent 30%, rgba(31, 41, 55, 0.05) 35%, transparent 40%),
+    linear-gradient(-45deg, transparent 60%, rgba(107, 114, 128, 0.05) 65%, transparent 70%);
+  opacity: 0;
+  transition: opacity var(--transition-duration) ease;
+  pointer-events: none;
+}
+
+.theme-hand-drawn .timer-button:hover::before {
+  opacity: 1;
+}
+
+.theme-hand-drawn .timer-button:hover {
+  background: var(--paper-texture), var(--button-hover);
+  transform: translateY(var(--button-hover-translate)) rotate(-0.2deg);
+  box-shadow: var(--button-hover-shadow);
+  border-color: var(--accent-color);
+}
+
+/* Primary button with ink pen effect */
+.theme-hand-drawn .timer-button.primary {
+  background: var(--paper-texture), linear-gradient(135deg, var(--accent-color), #2563eb);
+  color: white;
+  border-color: var(--primary-color);
+  box-shadow:
+    var(--button-shadow),
+    0 0 10px rgba(59, 130, 246, 0.2);
+}
+
+.theme-hand-drawn .timer-button.primary:hover {
+  background: var(--paper-texture), linear-gradient(135deg, #2563eb, var(--accent-color));
+  box-shadow:
+    var(--button-hover-shadow),
+    0 0 15px rgba(59, 130, 246, 0.3);
+}
+
+/* Settings panel with notebook page styling */
+.theme-hand-drawn .settings-panel {
+  background: var(--paper-texture), var(--surface-color);
+  border: 2px solid var(--border-color);
+  border-left: 4px solid #ef4444; /* Red margin like notebook paper */
+  box-shadow:
+    var(--button-shadow),
+    inset 0 0 20px rgba(209, 213, 219, 0.1);
+  position: relative;
+  transform: rotate(-0.2deg);
+}
+
+/* Add margin line and spiral holes */
+.theme-hand-drawn .settings-panel::before {
+  content: '';
+  position: absolute;
+  left: 30px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: #ef4444; /* Red margin line */
+  opacity: 0.6;
+}
+
+.theme-hand-drawn .settings-panel::after {
+  content: '○ ○ ○'; /* Spiral holes */
+  position: absolute;
+  left: 8px;
+  top: 20px;
+  color: #6b7280;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  writing-mode: vertical-lr;
+  opacity: 0.4;
+}
+
+/* Hand-drawn form elements */
+.theme-hand-drawn .settings-select,
+.theme-hand-drawn .settings-input {
+  background: var(--paper-texture), var(--background-color);
+  border: 1px solid var(--border-color);
+  border-bottom: 2px solid var(--primary-color); /* Underline like handwriting */
+  border-radius: 0;
+  color: var(--text-primary);
+  font-family: var(--font-family);
+  transition: all var(--transition-duration) ease;
+  /* Slight rotation for organic feel */
+  transform: rotate(0.1deg);
+}
+
+.theme-hand-drawn .settings-select:focus,
+.theme-hand-drawn .settings-input:focus {
+  outline: none;
+  border-bottom-color: var(--accent-color);
+  border-bottom-width: 3px;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.1);
+  transform: rotate(-0.1deg);
+}
+
+.theme-hand-drawn .settings-select:hover,
+.theme-hand-drawn .settings-input:hover {
+  border-bottom-color: var(--secondary-color);
+  background: var(--surface-color);
+}
+
+/* Handwritten labels */
+.theme-hand-drawn .settings-label {
+  color: var(--text-secondary);
+  font-family: var(--font-family);
+  font-weight: 600;
+  text-shadow: 0.5px 0.5px 1px rgba(31, 41, 55, 0.1);
+  /* Slight tilt like handwriting */
+  transform: rotate(-0.3deg);
+  display: inline-block;
+}
+
+/* Hand-drawn tick marks with SVG styling */
+.theme-hand-drawn .timer-tick-major {
+  background: var(--major-tick-color);
+  border-radius: 1px;
+  /* Add slight irregularity */
+  transform: rotate(0.5deg) scaleY(1.1);
+  box-shadow: 0.5px 0.5px 1px rgba(31, 41, 55, 0.2);
+}
+
+.theme-hand-drawn .timer-tick-minor {
+  background: var(--tick-color);
+  border-radius: 0.5px;
+  /* Slight irregularity */
+  transform: rotate(-0.3deg) scaleY(0.9);
+  opacity: 0.8;
+}
+
+/* Hand-drawn clock hands */
+.theme-hand-drawn .timer-hand {
+  background: linear-gradient(to top, var(--accent-color), #1d4ed8);
+  border-radius: 2px;
+  box-shadow:
+    1px 1px 2px rgba(31, 41, 55, 0.2),
+    0 0 6px rgba(59, 130, 246, 0.1);
+  /* Slight curve like hand-drawn line */
+  transform-origin: bottom center;
+}
+
+.theme-hand-drawn .timer-hand::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 0.5px;
+  height: 100%;
+  background: rgba(17, 24, 39, 0.3);
+  transform: translateX(-50%);
+  /* Add slight wobble */
+  clip-path: polygon(0% 0%, 100% 2%, 100% 98%, 0% 100%);
+}
+
+/* Center dot with hand-drawn circle */
+.theme-hand-drawn .timer-center-dot {
+  background: radial-gradient(circle, var(--accent-color), #1e40af);
+  box-shadow:
+    var(--center-dot-glow),
+    1px 1px 3px rgba(31, 41, 55, 0.2);
+  border: 1px solid var(--background-color);
+  /* Slight imperfection in shape */
+  border-radius: 45% 55% 52% 48%;
+}
+
+/* Notebook-style notifications */
+.theme-hand-drawn .notification {
+  background: var(--paper-texture), var(--background-color);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--accent-color);
+  color: var(--text-primary);
+  box-shadow: var(--button-shadow);
+  font-family: var(--font-family);
+  position: relative;
+  transform: rotate(0.2deg);
+}
+
+.theme-hand-drawn .notification.success {
+  border-left-color: var(--success-color);
+}
+
+.theme-hand-drawn .notification.warning {
+  border-left-color: var(--warning-color);
+}
+
+.theme-hand-drawn .notification.error {
+  border-left-color: var(--error-color);
+}
+
+/* Session counter with sketched styling */
+.theme-hand-drawn .session-counter {
+  background: var(--paper-texture), var(--surface-color);
+  color: var(--text-secondary);
+  border: 1px dashed var(--border-color);
+  font-family: var(--font-family);
+  text-shadow: 0.5px 0.5px 1px rgba(31, 41, 55, 0.1);
+  transform: rotate(-0.4deg);
+}
+
+/* Hand-drawn animation effects */
+@keyframes hand-drawn-wobble {
+  0%,
+  100% {
+    transform: rotate(0deg) scale(1);
+  }
+  25% {
+    transform: rotate(0.3deg) scale(1.001);
+  }
+  50% {
+    transform: rotate(-0.2deg) scale(0.999);
+  }
+  75% {
+    transform: rotate(0.4deg) scale(1.001);
+  }
+}
+
+@keyframes pencil-sketch {
+  0% {
+    stroke-dasharray: 0, 1000;
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    stroke-dasharray: 1000, 0;
+    opacity: 1;
+  }
+}
+
+/* Apply subtle wobble to timer */
+.theme-hand-drawn .timer-display {
+  animation: hand-drawn-wobble 5s ease-in-out infinite;
+}
+
+/* Drawing effect for progress (would be applied via SVG) */
+.theme-hand-drawn .timer-progress-ring {
+  animation: pencil-sketch 1.5s ease-out;
+}
+
+/* Hover effects with organic feel */
+.theme-hand-drawn .timer-button:active {
+  transform: translateY(1px) rotate(0.6deg) scale(0.98);
+}
+
+.theme-hand-drawn .settings-select:active,
+.theme-hand-drawn .settings-input:active {
+  transform: rotate(0.2deg) scale(0.99);
+}
+
+/* Add some "ink blots" as decorative elements */
+.theme-hand-drawn .timer-container::after {
+  content: '•';
+  position: absolute;
+  bottom: -30px;
+  left: 20px;
+  color: var(--accent-color);
+  font-size: 1.5rem;
+  opacity: 0.3;
+  transform: scale(1.5, 0.8) rotate(15deg);
+}
+
+/* Responsive hand-drawn adjustments */
+@media (max-width: 768px) {
+  .theme-hand-drawn {
+    background-size:
+      15px 15px,
+      100px 100px,
+      100% 100%;
+  }
+
+  .theme-hand-drawn .timer-text {
+    transform: rotate(-0.3deg) translateX(0.5px);
+  }
+
+  .theme-hand-drawn .settings-panel {
+    transform: rotate(-0.1deg);
+  }
+}
+
+/* Accessibility for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .theme-hand-drawn .timer-display,
+  .theme-hand-drawn .timer-progress-ring {
+    animation: none;
+  }
+
+  .theme-hand-drawn .timer-text,
+  .theme-hand-drawn .timer-button,
+  .theme-hand-drawn .settings-panel,
+  .theme-hand-drawn .settings-select,
+  .theme-hand-drawn .settings-input,
+  .theme-hand-drawn .settings-label,
+  .theme-hand-drawn .notification,
+  .theme-hand-drawn .session-counter {
+    transform: none;
+  }
+
+  .theme-hand-drawn .timer-tick-major,
+  .theme-hand-drawn .timer-tick-minor {
+    transform: none;
+  }
+
+  .theme-hand-drawn .timer-center-dot {
+    border-radius: 50%;
+  }
+}

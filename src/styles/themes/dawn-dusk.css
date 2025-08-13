@@ -1,0 +1,379 @@
+/* Dawn-Dusk Theme - Gradient transitions representing time of day */
+/* SVG renderer with dynamic gradients */
+
+.theme-dawn-dusk {
+  /* Dynamic color palette - transitions through the day */
+  --primary-color: #4338ca; /* indigo-700 */
+  --secondary-color: #818cf8; /* indigo-400 */
+  --accent-color: #f59e0b; /* amber-500 - sun color */
+  --background-color: #ede9fe; /* violet-100 */
+
+  /* Text colors - adaptive to time */
+  --text-primary: #312e81; /* indigo-900 */
+  --text-secondary: #4338ca; /* indigo-700 */
+  --text-muted: #6366f1; /* indigo-500 */
+
+  /* Interface colors with gradient hints */
+  --surface-color: #f5f3ff; /* violet-50 */
+  --border-color: #c4b5fd; /* violet-300 */
+  --shadow-color: rgba(67, 56, 202, 0.2); /* indigo-700 with opacity */
+  --button-bg: #e0e7ff; /* indigo-100 */
+  --button-hover: #c7d2fe; /* indigo-200 */
+  --button-text: var(--text-primary);
+
+  /* Status colors - warm tones */
+  --success-color: #059669; /* emerald-600 */
+  --warning-color: #d97706; /* amber-600 */
+  --error-color: #dc2626; /* red-600 */
+
+  /* Sizing and layout */
+  --timer-size: 320px;
+  --timer-size-mobile: 280px;
+  --timer-size-small: 240px;
+  --ring-width: 10px;
+  --tick-length: 10px;
+  --major-tick-length: 16px;
+  --hand-width: 3px;
+  --center-dot-size: 14px;
+
+  /* Typography - elegant and readable */
+  --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'Fira Code', 'Roboto Mono', monospace;
+  --time-font-size: 2.8rem;
+  --time-font-size-mobile: 2.3rem;
+  --time-font-size-small: 1.8rem;
+
+  /* Animation settings - smooth transitions */
+  --animation-duration: 1500s; /* 25 minutes */
+  --transition-duration: 300ms;
+  --hand-transition: transform 1200ms ease-in-out;
+
+  /* Button styling - modern gradient feel */
+  --button-padding: 14px 24px;
+  --button-radius: 12px;
+  --button-border: 1px solid var(--border-color);
+  --button-shadow: 0 2px 4px var(--shadow-color);
+  --button-hover-shadow: 0 6px 12px rgba(67, 56, 202, 0.3);
+  --button-hover-translate: -3px;
+
+  /* Gradient definitions - core to Dawn-Dusk theme */
+
+  /* Dawn gradient (morning) */
+  --dawn-gradient: linear-gradient(
+    135deg,
+    #fef3c7 0% /* amber-100 */,
+    #fed7aa 25% /* orange-200 */,
+    #fecaca 50% /* red-200 */,
+    #ddd6fe 75% /* violet-200 */,
+    #c7d2fe 100% /* indigo-200 */
+  );
+
+  /* Day gradient (noon) */
+  --day-gradient: linear-gradient(
+    135deg,
+    #dbeafe 0% /* blue-100 */,
+    #bfdbfe 30% /* blue-200 */,
+    #93c5fd 70% /* blue-300 */,
+    #60a5fa 100% /* blue-400 */
+  );
+
+  /* Dusk gradient (evening) */
+  --dusk-gradient: linear-gradient(
+    135deg,
+    #fed7aa 0% /* orange-200 */,
+    #fdba74 25% /* orange-300 */,
+    #fb923c 50% /* orange-400 */,
+    #f97316 75% /* orange-500 */,
+    #dc2626 100% /* red-600 */
+  );
+
+  /* Night gradient (dark) */
+  --night-gradient: linear-gradient(
+    135deg,
+    #312e81 0% /* indigo-900 */,
+    #1e1b4b 25% /* indigo-950 */,
+    #0f172a 50% /* slate-900 */,
+    #020617 75% /* slate-950 */,
+    #000000 100% /* black */
+  );
+
+  /* Dynamic gradient that changes based on timer progress */
+  --dynamic-gradient: var(--dawn-gradient); /* Default to dawn */
+  --clock-gradient: var(--dynamic-gradient);
+  --body-background: linear-gradient(to bottom right, var(--background-color), var(--surface-color));
+
+  /* SVG-specific gradient definitions */
+  --svg-progress-gradient: url(#dawn-dusk-progress);
+  --svg-background-gradient: url(#dawn-dusk-background);
+  --svg-tick-gradient: url(#dawn-dusk-ticks);
+
+  /* Progress-based color transitions */
+  --progress-0: #fef3c7; /* Dawn - amber-100 */
+  --progress-25: #60a5fa; /* Day - blue-400 */
+  --progress-50: #fb923c; /* Dusk - orange-400 */
+  --progress-75: #312e81; /* Night - indigo-900 */
+  --progress-100: #fef3c7; /* Back to dawn */
+
+  /* Tick mark colors with gradient */
+  --tick-color: var(--secondary-color);
+  --major-tick-color: var(--primary-color);
+  --tick-gradient: linear-gradient(to bottom, var(--major-tick-color), var(--tick-color));
+
+  /* Glow effects */
+  --glow-color: rgba(245, 158, 11, 0.4); /* amber-500 with opacity */
+  --center-dot-glow: 0 0 12px var(--glow-color);
+  --progress-glow: 0 0 8px var(--accent-color);
+}
+
+/* SVG-specific styles for Dawn-Dusk theme */
+.theme-dawn-dusk .svg-timer {
+  filter: drop-shadow(0 4px 8px var(--shadow-color));
+}
+
+.theme-dawn-dusk .timer-display {
+  background: var(--clock-gradient);
+  border: var(--ring-width) solid transparent;
+  background-clip: padding-box;
+  position: relative;
+}
+
+.theme-dawn-dusk .timer-display::before {
+  content: '';
+  position: absolute;
+  inset: calc(-1 * var(--ring-width));
+  border-radius: inherit;
+  padding: var(--ring-width);
+  background: var(--dynamic-gradient);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+}
+
+/* Progress ring with gradient */
+.theme-dawn-dusk .timer-progress-ring {
+  background: conic-gradient(
+    from 0deg,
+    var(--accent-color) 0deg,
+    var(--accent-color) calc(var(--progress, 0) * 3.6deg),
+    transparent calc(var(--progress, 0) * 3.6deg),
+    transparent 360deg
+  );
+  border-radius: 50%;
+  mask: radial-gradient(
+    circle,
+    transparent calc(50% - var(--ring-width)),
+    black calc(50% - var(--ring-width)),
+    black 50%,
+    transparent 50%
+  );
+  filter: var(--progress-glow);
+}
+
+/* Dynamic theme class updates based on timer progress */
+.theme-dawn-dusk.progress-dawn {
+  --dynamic-gradient: var(--dawn-gradient);
+  --accent-color: #f59e0b; /* amber-500 */
+  --glow-color: rgba(245, 158, 11, 0.4);
+}
+
+.theme-dawn-dusk.progress-day {
+  --dynamic-gradient: var(--day-gradient);
+  --accent-color: #3b82f6; /* blue-500 */
+  --glow-color: rgba(59, 130, 246, 0.4);
+}
+
+.theme-dawn-dusk.progress-dusk {
+  --dynamic-gradient: var(--dusk-gradient);
+  --accent-color: #ea580c; /* orange-600 */
+  --glow-color: rgba(234, 88, 12, 0.4);
+}
+
+.theme-dawn-dusk.progress-night {
+  --dynamic-gradient: var(--night-gradient);
+  --accent-color: #8b5cf6; /* violet-500 */
+  --glow-color: rgba(139, 92, 246, 0.4);
+  --text-primary: #e0e7ff; /* indigo-100 */
+  --text-secondary: #c7d2fe; /* indigo-200 */
+  --button-text: #e0e7ff;
+}
+
+/* Gradient text effect */
+.theme-dawn-dusk .timer-text {
+  background: var(--dynamic-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+  text-shadow: 0 2px 4px var(--shadow-color);
+}
+
+/* Gradient buttons */
+.theme-dawn-dusk .timer-button {
+  background: linear-gradient(135deg, var(--button-bg), var(--button-hover));
+  border: var(--button-border);
+  color: var(--button-text);
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-dawn-dusk .timer-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.theme-dawn-dusk .timer-button:hover::before {
+  left: 100%;
+}
+
+.theme-dawn-dusk .timer-button:hover {
+  transform: translateY(var(--button-hover-translate));
+  box-shadow: var(--button-hover-shadow);
+  background: linear-gradient(135deg, var(--button-hover), var(--surface-color));
+}
+
+/* Primary button with accent gradient */
+.theme-dawn-dusk .timer-button.primary {
+  background: linear-gradient(135deg, var(--accent-color), var(--warning-color));
+  color: white;
+  border-color: var(--accent-color);
+}
+
+.theme-dawn-dusk .timer-button.primary:hover {
+  background: linear-gradient(135deg, var(--warning-color), var(--accent-color));
+}
+
+/* Settings panel with gradient border */
+.theme-dawn-dusk .settings-panel {
+  background: var(--surface-color);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  box-shadow: var(--button-shadow);
+  position: relative;
+}
+
+.theme-dawn-dusk .settings-panel::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: var(--dynamic-gradient);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+}
+
+/* Form elements with gradient accents */
+.theme-dawn-dusk .settings-select,
+.theme-dawn-dusk .settings-input {
+  background: var(--background-color);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  transition: all var(--transition-duration) ease;
+}
+
+.theme-dawn-dusk .settings-select:focus,
+.theme-dawn-dusk .settings-input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+}
+
+/* SVG gradient definitions for dynamic effects */
+.theme-dawn-dusk svg defs {
+  /* These would be injected dynamically by the SVG renderer */
+}
+
+/* Progress-based animations */
+@keyframes dawn-transition {
+  0% {
+    filter: hue-rotate(0deg) brightness(1);
+  }
+  100% {
+    filter: hue-rotate(60deg) brightness(1.1);
+  }
+}
+
+@keyframes day-transition {
+  0% {
+    filter: hue-rotate(0deg) brightness(1.1);
+  }
+  100% {
+    filter: hue-rotate(30deg) brightness(1.2);
+  }
+}
+
+@keyframes dusk-transition {
+  0% {
+    filter: hue-rotate(0deg) brightness(1.2);
+  }
+  100% {
+    filter: hue-rotate(-30deg) brightness(0.9);
+  }
+}
+
+@keyframes night-transition {
+  0% {
+    filter: hue-rotate(0deg) brightness(0.9);
+  }
+  100% {
+    filter: hue-rotate(-60deg) brightness(0.7);
+  }
+}
+
+/* Apply dynamic animations based on progress */
+.theme-dawn-dusk.progress-dawn .timer-container {
+  animation: dawn-transition 2s ease-in-out infinite alternate;
+}
+
+.theme-dawn-dusk.progress-day .timer-container {
+  animation: day-transition 3s ease-in-out infinite alternate;
+}
+
+.theme-dawn-dusk.progress-dusk .timer-container {
+  animation: dusk-transition 2s ease-in-out infinite alternate;
+}
+
+.theme-dawn-dusk.progress-night .timer-container {
+  animation: night-transition 4s ease-in-out infinite alternate;
+}
+
+/* Responsive gradient adjustments */
+@media (max-width: 768px) {
+  .theme-dawn-dusk .timer-text {
+    /* Fallback for mobile if gradient text isn't supported */
+    -webkit-text-fill-color: var(--text-primary);
+    color: var(--text-primary);
+  }
+}
+
+/* Accessibility for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .theme-dawn-dusk.progress-dawn .timer-container,
+  .theme-dawn-dusk.progress-day .timer-container,
+  .theme-dawn-dusk.progress-dusk .timer-container,
+  .theme-dawn-dusk.progress-night .timer-container {
+    animation: none;
+  }
+
+  .theme-dawn-dusk .timer-button::before {
+    transition: none;
+  }
+}
