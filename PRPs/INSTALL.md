@@ -1,6 +1,6 @@
 # Tempus Ring
 
-## FEATURE
+## 功能
 
 ### 核心番茄钟功能
 
