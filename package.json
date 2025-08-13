@@ -34,11 +34,13 @@
     "postinstall": "simple-git-hooks"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.17.2",
     "@tauri-apps/api": "^2.7.0",
     "@tauri-apps/plugin-opener": "^2.4.0",
     "@tauri-apps/plugin-os": "^2.3.0",
     "lucide": "^0.539.0",
-    "roughjs": "^4.6.6"
+    "roughjs": "^4.6.6",
+    "zod": "^4.0.17"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.1.3",
