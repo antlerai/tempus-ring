@@ -1,4 +1,8 @@
 import './styles/global.css';
+import { ControlPanel } from './components/control-panel';
+import { SettingsPanel } from './components/settings-panel';
+import { TimerDisplay } from './components/timer-display';
+import { TimerFactory } from './factories/timer-factory';
 import { i18n } from './i18n';
 import { NotificationService } from './services/notification-service';
 import { StorageService } from './services/storage-service';
@@ -12,12 +16,19 @@ class TempusRingApp {
   private timerService: TimerService;
   private storageService: StorageService;
   private notificationService: NotificationService;
+  private timerFactory: TimerFactory;
+
+  // UI Components
+  private timerDisplay: TimerDisplay | undefined;
+  private controlPanel: ControlPanel | undefined;
+  private settingsPanel: SettingsPanel | undefined;
 
   constructor() {
     this.storageService = StorageService.getInstance();
     this.themeManager = new ThemeManager();
     this.timerService = new TimerService();
     this.notificationService = new NotificationService();
+    this.timerFactory = new TimerFactory();
     // Statistics service will be used later for session tracking
   }
 
@@ -78,9 +89,12 @@ class TempusRingApp {
     appContainer.innerHTML = `
       <div class="min-h-screen bg-background text-foreground transition-colors duration-300">
         <div class="container mx-auto px-4 py-8">
-          <header class="text-center mb-8">
+          <header class="text-center mb-8 relative">
             <h1 class="text-3xl font-bold mb-2" data-i18n="app.title">Tempus Ring</h1>
             <p class="text-muted-foreground" data-i18n="app.subtitle">Focus Timer</p>
+            <button id="settings-button" class="absolute top-0 right-0 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+              ⚙️
+            </button>
           </header>
           
           <main class="grid gap-8 lg:grid-cols-3">
@@ -103,8 +117,36 @@ class TempusRingApp {
     const settingsPanelContainer = document.getElementById('settings-panel');
 
     if (timerDisplayContainer && controlPanelContainer && settingsPanelContainer) {
-      // Components will be initialized here in future tasks
-      console.log('UI components ready for initialization');
+      // Initialize Timer Display
+      this.timerDisplay = new TimerDisplay({
+        container: timerDisplayContainer,
+        timerService: this.timerService,
+        themeManager: this.themeManager,
+        timerFactory: this.timerFactory,
+      });
+
+      // Initialize Control Panel
+      this.controlPanel = new ControlPanel({
+        container: controlPanelContainer,
+        timerService: this.timerService,
+      });
+
+      // Initialize Settings Panel
+      this.settingsPanel = new SettingsPanel({
+        container: settingsPanelContainer,
+        themeManager: this.themeManager,
+        timerService: this.timerService,
+      });
+
+      console.log('UI components initialized successfully');
+
+      // Setup settings button
+      const settingsButton = document.getElementById('settings-button');
+      if (settingsButton && this.settingsPanel) {
+        settingsButton.addEventListener('click', () => {
+          this.settingsPanel?.show();
+        });
+      }
     }
   }
 
@@ -197,6 +239,22 @@ class TempusRingApp {
 
   private cleanup(): void {
     this.timerService.pause();
+
+    // Cleanup UI components
+    if (this.timerDisplay) {
+      this.timerDisplay.destroy();
+      this.timerDisplay = undefined;
+    }
+
+    if (this.controlPanel) {
+      this.controlPanel.destroy();
+      this.controlPanel = undefined;
+    }
+
+    if (this.settingsPanel) {
+      this.settingsPanel.destroy();
+      this.settingsPanel = undefined;
+    }
   }
 }
 
