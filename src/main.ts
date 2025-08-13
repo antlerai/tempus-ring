@@ -1,34 +1,24 @@
 import './styles/global.css';
 import { i18n } from './i18n';
+import { NotificationService } from './services/notification-service';
+import { StorageService } from './services/storage-service';
 import { ThemeManager } from './services/theme-manager';
 import { TimerService } from './services/timer-service';
-import { TimerFactory } from './factories/timer-factory';
-import { StorageService } from './services/storage-service';
-import { NotificationService } from './services/notification-service';
-import { StatisticsService } from './services/statistics-service';
-import { TimerDisplay } from './components/timer-display';
-import { ControlPanel } from './components/control-panel';
-import { SettingsPanel } from './components/settings-panel';
-import type { TimerConfig } from './types/timer-types';
 import type { ThemeName } from './types/theme-types';
+import type { TimerConfig } from './types/timer-types';
 
 class TempusRingApp {
   private themeManager: ThemeManager;
   private timerService: TimerService;
   private storageService: StorageService;
   private notificationService: NotificationService;
-  private statisticsService: StatisticsService;
-
-  private timerDisplay?: TimerDisplay;
-  private controlPanel?: ControlPanel;
-  private settingsPanel?: SettingsPanel;
 
   constructor() {
     this.storageService = StorageService.getInstance();
     this.themeManager = new ThemeManager();
-    this.timerService = TimerService.getInstance();
-    this.notificationService = NotificationService.getInstance();
-    this.statisticsService = StatisticsService.getInstance();
+    this.timerService = new TimerService();
+    this.notificationService = new NotificationService();
+    // Statistics service will be used later for session tracking
   }
 
   async initialize(): Promise<void> {
@@ -47,7 +37,7 @@ class TempusRingApp {
 
       // Initialize language
       if (preferences.language) {
-        i18n.switchLanguage(preferences.language);
+        await i18n.switchLocale(preferences.language);
       }
 
       // Initialize timer with saved config
@@ -63,7 +53,7 @@ class TempusRingApp {
       this.timerService.updateConfig(timerConfig);
 
       // Request notification permissions
-      await this.notificationService.initialize();
+      await this.notificationService.requestPermission();
 
       // Mount UI components
       this.mountComponents();
@@ -113,47 +103,26 @@ class TempusRingApp {
     const settingsPanelContainer = document.getElementById('settings-panel');
 
     if (timerDisplayContainer && controlPanelContainer && settingsPanelContainer) {
-      // Initialize timer display with required services
-      this.timerDisplay = new TimerDisplay({
-        container: timerDisplayContainer,
-        timerService: this.timerService,
-        themeManager: this.themeManager,
-        timerFactory: TimerFactory.getInstance(),
-      });
-
-      // Initialize control panel
-      this.controlPanel = new ControlPanel({
-        container: controlPanelContainer,
-        timerService: this.timerService,
-      });
-
-      // Initialize settings panel
-      this.settingsPanel = new SettingsPanel({
-        container: settingsPanelContainer,
-        timerService: this.timerService,
-        themeManager: this.themeManager,
-      });
+      // Components will be initialized here in future tasks
+      console.log('UI components ready for initialization');
     }
   }
 
   private setupEventHandlers(): void {
     // Timer state changes
-    this.timerService.on('stateChange', (data) => {
-      this.timerDisplay?.handleStateChange(data);
-      this.controlPanel?.handleStateChange(data);
+    this.timerService.on('timer:stateChange', (data) => {
+      // Components will handle their own state updates
+      console.log('Timer state changed:', data);
     });
 
-    this.timerService.on('tick', (data) => {
-      this.timerDisplay?.handleTick(data);
+    this.timerService.on('timer:tick', (data) => {
+      // Components will handle their own tick updates
+      console.log('Timer tick:', data);
     });
 
-    this.timerService.on('sessionComplete', (session) => {
-      this.notificationService.notify({
-        title: i18n.t('notifications.sessionComplete'),
-        body: i18n.t('notifications.sessionCompleteBody'),
-        icon: '/icon.png',
-      });
-      this.statisticsService.addSession(session);
+    this.timerService.on('timer:sessionComplete', (session) => {
+      // Handle session completion
+      console.log('Session completed:', session);
     });
 
     // Theme changes
@@ -161,8 +130,8 @@ class TempusRingApp {
       this.savePreferences();
     });
 
-    // Language changes
-    i18n.on('languageChanged', () => {
+    // Language changes - use DOM events
+    window.addEventListener('localeChange', () => {
       this.updateTranslations();
       this.savePreferences();
     });
@@ -175,25 +144,23 @@ class TempusRingApp {
 
   private updateTranslations(): void {
     const elements = document.querySelectorAll('[data-i18n]');
-    elements.forEach((element) => {
+    for (const element of elements) {
       const key = element.getAttribute('data-i18n');
       if (key) {
         element.textContent = i18n.t(key);
       }
-    });
+    }
 
     // Components will handle their own translation updates
-    this.controlPanel?.render();
-    this.settingsPanel?.render();
-    this.timerDisplay?.render();
+    console.log('Translations updated');
   }
 
   private async savePreferences(): Promise<void> {
     try {
-      const currentConfig = this.timerService.getConfiguration();
+      const currentConfig = this.timerService.getConfig();
       const preferences = {
         theme: this.themeManager.getCurrentThemeName(),
-        language: i18n.getCurrentLanguage(),
+        language: i18n.getCurrentLocale(),
         workDuration: currentConfig.workDuration,
         shortBreakDuration: currentConfig.shortBreakDuration,
         longBreakDuration: currentConfig.longBreakDuration,
