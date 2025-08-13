@@ -18,6 +18,10 @@ export default defineConfig(() => ({
       '@/components': resolve(__dirname, 'src/components'),
       '@/types': resolve(__dirname, 'src/types'),
       '@/styles': resolve(__dirname, 'src/styles'),
+      '@/services': resolve(__dirname, 'src/services'),
+      '@/factories': resolve(__dirname, 'src/factories'),
+      '@/utils': resolve(__dirname, 'src/utils'),
+      '@/i18n': resolve(__dirname, 'src/i18n'),
     },
   },
 
@@ -61,9 +65,13 @@ export default defineConfig(() => ({
       output: {
         manualChunks: {
           tauri: ['@tauri-apps/api'],
+          vendor: ['roughjs'],
         },
       },
     },
+    // Optimize for production
+    chunkSizeWarningLimit: 1000,
+    assetsInlineLimit: 4096,
   },
 
   // Define global constants

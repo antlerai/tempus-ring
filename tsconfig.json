@@ -17,7 +17,11 @@
       "@/*": ["src/*"],
       "@/components/*": ["src/components/*"],
       "@/types/*": ["src/types/*"],
-      "@/styles/*": ["src/styles/*"]
+      "@/styles/*": ["src/styles/*"],
+      "@/services/*": ["src/services/*"],
+      "@/factories/*": ["src/factories/*"],
+      "@/utils/*": ["src/utils/*"],
+      "@/i18n/*": ["src/i18n/*"]
     },
     /* Enhanced linting */
     "strict": true,
