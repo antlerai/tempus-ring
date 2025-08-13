@@ -11,6 +11,12 @@
     "sessions": "Sessions",
     "completed": "Completed",
     "remaining": "Remaining",
+    "controls": {
+      "start": "Start",
+      "pause": "Pause",
+      "resume": "Resume",
+      "reset": "Reset"
+    },
     "timeFormat": {
       "minutes": "{count}m",
       "seconds": "{count}s",
