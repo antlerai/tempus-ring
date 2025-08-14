@@ -1,0 +1,3 @@
+[submodule "tauri-plugin-mcp"]
+	path = tauri-plugin-mcp
+	url = git@github.com:antlerai/tauri-plugin-mcp.git
