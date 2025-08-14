@@ -16,6 +16,8 @@
 
 ### Project Structure
 
+Use `lstr -g` to get the latest project tree structure.
+
 ```txt
 src/
 ├── types/         # Interfaces, type declarations, abstract classes
