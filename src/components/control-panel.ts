@@ -1,52 +1,45 @@
 import { i18n } from '../i18n';
+// biome-ignore lint/style/useImportType: ThemeManager is used as constructor parameter
+import { ThemeManager } from '../services/theme-manager';
 // biome-ignore lint/style/useImportType: TimerService is used as constructor parameter
 import { TimerService } from '../services/timer-service';
-import type { TimerData, TimerState } from '../types';
+import type { ThemeConfig, TimerData, TimerState } from '../types';
 import { TimerState as TimerStateEnum } from '../types';
 import { IconManager } from '../utils/icons';
 
 export interface ControlPanelConfig {
   container: HTMLElement;
   timerService: TimerService;
+  themeManager: ThemeManager;
   onStateChange?: (state: TimerState) => void;
 }
 
 export class ControlPanel {
   private container: HTMLElement;
   private timerService: TimerService;
+  private themeManager: ThemeManager;
   private onStateChange: ((state: TimerState) => void) | undefined;
   private currentState: TimerState = TimerStateEnum.IDLE;
   private iconManager: IconManager;
+  private currentTheme: ThemeConfig;
 
-  private startButton: HTMLButtonElement;
-  private pauseButton: HTMLButtonElement;
-  private resetButton: HTMLButtonElement;
+  private startButton!: HTMLButtonElement;
+  private pauseButton!: HTMLButtonElement;
+  private resetButton!: HTMLButtonElement;
 
   constructor(config: ControlPanelConfig) {
     this.container = config.container;
     this.timerService = config.timerService;
+    this.themeManager = config.themeManager;
     this.onStateChange = config.onStateChange;
     this.iconManager = IconManager.getInstance();
+    this.currentTheme = this.themeManager.getCurrentTheme();
 
-    this.startButton = this.createElement(
-      'button',
-      'start-btn',
-      'bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2'
-    );
-    this.pauseButton = this.createElement(
-      'button',
-      'pause-btn',
-      'bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2'
-    );
-    this.resetButton = this.createElement(
-      'button',
-      'reset-btn',
-      'bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2'
-    );
-
+    this.createButtons();
     this.render();
     this.attachEventListeners();
     this.setupTimerEventListeners();
+    this.setupThemeEventListeners();
     this.updateButtons();
     this.updateLabels();
 
@@ -54,6 +47,16 @@ export class ControlPanel {
     window.addEventListener('localeChange', () => {
       this.updateLabels();
     });
+  }
+
+  private createButtons(): void {
+    const buttonLayout = this.currentTheme.controlPanel?.buttonLayout || 'standard';
+    const buttonClass =
+      buttonLayout === 'minimal' ? 'timer-button-minimal' : 'timer-button-standard';
+
+    this.startButton = this.createElement('button', 'start-btn', buttonClass);
+    this.pauseButton = this.createElement('button', 'pause-btn', `${buttonClass} pause`);
+    this.resetButton = this.createElement('button', 'reset-btn', `${buttonClass} reset`);
   }
 
   private createElement(tag: string, id: string, className: string): HTMLButtonElement {
@@ -64,31 +67,22 @@ export class ControlPanel {
   }
 
   private render(): void {
-    // Check if using cloudlight theme for different button styling
-    const isCloudlight = document.body.classList.contains('theme-cloudlight');
+    const buttonLayout = this.currentTheme.controlPanel?.buttonLayout || 'standard';
 
-    if (isCloudlight) {
-      // Cloudlight minimal design - just two buttons
-      this.container.className = 'flex items-center justify-center gap-4';
+    // Apply appropriate container class based on button layout
+    if (buttonLayout === 'minimal') {
+      this.container.className = 'control-panel-minimal';
 
-      // Update button styles for cloudlight - matches prototype
-      const buttonStyle =
-        'flex items-center justify-center w-16 h-16 rounded-full border-2 border-gray-300 text-gray-500 transition-all duration-200 ease-out hover:border-gray-400 hover:text-gray-600 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed';
-
-      this.resetButton.className = buttonStyle;
-      this.startButton.className = buttonStyle;
-      this.pauseButton.className = buttonStyle;
-
-      // Only show reset and start/pause buttons - reset comes first like in prototype
+      // Minimal layout: reset, start/pause buttons only
       this.container.appendChild(this.resetButton);
       this.container.appendChild(this.startButton);
       this.container.appendChild(this.pauseButton);
     } else {
-      this.container.className =
-        'flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-md mx-auto';
+      this.container.className = 'control-panel-standard';
 
+      // Standard layout: all buttons in a container
       const buttonContainer = document.createElement('div');
-      buttonContainer.className = 'flex gap-3 justify-center w-full';
+      buttonContainer.className = 'control-buttons';
 
       buttonContainer.appendChild(this.startButton);
       buttonContainer.appendChild(this.pauseButton);
@@ -145,6 +139,24 @@ export class ControlPanel {
     });
   }
 
+  private setupThemeEventListeners(): void {
+    this.themeManager.on('theme:changed', () => {
+      this.currentTheme = this.themeManager.getCurrentTheme();
+      this.recreateButtons();
+      this.render();
+      this.updateButtons();
+      this.updateLabels();
+    });
+  }
+
+  private recreateButtons(): void {
+    // Remove old buttons from DOM
+    this.container.innerHTML = '';
+
+    // Create new buttons with updated theme styles
+    this.createButtons();
+  }
+
   private handleStart(): void {
     try {
       this.timerService.start();
@@ -176,15 +188,15 @@ export class ControlPanel {
 
   private updateButtons(): void {
     const states = this.getButtonStates();
-    const isCloudlight = document.body.classList.contains('theme-cloudlight');
+    const buttonLayout = this.currentTheme.controlPanel?.buttonLayout || 'standard';
 
-    if (isCloudlight) {
-      this.updateCloudlightButtons(states);
+    if (buttonLayout === 'minimal') {
+      this.updateMinimalButtons(states);
     } else {
       this.updateStandardButtons(states);
     }
 
-    this.updatePauseButton(states.isPaused, isCloudlight);
+    this.updatePauseButton(states.isPaused, buttonLayout);
     this.iconManager.refreshIcons();
   }
 
@@ -199,7 +211,7 @@ export class ControlPanel {
     return { isIdle, isRunning, isPaused };
   }
 
-  private updateCloudlightButtons(states: {
+  private updateMinimalButtons(states: {
     isIdle: boolean;
     isRunning: boolean;
     isPaused: boolean;
@@ -228,34 +240,42 @@ export class ControlPanel {
     this.resetButton.disabled = states.isIdle;
   }
 
-  private updatePauseButton(isPaused: boolean, isCloudlight: boolean): void {
-    if (isCloudlight) {
+  private updatePauseButton(isPaused: boolean, buttonLayout: string): void {
+    const showLabels = this.currentTheme.controlPanel?.showLabels !== false;
+    const iconSize = buttonLayout === 'minimal' ? 'w-8 h-8' : 'w-4 h-4';
+
+    // Update button content based on state and theme preferences
+    if (buttonLayout === 'minimal' || !showLabels) {
       this.pauseButton.innerHTML = isPaused
-        ? '<i data-lucide="play" class="w-8 h-8"></i>'
-        : '<i data-lucide="pause" class="w-8 h-8"></i>';
+        ? `<i data-lucide="play" class="${iconSize}"></i>`
+        : `<i data-lucide="pause" class="${iconSize}"></i>`;
     } else {
       if (isPaused) {
-        this.pauseButton.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i><span>${i18n.t('timer.controls.resume')}</span>`;
-        this.pauseButton.className =
-          'bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2';
+        this.pauseButton.innerHTML = `<i data-lucide="play" class="${iconSize}"></i><span>${i18n.t('timer.controls.resume')}</span>`;
+        // Add resume class for styling
+        this.pauseButton.classList.add('resume');
       } else {
-        this.pauseButton.innerHTML = `<i data-lucide="pause" class="w-4 h-4"></i><span>${i18n.t('timer.controls.pause')}</span>`;
-        this.pauseButton.className =
-          'bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2';
+        this.pauseButton.innerHTML = `<i data-lucide="pause" class="${iconSize}"></i><span>${i18n.t('timer.controls.pause')}</span>`;
+        // Remove resume class
+        this.pauseButton.classList.remove('resume');
       }
     }
   }
 
   private updateLabels(): void {
-    const isCloudlight = document.body.classList.contains('theme-cloudlight');
+    const buttonLayout = this.currentTheme.controlPanel?.buttonLayout || 'standard';
+    const showLabels = this.currentTheme.controlPanel?.showLabels !== false;
+    const iconSize = buttonLayout === 'minimal' ? 'w-8 h-8' : 'w-4 h-4';
 
-    if (isCloudlight) {
-      // Cloudlight uses only icons, no text
-      this.startButton.innerHTML = '<i data-lucide="play" class="w-8 h-8"></i>';
-      this.resetButton.innerHTML = '<i data-lucide="rotate-cw" class="w-8 h-8"></i>';
+    // Update button content based on theme preferences
+    if (buttonLayout === 'minimal' || !showLabels) {
+      // Icon-only buttons
+      this.startButton.innerHTML = `<i data-lucide="play" class="${iconSize}"></i>`;
+      this.resetButton.innerHTML = `<i data-lucide="rotate-cw" class="${iconSize}"></i>`;
     } else {
-      this.startButton.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i><span>${i18n.t('timer.controls.start')}</span>`;
-      this.resetButton.innerHTML = `<i data-lucide="square" class="w-4 h-4"></i><span>${i18n.t('timer.controls.reset')}</span>`;
+      // Buttons with icons and labels
+      this.startButton.innerHTML = `<i data-lucide="play" class="${iconSize}"></i><span>${i18n.t('timer.controls.start')}</span>`;
+      this.resetButton.innerHTML = `<i data-lucide="square" class="${iconSize}"></i><span>${i18n.t('timer.controls.reset')}</span>`;
     }
 
     // Pause/Resume text is updated in updateButtons()

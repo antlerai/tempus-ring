@@ -2,6 +2,12 @@ export interface ThemeConfig {
   name: string;
   displayName: string;
   renderer: RendererType;
+  layoutMode?: 'standard' | 'minimal';
+  controlPanel?: {
+    buttonLayout: 'standard' | 'minimal';
+    showLabels: boolean;
+    showIcons: boolean;
+  };
   colors: {
     primary: string;
     secondary: string;

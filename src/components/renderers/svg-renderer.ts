@@ -3,17 +3,17 @@ import type { ThemeConfig } from '../../types/theme-types';
 
 export class SVGRenderer implements TimerRenderer {
   private container: HTMLElement;
-  private svg!: SVGSVGElement;
-  private progressCircle!: SVGCircleElement;
-  private backgroundCircle!: SVGCircleElement;
-  private timeText!: SVGTextElement;
-  private tickGroup!: SVGGElement;
-  private clockHands!: { minute: SVGLineElement; hour: SVGLineElement };
-  private initialized = false;
-  private config: SVGRendererConfig;
-  private renderState: RenderState;
-  private radius: number;
-  private center: { x: number; y: number };
+  protected svg!: SVGSVGElement;
+  protected progressCircle!: SVGCircleElement;
+  protected backgroundCircle!: SVGCircleElement;
+  protected timeText!: SVGTextElement;
+  protected tickGroup!: SVGGElement;
+  protected clockHands!: { minute: SVGLineElement; hour: SVGLineElement };
+  protected initialized = false;
+  protected config: SVGRendererConfig;
+  protected renderState: RenderState;
+  protected radius: number;
+  protected center: { x: number; y: number };
 
   constructor(config: SVGRendererConfig) {
     this.config = config;
@@ -40,7 +40,7 @@ export class SVGRenderer implements TimerRenderer {
     this.initialized = true;
   }
 
-  private createSVGStructure(): void {
+  protected createSVGStructure(): void {
     // Clear container
     this.container.innerHTML = '';
 
@@ -188,7 +188,7 @@ export class SVGRenderer implements TimerRenderer {
     return tick;
   }
 
-  private updateProgressCircle(progress: number): void {
+  protected updateProgressRing(progress: number): void {
     const circumference = 2 * Math.PI * this.radius;
     const offset = circumference - progress * circumference;
     this.progressCircle.setAttribute('stroke-dashoffset', offset.toString());
@@ -223,7 +223,7 @@ export class SVGRenderer implements TimerRenderer {
     }
 
     // Update progress circle
-    this.updateProgressCircle(progress);
+    this.updateProgressRing(progress);
 
     // Update clock hands if in clock mode
     if (this.config.displayMode === 'clock') {

@@ -42,6 +42,12 @@ export class ThemeManager extends EventEmitter<ThemeManagerEvents> {
         name: THEME_NAMES.WABISABI,
         displayName: 'Wabi-Sabi',
         renderer: 'canvas',
+        layoutMode: 'standard',
+        controlPanel: {
+          buttonLayout: 'standard',
+          showLabels: true,
+          showIcons: true,
+        },
         colors: {
           primary: '#374151',
           secondary: '#9ca3af',
@@ -98,6 +104,12 @@ export class ThemeManager extends EventEmitter<ThemeManagerEvents> {
         name: THEME_NAMES.CLOUDLIGHT,
         displayName: 'Cloudlight',
         renderer: 'dom',
+        layoutMode: 'minimal',
+        controlPanel: {
+          buttonLayout: 'minimal',
+          showLabels: false,
+          showIcons: true,
+        },
         colors: {
           primary: '#64748b',
           secondary: '#94a3b8',
@@ -146,7 +158,13 @@ export class ThemeManager extends EventEmitter<ThemeManagerEvents> {
       config: {
         name: THEME_NAMES.DAWN_DUSK,
         displayName: 'Dawn & Dusk',
-        renderer: 'svg',
+        renderer: 'dom',
+        layoutMode: 'standard',
+        controlPanel: {
+          buttonLayout: 'standard',
+          showLabels: true,
+          showIcons: true,
+        },
         colors: {
           primary: '#f59e0b',
           secondary: '#fbbf24',
@@ -196,6 +214,12 @@ export class ThemeManager extends EventEmitter<ThemeManagerEvents> {
         name: THEME_NAMES.NIGHTFALL,
         displayName: 'Nightfall',
         renderer: 'dom',
+        layoutMode: 'standard',
+        controlPanel: {
+          buttonLayout: 'standard',
+          showLabels: true,
+          showIcons: true,
+        },
         colors: {
           primary: '#6366f1',
           secondary: '#8b5cf6',
@@ -245,6 +269,12 @@ export class ThemeManager extends EventEmitter<ThemeManagerEvents> {
         name: THEME_NAMES.ARTISTIC,
         displayName: 'Artistic Sketch',
         renderer: 'svg',
+        layoutMode: 'standard',
+        controlPanel: {
+          buttonLayout: 'standard',
+          showLabels: true,
+          showIcons: true,
+        },
         colors: {
           primary: '#374151',
           secondary: '#6b7280',
@@ -293,7 +323,13 @@ export class ThemeManager extends EventEmitter<ThemeManagerEvents> {
       config: {
         name: THEME_NAMES.HAND_DRAWN,
         displayName: 'Hand Drawn',
-        renderer: 'canvas',
+        renderer: 'svg',
+        layoutMode: 'standard',
+        controlPanel: {
+          buttonLayout: 'standard',
+          showLabels: true,
+          showIcons: true,
+        },
         colors: {
           primary: '#4b5563',
           secondary: '#9ca3af',

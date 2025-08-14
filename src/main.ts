@@ -147,6 +147,7 @@ class TempusRingApp {
       this.controlPanel = new ControlPanel({
         container: controlPanelContainer,
         timerService: this.timerService,
+        themeManager: this.themeManager,
       });
 
       // Initialize Settings Panel

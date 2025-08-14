@@ -49,6 +49,7 @@ export class TimerDisplay {
 
     this.render();
     this.setupEventListeners();
+    this.setupThemeEventListeners();
     this.initializeRenderer();
     this.updateDisplay();
 
@@ -58,17 +59,35 @@ export class TimerDisplay {
     });
   }
 
+  private setupThemeEventListeners(): void {
+    this.themeManager.on('theme:changed', () => {
+      this.recreateDisplayElements();
+      this.render();
+      this.updateDisplay();
+    });
+  }
+
+  private recreateDisplayElements(): void {
+    // Recreate all display elements with updated theme styles
+    this.displayContainer = this.createDisplayContainer();
+    this.timeDisplay = this.createTimeDisplay();
+    this.stateDisplay = this.createStateDisplay();
+    this.sessionCounter = this.createSessionCounter();
+    this.progressText = this.createProgressText();
+  }
+
   private createDisplayContainer(): HTMLElement {
     const container = document.createElement('div');
-    // Check if cloudlight theme is active
-    const isCloudlight = this.themeManager.getCurrentThemeName() === 'cloudlight';
+    const currentTheme = this.themeManager.getCurrentTheme();
+    const layoutMode = currentTheme.layoutMode || 'standard';
 
-    if (isCloudlight) {
-      container.className = 'flex flex-col items-center gap-12';
+    // Apply appropriate layout class based on theme
+    if (layoutMode === 'minimal') {
+      container.className = 'timer-layout-minimal';
     } else {
-      container.className =
-        'flex flex-col items-center justify-center space-y-6 w-full max-w-lg mx-auto';
+      container.className = 'timer-layout-standard';
     }
+
     return container;
   }
 
@@ -81,39 +100,58 @@ export class TimerDisplay {
 
   private createTimeDisplay(): HTMLElement {
     const timeDisplay = document.createElement('div');
-    const isCloudlight = this.themeManager.getCurrentThemeName() === 'cloudlight';
+    const currentTheme = this.themeManager.getCurrentTheme();
+    const layoutMode = currentTheme.layoutMode || 'standard';
 
-    if (isCloudlight) {
-      // Cloudlight theme uses larger monospace font like in prototype
-      timeDisplay.className = 'font-mono text-5xl font-bold text-gray-800';
-      timeDisplay.style.fontFamily = "'Roboto Mono', 'SF Mono', 'Monaco', monospace";
+    // Apply appropriate time display class based on theme
+    if (layoutMode === 'minimal') {
+      timeDisplay.className = 'timer-time-large';
     } else {
-      timeDisplay.className =
-        'text-6xl font-bold text-center text-gray-800 dark:text-white font-mono tracking-wider';
+      timeDisplay.className = 'timer-time-standard';
     }
+
     timeDisplay.textContent = '25:00';
     return timeDisplay;
   }
 
   private createStateDisplay(): HTMLElement {
     const stateDisplay = document.createElement('div');
-    stateDisplay.className =
-      'text-2xl font-semibold text-center text-gray-600 dark:text-gray-300 capitalize';
+    const currentTheme = this.themeManager.getCurrentTheme();
+    const layoutMode = currentTheme.layoutMode || 'standard';
+
+    // Apply appropriate state display class based on theme
+    if (layoutMode === 'minimal') {
+      stateDisplay.className = 'timer-state-minimal';
+    } else {
+      stateDisplay.className = 'timer-state-standard';
+    }
+
     stateDisplay.textContent = i18n.t('timer.work');
     return stateDisplay;
   }
 
   private createSessionCounter(): HTMLElement {
     const sessionCounter = document.createElement('div');
-    sessionCounter.className =
-      'flex items-center justify-between w-full max-w-sm text-sm text-gray-500 dark:text-gray-400';
+    const currentTheme = this.themeManager.getCurrentTheme();
+    const layoutMode = currentTheme.layoutMode || 'standard';
+
+    // Base container styling
+    sessionCounter.className = 'flex items-center justify-between w-full max-w-sm';
 
     const completedSessions = document.createElement('span');
     completedSessions.id = 'completed-sessions';
+    // Apply appropriate session counter class based on theme
+    if (layoutMode === 'minimal') {
+      completedSessions.className = 'timer-session-minimal';
+    } else {
+      completedSessions.className = 'timer-session-standard';
+    }
     completedSessions.textContent = `${i18n.t('timer.completed')}: 0`;
 
     const remainingSessions = document.createElement('span');
     remainingSessions.id = 'remaining-sessions';
+    // Apply same class to remaining sessions
+    remainingSessions.className = completedSessions.className;
     remainingSessions.textContent = `${i18n.t('timer.remaining')}: 4`;
 
     sessionCounter.appendChild(completedSessions);
@@ -124,7 +162,7 @@ export class TimerDisplay {
 
   private createProgressText(): HTMLElement {
     const progressText = document.createElement('div');
-    progressText.className = 'text-center text-gray-500 dark:text-gray-400 text-sm';
+    progressText.className = 'timer-progress-text';
     progressText.textContent = '0% complete';
     return progressText;
   }

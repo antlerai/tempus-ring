@@ -2,13 +2,13 @@ import type { DOMRendererConfig, RenderState, TimerRenderer } from '../../types/
 import type { ThemeConfig } from '../../types/theme-types';
 
 export class DOMRenderer implements TimerRenderer {
-  private container: HTMLElement;
-  private progressRing!: HTMLElement;
-  private timeDisplay!: HTMLElement;
-  private tickContainer!: HTMLElement;
-  private initialized = false;
-  private config: DOMRendererConfig;
-  private renderState: RenderState;
+  protected container: HTMLElement;
+  protected progressRing!: HTMLElement;
+  protected timeDisplay!: HTMLElement;
+  protected tickContainer!: HTMLElement;
+  protected initialized = false;
+  protected config: DOMRendererConfig;
+  protected renderState: RenderState;
 
   constructor(config: DOMRendererConfig) {
     this.config = config;
@@ -24,13 +24,13 @@ export class DOMRenderer implements TimerRenderer {
     this.initialize();
   }
 
-  private initialize(): void {
+  protected initialize(): void {
     this.createDOMStructure();
     this.setupStyles();
     this.initialized = true;
   }
 
-  private createDOMStructure(): void {
+  protected createDOMStructure(): void {
     // Clear container
     this.container.innerHTML = '';
 
@@ -118,7 +118,7 @@ export class DOMRenderer implements TimerRenderer {
     this.container.appendChild(wrapper);
   }
 
-  private setupStyles(): void {
+  protected setupStyles(): void {
     // Apply theme-based CSS custom properties
     const theme = this.config.theme;
     const cssVariables = {
@@ -137,7 +137,7 @@ export class DOMRenderer implements TimerRenderer {
     }
   }
 
-  private createTickElement(angle: number, isLarge: boolean): HTMLElement {
+  protected createTickElement(angle: number, isLarge: boolean): HTMLElement {
     const tick = document.createElement('div');
     tick.className = isLarge ? 'tick tick-large' : 'tick tick-small';
 
@@ -159,7 +159,7 @@ export class DOMRenderer implements TimerRenderer {
     return tick;
   }
 
-  private updateProgressRing(progress: number): void {
+  protected updateProgressRing(progress: number): void {
     const percentage = Math.min(Math.max(progress, 0), 1) * 100;
 
     // Update conic-gradient background

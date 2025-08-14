@@ -1,7 +1,12 @@
+import { ArtisticSVGRenderer } from '../components/renderers/artistic-svg-renderer';
 import { CanvasRenderer } from '../components/renderers/canvas-renderer';
 import { CloudlightDOMRenderer } from '../components/renderers/cloudlight-dom-renderer';
+import { DawnDuskDOMRenderer } from '../components/renderers/dawn-dusk-dom-renderer';
 import { DOMRenderer } from '../components/renderers/dom-renderer';
+import { HandDrawnSVGRenderer } from '../components/renderers/hand-drawn-svg-renderer';
+import { NightfallDOMRenderer } from '../components/renderers/nightfall-dom-renderer';
 import { SVGRenderer } from '../components/renderers/svg-renderer';
+import { WabiSabiCanvasRenderer } from '../components/renderers/wabisabi-canvas-renderer';
 import type {
   CanvasRendererConfig,
   DOMRendererConfig,
@@ -69,9 +74,19 @@ export class TimerFactory {
     try {
       switch (theme.renderer) {
         case 'dom':
-          // Use CloudlightDOMRenderer for cloudlight theme
+          // Use theme-specific DOM renderers
           if (theme.name === 'cloudlight') {
             renderer = this.createCloudlightDOMRenderer(
+              container,
+              theme,
+              width,
+              height,
+              displayMode
+            );
+          } else if (theme.name === 'dawn-dusk') {
+            renderer = this.createDawnDuskDOMRenderer(container, theme, width, height, displayMode);
+          } else if (theme.name === 'nightfall') {
+            renderer = this.createNightfallDOMRenderer(
               container,
               theme,
               width,
@@ -84,11 +99,35 @@ export class TimerFactory {
           break;
 
         case 'svg':
-          renderer = this.createSVGRenderer(container, theme, width, height, displayMode);
+          // Use theme-specific SVG renderers
+          if (theme.name === 'artistic') {
+            renderer = this.createArtisticSVGRenderer(container, theme, width, height, displayMode);
+          } else if (theme.name === 'hand-drawn') {
+            renderer = this.createHandDrawnSVGRenderer(
+              container,
+              theme,
+              width,
+              height,
+              displayMode
+            );
+          } else {
+            renderer = this.createSVGRenderer(container, theme, width, height, displayMode);
+          }
           break;
 
         case 'canvas':
-          renderer = this.createCanvasRenderer(container, theme, width, height, displayMode);
+          // Use theme-specific Canvas renderers
+          if (theme.name === 'wabisabi') {
+            renderer = this.createWabiSabiCanvasRenderer(
+              container,
+              theme,
+              width,
+              height,
+              displayMode
+            );
+          } else {
+            renderer = this.createCanvasRenderer(container, theme, width, height, displayMode);
+          }
           break;
 
         default:
@@ -132,6 +171,130 @@ export class TimerFactory {
     };
 
     return new CloudlightDOMRenderer(config);
+  }
+
+  /**
+   * Create Dawn & Dusk DOM renderer with gradient sky effect
+   */
+  private createDawnDuskDOMRenderer(
+    container: HTMLElement,
+    theme: ThemeConfig,
+    width: number,
+    height: number,
+    displayMode: 'percentage' | 'clock'
+  ): DawnDuskDOMRenderer {
+    const config: DOMRendererConfig = {
+      container,
+      width,
+      height,
+      theme,
+      displayMode,
+      useCSSTansitions: true,
+      transitionDuration: '1s',
+    };
+
+    return new DawnDuskDOMRenderer(config);
+  }
+
+  /**
+   * Create Nightfall DOM renderer with celestial elements
+   */
+  private createNightfallDOMRenderer(
+    container: HTMLElement,
+    theme: ThemeConfig,
+    width: number,
+    height: number,
+    displayMode: 'percentage' | 'clock'
+  ): NightfallDOMRenderer {
+    const config: DOMRendererConfig = {
+      container,
+      width,
+      height,
+      theme,
+      displayMode,
+      useCSSTansitions: true,
+      transitionDuration: '1s',
+    };
+
+    return new NightfallDOMRenderer(config);
+  }
+
+  /**
+   * Create Artistic SVG renderer with sketch effects
+   */
+  private createArtisticSVGRenderer(
+    container: HTMLElement,
+    theme: ThemeConfig,
+    width: number,
+    height: number,
+    displayMode: 'percentage' | 'clock'
+  ): ArtisticSVGRenderer {
+    const config: SVGRendererConfig = {
+      container,
+      width,
+      height,
+      theme,
+      displayMode,
+      viewBox: `0 0 ${width} ${height}`,
+      preserveAspectRatio: 'xMidYMid meet',
+    };
+
+    return new ArtisticSVGRenderer(config);
+  }
+
+  /**
+   * Create Hand-Drawn SVG renderer with doodle effects
+   */
+  private createHandDrawnSVGRenderer(
+    container: HTMLElement,
+    theme: ThemeConfig,
+    width: number,
+    height: number,
+    displayMode: 'percentage' | 'clock'
+  ): HandDrawnSVGRenderer {
+    const config: SVGRendererConfig = {
+      container,
+      width,
+      height,
+      theme,
+      displayMode,
+      viewBox: `0 0 ${width} ${height}`,
+      preserveAspectRatio: 'xMidYMid meet',
+    };
+
+    return new HandDrawnSVGRenderer(config);
+  }
+
+  /**
+   * Create Wabi-Sabi Canvas renderer with rough aesthetic
+   */
+  private createWabiSabiCanvasRenderer(
+    container: HTMLElement,
+    theme: ThemeConfig,
+    width: number,
+    height: number,
+    displayMode: 'percentage' | 'clock'
+  ): WabiSabiCanvasRenderer {
+    const config: CanvasRendererConfig = {
+      container,
+      width,
+      height,
+      theme,
+      displayMode,
+      devicePixelRatio: this.config.devicePixelRatio || 1,
+    };
+
+    if (theme.effects) {
+      config.roughOptions = {
+        roughness: theme.effects.roughness || 2.5,
+        strokeWidth: theme.effects.strokeWidth || 3,
+        fillStyle: theme.effects.fillStyle || 'hachure',
+        hachureGap: theme.effects.hachureGap || 6,
+        hachureAngle: theme.effects.hachureAngle || 45,
+      };
+    }
+
+    return new WabiSabiCanvasRenderer(config);
   }
 
   /**

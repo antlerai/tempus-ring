@@ -7,6 +7,116 @@
   height: var(--timer-size, 320px);
 }
 
+/* Layout Classes for Different Design Modes */
+
+/* Standard layout - traditional timer display */
+.timer-layout-standard {
+  @apply flex flex-col items-center justify-center space-y-6 w-full max-w-lg mx-auto;
+}
+
+/* Minimal layout - clean, compact design */
+.timer-layout-minimal {
+  @apply flex flex-col items-center gap-12;
+}
+
+/* Control Panel Layouts */
+
+/* Standard control panel - full button layout with labels */
+.control-panel-standard {
+  @apply flex flex-col sm:flex-row gap-4 justify-center items-center w-full max-w-md mx-auto;
+}
+
+/* Standard button container for multi-button layout */
+.control-panel-standard .control-buttons {
+  @apply flex gap-3 justify-center w-full;
+}
+
+/* Minimal control panel - icon-only buttons */
+.control-panel-minimal {
+  @apply flex items-center justify-center gap-4;
+}
+
+/* Button Variants */
+
+/* Standard buttons with text and icons */
+.timer-button-standard {
+  @apply bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2;
+}
+
+.timer-button-standard.pause {
+  @apply bg-orange-500 hover:bg-orange-600;
+}
+
+.timer-button-standard.pause.resume {
+  @apply bg-blue-500 hover:bg-blue-600;
+}
+
+.timer-button-standard.reset {
+  @apply bg-red-500 hover:bg-red-600;
+}
+
+/* Minimal buttons - circular icon-only */
+.timer-button-minimal {
+  @apply flex items-center justify-center w-16 h-16 rounded-full border-2 border-gray-300 text-gray-500 transition-all duration-200 ease-out hover:border-gray-400 hover:text-gray-600 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  background-color: var(--button-bg, transparent);
+  border-color: var(--button-border, #d1d5db);
+  color: var(--button-text, #6b7280);
+}
+
+/* Time Display Variants */
+
+/* Standard time display */
+.timer-time-standard {
+  @apply text-6xl font-bold text-center text-gray-800 dark:text-white font-mono tracking-wider;
+  color: var(--text-primary);
+  font-family: var(--font-mono, 'Roboto Mono', monospace);
+}
+
+/* Large time display for minimal themes */
+.timer-time-large {
+  @apply font-mono text-5xl font-bold text-gray-800;
+  color: var(--text-primary);
+  font-family: var(--font-mono, 'Roboto Mono', monospace);
+}
+
+/* State Display Variants */
+
+/* Standard state display with full text */
+.timer-state-standard {
+  @apply text-lg font-medium text-center px-6 py-2 rounded-full;
+  background-color: var(--surface-color, #ffffff);
+  color: var(--text-secondary, #6b7280);
+  border: 1px solid var(--border-color, #e5e7eb);
+}
+
+/* Minimal state display - compact */
+.timer-state-minimal {
+  @apply text-sm font-medium text-center px-3 py-1 rounded;
+  color: var(--text-secondary, #6b7280);
+}
+
+/* Session Counter Variants */
+
+/* Standard session counter */
+.timer-session-standard {
+  @apply text-sm font-medium px-4 py-2 rounded-lg;
+  background-color: var(--surface-color, #ffffff);
+  color: var(--text-secondary, #6b7280);
+  border: 1px solid var(--border-color, #e5e7eb);
+}
+
+/* Minimal session counter */
+.timer-session-minimal {
+  @apply text-xs font-medium px-2 py-1 rounded;
+  color: var(--text-muted, #9ca3af);
+}
+
+/* Progress Text Display */
+.timer-progress-text {
+  @apply text-sm text-center font-medium;
+  color: var(--text-secondary, #6b7280);
+}
+
 .timer-display {
   @apply rounded-full transition-all duration-300;
   width: var(--timer-size, 320px);

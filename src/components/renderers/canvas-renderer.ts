@@ -3,16 +3,16 @@ import type { ThemeConfig } from '../../types/theme-types';
 import { type CachedDrawables, RoughCanvasHelper } from '../../utils/rough-helpers';
 
 export class CanvasRenderer implements TimerRenderer {
-  private container: HTMLElement;
-  private canvas!: HTMLCanvasElement;
-  private ctx!: CanvasRenderingContext2D;
-  private roughHelper!: RoughCanvasHelper;
-  private timeText!: HTMLElement;
-  private initialized = false;
-  private config: CanvasRendererConfig;
-  private renderState: RenderState;
-  private radius: number;
-  private center: { x: number; y: number };
+  protected container: HTMLElement;
+  protected canvas!: HTMLCanvasElement;
+  protected ctx!: CanvasRenderingContext2D;
+  protected roughHelper!: RoughCanvasHelper;
+  protected timeText!: HTMLElement;
+  protected initialized = false;
+  protected config: CanvasRendererConfig;
+  protected renderState: RenderState;
+  protected radius: number;
+  protected center: { x: number; y: number };
   private cachedDrawables: CachedDrawables | undefined;
   private animationFrameId: number | null = null;
 
@@ -117,7 +117,7 @@ export class CanvasRenderer implements TimerRenderer {
     this.ctx.lineJoin = 'round';
   }
 
-  private setupRoughHelper(): void {
+  protected setupRoughHelper(): void {
     this.roughHelper = new RoughCanvasHelper(this.canvas, this.config);
     // Pre-generate cached drawables
     this.updateCachedDrawables();
@@ -153,7 +153,7 @@ export class CanvasRenderer implements TimerRenderer {
     this.ctx.clearRect(0, 0, this.config.width, this.config.height);
   }
 
-  private drawBackground(): void {
+  protected drawBackground(): void {
     if (!this.cachedDrawables) return;
 
     // Draw the cached background elements
@@ -164,7 +164,7 @@ export class CanvasRenderer implements TimerRenderer {
     });
   }
 
-  private drawProgressArc(progress: number): void {
+  protected drawProgressArc(progress: number): void {
     if (!this.roughHelper) return;
 
     const startAngle = -Math.PI / 2; // Start from top (12 o'clock)
