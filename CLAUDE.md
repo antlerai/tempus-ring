@@ -9,7 +9,25 @@
 - **Modularity:** Keep files under 500 lines. Refactor if larger.
 - **Clarity:** Ask for clarification if requirements are unclear.
 
-## 2. Code Architecture & Style
+## 2. Technical Stack
+
+### Core Technologies
+
+- **Desktop Framework:** Tauri 2 - Rust-based framework for cross-platform desktop applications
+- **Frontend:** Vanilla JavaScript + TypeScript with strict type checking
+- **Build Tool:** Vite - Fast development server and bundler
+- **Module System:** ESM (ES Modules) - Modern JavaScript module system
+- **Styling:** Tailwind CSS v4 - Utility-first CSS framework
+- **Code Quality:** Biome - Fast formatter and linter for JavaScript/TypeScript
+- **Package Manager:** pnpm - Fast, disk space efficient package manager
+- **Testing:** Vitest - Unit testing framework
+
+### Additional Libraries
+
+- **Icons:** Lucide icons - Consistent icon library
+- **Backend Language:** Rust - Systems programming language for Tauri backend
+
+## 3. Code Architecture & Style
 
 - **Layered Structure:** `types` → `services` → `factories` → `components`.
 - **Dependency Flow:** High-level modules depend on abstractions in `types`.
@@ -17,16 +35,6 @@
 ### Project Structure
 
 Use `lstr -g` to get the latest project tree structure.
-
-```txt
-src/
-├── types/         # Interfaces, type declarations, abstract classes
-├── services/      # Business logic, state management (e.g., ThemeManager)
-├── factories/     # Object creation & instantiation (e.g., TimerFactory)
-├── components/    # UI components and renderers
-├── i18n/          # Internationalization (locales, config)
-└── styles/        # Global styles, themes, component-specific styles
-```
 
 ### Naming Conventions
 
@@ -41,6 +49,7 @@ src/
 - **Domain Errors:** Use custom Error classes for domain-specific errors.
 - **Formatting:** Use Biome (`pnpm format`).
 - **Styling:** Use Tailwind CSS primarily; avoid custom CSS where possible.
+- **Icons:** Use Lucide icons exclusively. Never use emojis as icons.
 - **State Management:** Use a simple state machine pattern in `services` for core logic (e.g., timer states: `idle`, `running`, `paused`).
 
 ### Backend (Rust/Tauri)
@@ -64,14 +73,14 @@ src/
   async switchTheme(themeName: string): Promise<void> { /* ... */ }
   ```
 
-## 3. Advanced Concepts
+## 4. Advanced Concepts
 
 ### Cross-Platform Compatibility
 
 - **Backend:** Use conditional compilation (`#[cfg(target_os = "macos")]`) in Rust for OS-specific logic.
 - **Frontend:** Use the Tauri `os` module for platform-specific TypeScript code when necessary.
 
-## 4. Testing & Internationalization
+## 5. Testing & Internationalization
 
 ### Testing
 
