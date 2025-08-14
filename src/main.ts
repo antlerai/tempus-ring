@@ -89,9 +89,8 @@ class TempusRingApp {
     appContainer.innerHTML = `
       <div class="min-h-screen bg-background text-foreground transition-colors duration-300">
         <div class="container mx-auto px-4 py-8">
-          <header class="text-center mb-8 relative">
-            <h1 class="text-3xl font-bold mb-2" data-i18n="app.title">Tempus Ring</h1>
-            <p class="text-muted-foreground" data-i18n="app.subtitle">Focus Timer</p>
+          <header class="text-center mb-6 relative">
+            <h1 class="text-2xl font-bold text-muted-foreground" data-i18n="app.subtitle">Focus Timer</h1>
             <button id="settings-button" class="absolute top-0 right-0 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
               ⚙️
             </button>
