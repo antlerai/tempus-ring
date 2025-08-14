@@ -44,7 +44,7 @@ export class TimerService extends EventEmitter<TimerEvents> {
   private config: TimerConfig = DEFAULT_CONFIG;
   private state: TimerState = TimerState.IDLE;
   private currentSession: TimerSession | undefined;
-  private remainingTime = 0;
+  private remainingTime: number;
   private completedSessions = 0;
   private sessionsUntilLongBreak = 4;
   private intervalId: number | undefined;
@@ -55,6 +55,7 @@ export class TimerService extends EventEmitter<TimerEvents> {
       this.config = { ...DEFAULT_CONFIG, ...config };
     }
     this.sessionsUntilLongBreak = this.config.sessionsUntilLongBreak;
+    this.remainingTime = this.config.workDuration;
   }
 
   public getConfig(): TimerConfig {

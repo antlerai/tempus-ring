@@ -1,4 +1,5 @@
 import { CanvasRenderer } from '../components/renderers/canvas-renderer';
+import { CloudlightDOMRenderer } from '../components/renderers/cloudlight-dom-renderer';
 import { DOMRenderer } from '../components/renderers/dom-renderer';
 import { SVGRenderer } from '../components/renderers/svg-renderer';
 import type {
@@ -68,7 +69,18 @@ export class TimerFactory {
     try {
       switch (theme.renderer) {
         case 'dom':
-          renderer = this.createDOMRenderer(container, theme, width, height, displayMode);
+          // Use CloudlightDOMRenderer for cloudlight theme
+          if (theme.name === 'cloudlight') {
+            renderer = this.createCloudlightDOMRenderer(
+              container,
+              theme,
+              width,
+              height,
+              displayMode
+            );
+          } else {
+            renderer = this.createDOMRenderer(container, theme, width, height, displayMode);
+          }
           break;
 
         case 'svg':
@@ -97,6 +109,29 @@ export class TimerFactory {
         `Renderer creation failed: ${error instanceof Error ? error.message : String(error)}`
       );
     }
+  }
+
+  /**
+   * Create Cloudlight DOM renderer with analog clock design
+   */
+  private createCloudlightDOMRenderer(
+    container: HTMLElement,
+    theme: ThemeConfig,
+    width: number,
+    height: number,
+    displayMode: 'percentage' | 'clock'
+  ): CloudlightDOMRenderer {
+    const config: DOMRendererConfig = {
+      container,
+      width,
+      height,
+      theme,
+      displayMode,
+      useCSSTansitions: true,
+      transitionDuration: '1s',
+    };
+
+    return new CloudlightDOMRenderer(config);
   }
 
   /**

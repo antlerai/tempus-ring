@@ -62,6 +62,7 @@ Use `lstr -g` to get the latest project tree structure.
 
 ### Documentation
 
+- **Architecture**: For an in-depth look at the theme and rendering system, see [Architecture: Theme and Rendering System](docs/render-theme.md).
 - **JSDoc:** Comment all public functions/classes. For complex logic, add comments explaining the "why".
 
   ```typescript

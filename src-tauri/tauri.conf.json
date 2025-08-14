@@ -14,8 +14,8 @@
     "windows": [
       {
         "title": "Tempus Ring",
-        "width": 300,
-        "height": 650,
+        "width": 480,
+        "height": 670,
         "minWidth": 280,
         "minHeight": 400,
         "resizable": true,
@@ -32,7 +32,6 @@
     "trayIcon": {
       "iconPath": "icons/icon.png",
       "iconAsTemplate": true,
-      "menuOnLeftClick": false,
       "tooltip": "Tempus Ring - Focus Timer"
     }
   },
@@ -41,7 +40,7 @@
     "targets": "all",
     "icon": [
       "icons/32x32.png",
-      "icons/128x128.png", 
+      "icons/128x128.png",
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
@@ -58,7 +57,7 @@
       "default": true
     },
     "globalShortcut": {
-      "default": true  
+      "default": true
     },
     "shell": {
       "open": true

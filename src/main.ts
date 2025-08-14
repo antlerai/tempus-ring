@@ -88,8 +88,24 @@ class TempusRingApp {
       throw new Error('App container not found');
     }
 
+    // Check if cloudlight theme is active
+    const isCloudlight = this.themeManager.getCurrentThemeName() === 'cloudlight';
+
     // Create main layout
-    appContainer.innerHTML = `
+    appContainer.innerHTML = isCloudlight
+      ? `
+      <div class="min-h-screen flex items-center justify-center transition-colors duration-300">
+        <div class="flex flex-col items-center gap-12">
+          <div id="timer-display"></div>
+          <div id="control-panel"></div>
+          <button id="settings-button" class="absolute top-4 right-4 p-2 text-gray-500 hover:text-gray-700">
+            <i data-lucide="settings" class="w-5 h-5"></i>
+          </button>
+        </div>
+        <div id="settings-panel" class="hidden"></div>
+      </div>
+    `
+      : `
       <div class="min-h-screen bg-background text-foreground transition-colors duration-300">
         <div class="container mx-auto px-4 py-8">
           <header class="text-center mb-6 relative">

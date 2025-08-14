@@ -60,8 +60,15 @@ export class TimerDisplay {
 
   private createDisplayContainer(): HTMLElement {
     const container = document.createElement('div');
-    container.className =
-      'flex flex-col items-center justify-center space-y-6 w-full max-w-lg mx-auto';
+    // Check if cloudlight theme is active
+    const isCloudlight = this.themeManager.getCurrentThemeName() === 'cloudlight';
+
+    if (isCloudlight) {
+      container.className = 'flex flex-col items-center gap-12';
+    } else {
+      container.className =
+        'flex flex-col items-center justify-center space-y-6 w-full max-w-lg mx-auto';
+    }
     return container;
   }
 
@@ -74,8 +81,16 @@ export class TimerDisplay {
 
   private createTimeDisplay(): HTMLElement {
     const timeDisplay = document.createElement('div');
-    timeDisplay.className =
-      'text-6xl font-bold text-center text-gray-800 dark:text-white font-mono tracking-wider';
+    const isCloudlight = this.themeManager.getCurrentThemeName() === 'cloudlight';
+
+    if (isCloudlight) {
+      // Cloudlight theme uses larger monospace font like in prototype
+      timeDisplay.className = 'font-mono text-5xl font-bold text-gray-800';
+      timeDisplay.style.fontFamily = "'Roboto Mono', 'SF Mono', 'Monaco', monospace";
+    } else {
+      timeDisplay.className =
+        'text-6xl font-bold text-center text-gray-800 dark:text-white font-mono tracking-wider';
+    }
     timeDisplay.textContent = '25:00';
     return timeDisplay;
   }
@@ -115,14 +130,26 @@ export class TimerDisplay {
   }
 
   private render(): void {
-    this.container.className = 'flex flex-col items-center justify-center min-h-screen p-8';
+    const isCloudlight = this.themeManager.getCurrentThemeName() === 'cloudlight';
 
-    // Add all components to display container
-    this.displayContainer.appendChild(this.rendererContainer);
-    this.displayContainer.appendChild(this.timeDisplay);
-    this.displayContainer.appendChild(this.stateDisplay);
-    this.displayContainer.appendChild(this.sessionCounter);
-    this.displayContainer.appendChild(this.progressText);
+    if (isCloudlight) {
+      // Cloudlight theme has different layout
+      this.container.className = '';
+
+      // Add components in the cloudlight order
+      this.displayContainer.appendChild(this.rendererContainer);
+      this.displayContainer.appendChild(this.timeDisplay);
+      // Don't show state, session counter, and progress for cloudlight minimal design
+    } else {
+      this.container.className = 'flex flex-col items-center justify-center min-h-screen p-8';
+
+      // Add all components to display container
+      this.displayContainer.appendChild(this.rendererContainer);
+      this.displayContainer.appendChild(this.timeDisplay);
+      this.displayContainer.appendChild(this.stateDisplay);
+      this.displayContainer.appendChild(this.sessionCounter);
+      this.displayContainer.appendChild(this.progressText);
+    }
 
     this.container.appendChild(this.displayContainer);
   }
