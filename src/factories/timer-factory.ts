@@ -59,82 +59,13 @@ export class TimerFactory {
     } = options;
 
     // Check cache first
-    if (cacheKey && this.rendererCache.has(cacheKey)) {
-      const cachedRenderer = this.rendererCache.get(cacheKey)!;
-      if (cachedRenderer.isInitialized()) {
-        return cachedRenderer;
-      } else {
-        // Remove invalid cached renderer
-        this.rendererCache.delete(cacheKey);
-      }
+    const cachedRenderer = this.getCachedRendererIfValid(cacheKey);
+    if (cachedRenderer) {
+      return cachedRenderer;
     }
 
-    let renderer: TimerRenderer;
-
     try {
-      switch (theme.renderer) {
-        case 'dom':
-          // Use theme-specific DOM renderers
-          if (theme.name === 'cloudlight') {
-            renderer = this.createCloudlightDOMRenderer(
-              container,
-              theme,
-              width,
-              height,
-              displayMode
-            );
-          } else if (theme.name === 'dawn-dusk') {
-            renderer = this.createDawnDuskDOMRenderer(container, theme, width, height, displayMode);
-          } else if (theme.name === 'nightfall') {
-            renderer = this.createNightfallDOMRenderer(
-              container,
-              theme,
-              width,
-              height,
-              displayMode
-            );
-          } else {
-            renderer = this.createDOMRenderer(container, theme, width, height, displayMode);
-          }
-          break;
-
-        case 'svg':
-          // Use theme-specific SVG renderers
-          if (theme.name === 'artistic') {
-            renderer = this.createArtisticSVGRenderer(container, theme, width, height, displayMode);
-          } else if (theme.name === 'hand-drawn') {
-            renderer = this.createHandDrawnSVGRenderer(
-              container,
-              theme,
-              width,
-              height,
-              displayMode
-            );
-          } else {
-            renderer = this.createSVGRenderer(container, theme, width, height, displayMode);
-          }
-          break;
-
-        case 'canvas':
-          // Use theme-specific Canvas renderers
-          if (theme.name === 'wabisabi') {
-            renderer = this.createWabiSabiCanvasRenderer(
-              container,
-              theme,
-              width,
-              height,
-              displayMode
-            );
-          } else {
-            renderer = this.createCanvasRenderer(container, theme, width, height, displayMode);
-          }
-          break;
-
-        default:
-          // Default to DOM renderer for unknown types
-          renderer = this.createDOMRenderer(container, theme, width, height, displayMode);
-          break;
-      }
+      const renderer = this.createRendererByType(container, theme, width, height, displayMode);
 
       // Cache renderer if cache key provided
       if (cacheKey) {
@@ -147,6 +78,106 @@ export class TimerFactory {
       throw new Error(
         `Renderer creation failed: ${error instanceof Error ? error.message : String(error)}`
       );
+    }
+  }
+
+  /**
+   * Get cached renderer if valid, otherwise clean up invalid cache
+   */
+  private getCachedRendererIfValid(cacheKey?: string): TimerRenderer | null {
+    if (!cacheKey || !this.rendererCache.has(cacheKey)) {
+      return null;
+    }
+
+    const cachedRenderer = this.rendererCache.get(cacheKey)!;
+    if (cachedRenderer.isInitialized()) {
+      return cachedRenderer;
+    }
+
+    // Remove invalid cached renderer
+    this.rendererCache.delete(cacheKey);
+    return null;
+  }
+
+  /**
+   * Create renderer based on theme type and name
+   */
+  private createRendererByType(
+    container: HTMLElement,
+    theme: ThemeConfig,
+    width: number,
+    height: number,
+    displayMode: 'percentage' | 'clock'
+  ): TimerRenderer {
+    switch (theme.renderer) {
+      case 'dom':
+        return this.createDOMRendererByTheme(container, theme, width, height, displayMode);
+      case 'svg':
+        return this.createSVGRendererByTheme(container, theme, width, height, displayMode);
+      case 'canvas':
+        return this.createCanvasRendererByTheme(container, theme, width, height, displayMode);
+      default:
+        return this.createDOMRenderer(container, theme, width, height, displayMode);
+    }
+  }
+
+  /**
+   * Create DOM renderer based on theme name
+   */
+  private createDOMRendererByTheme(
+    container: HTMLElement,
+    theme: ThemeConfig,
+    width: number,
+    height: number,
+    displayMode: 'percentage' | 'clock'
+  ): TimerRenderer {
+    switch (theme.name) {
+      case 'cloudlight':
+        return this.createCloudlightDOMRenderer(container, theme, width, height, displayMode);
+      case 'dawn-dusk':
+        return this.createDawnDuskDOMRenderer(container, theme, width, height, displayMode);
+      case 'nightfall':
+        return this.createNightfallDOMRenderer(container, theme, width, height, displayMode);
+      default:
+        return this.createDOMRenderer(container, theme, width, height, displayMode);
+    }
+  }
+
+  /**
+   * Create SVG renderer based on theme name
+   */
+  private createSVGRendererByTheme(
+    container: HTMLElement,
+    theme: ThemeConfig,
+    width: number,
+    height: number,
+    displayMode: 'percentage' | 'clock'
+  ): TimerRenderer {
+    switch (theme.name) {
+      case 'artistic':
+        return this.createArtisticSVGRenderer(container, theme, width, height, displayMode);
+      case 'hand-drawn':
+        return this.createHandDrawnSVGRenderer(container, theme, width, height, displayMode);
+      default:
+        return this.createSVGRenderer(container, theme, width, height, displayMode);
+    }
+  }
+
+  /**
+   * Create Canvas renderer based on theme name
+   */
+  private createCanvasRendererByTheme(
+    container: HTMLElement,
+    theme: ThemeConfig,
+    width: number,
+    height: number,
+    displayMode: 'percentage' | 'clock'
+  ): TimerRenderer {
+    switch (theme.name) {
+      case 'wabisabi':
+        return this.createWabiSabiCanvasRenderer(container, theme, width, height, displayMode);
+      default:
+        return this.createCanvasRenderer(container, theme, width, height, displayMode);
     }
   }
 

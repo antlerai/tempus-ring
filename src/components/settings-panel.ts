@@ -1,3 +1,4 @@
+import '@/styles/settings-panel.css';
 import { i18n } from '../i18n';
 // biome-ignore lint/style/useImportType: ThemeManager is used as constructor parameter
 import { ThemeManager } from '../services/theme-manager';
@@ -5,6 +6,7 @@ import { ThemeManager } from '../services/theme-manager';
 import { TimerService } from '../services/timer-service';
 import type { TimerConfig } from '../types';
 import type { ThemeName } from '../types/theme-types';
+import { IconManager } from '../utils/icons';
 
 export interface SettingsPanelConfig {
   container: HTMLElement;
@@ -54,17 +56,15 @@ export class SettingsPanel {
 
   private createForm(): HTMLFormElement {
     const form = document.createElement('form');
-    form.className =
-      'space-y-6 max-w-md mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-lg';
+    form.className = 'settings-form';
     return form;
   }
 
   private render(): void {
-    this.container.className =
-      'fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50';
+    this.container.className = 'settings-modal-overlay hidden flex items-center justify-center';
 
     const modal = document.createElement('div');
-    modal.className = 'relative max-h-screen overflow-y-auto';
+    modal.className = 'settings-modal';
 
     const header = this.createHeader();
     const content = this.createContent();
@@ -87,17 +87,19 @@ export class SettingsPanel {
 
   private createHeader(): HTMLElement {
     const header = document.createElement('div');
-    header.className = 'flex justify-between items-center mb-6';
+    header.className = 'settings-header';
 
     const title = document.createElement('h2');
-    title.className = 'text-2xl font-bold text-gray-900 dark:text-white';
-    title.textContent = i18n.t('settings.title');
+    title.className = 'settings-title';
+    title.innerHTML = `
+      <i data-lucide="settings" class="settings-section-icon"></i>
+      ${i18n.t('settings.title')}
+    `;
 
     const closeButton = document.createElement('button');
     closeButton.type = 'button';
-    closeButton.className = 'text-gray-400 hover:text-gray-600 dark:hover:text-gray-300';
-    closeButton.innerHTML = '×';
-    closeButton.style.fontSize = '24px';
+    closeButton.className = 'settings-close-btn';
+    closeButton.innerHTML = '<i data-lucide="x" class="w-5 h-5"></i>';
     closeButton.addEventListener('click', () => this.hide());
 
     header.appendChild(title);
@@ -108,38 +110,60 @@ export class SettingsPanel {
 
   private createContent(): HTMLElement {
     const content = document.createElement('div');
-    content.className = 'space-y-6';
+    content.className = 'settings-content';
 
-    // Theme Selection
-    content.appendChild(this.createThemeSection());
+    // Theme and Language section
+    const appearanceSection = document.createElement('div');
+    appearanceSection.className = 'settings-section';
 
-    // Language Selection
-    content.appendChild(this.createLanguageSection());
+    const appearanceTitle = document.createElement('h3');
+    appearanceTitle.className = 'settings-section-title';
+    appearanceTitle.innerHTML = `
+      <i data-lucide="brush" class="settings-section-icon"></i>
+      ${i18n.t('settings.appearance')}
+    `;
 
-    // Timer Durations
-    content.appendChild(this.createDurationsSection());
+    const appearanceContent = document.createElement('div');
+    appearanceContent.className = 'space-y-4';
+    appearanceContent.appendChild(this.createThemeSection());
+    appearanceContent.appendChild(this.createLanguageSection());
 
-    // Auto-start Options
-    content.appendChild(this.createAutoStartSection());
+    appearanceSection.appendChild(appearanceTitle);
+    appearanceSection.appendChild(appearanceContent);
 
-    // Notifications
-    content.appendChild(this.createNotificationsSection());
+    // Timer Duration section
+    const durationSection = this.createDurationsSection();
+
+    // Auto Start section
+    const autoStartSection = this.createAutoStartSection();
+
+    // Notifications section
+    const notificationsSection = this.createNotificationsSection();
+
+    content.appendChild(appearanceSection);
+    content.appendChild(durationSection);
+    content.appendChild(autoStartSection);
+    content.appendChild(notificationsSection);
 
     return content;
   }
 
   private createThemeSection(): HTMLElement {
     const section = document.createElement('div');
-    section.className = 'space-y-2';
+    section.className = 'settings-form-group';
 
     const label = document.createElement('label');
-    label.className = 'block text-sm font-medium text-gray-700 dark:text-gray-300';
-    label.textContent = i18n.t('settings.theme');
+    label.className = 'settings-label';
+    label.innerHTML = `
+      <span class="settings-label-text">
+        <i data-lucide="palette" class="settings-section-icon"></i>
+        ${i18n.t('settings.theme')}
+      </span>
+    `;
 
     const select = document.createElement('select');
     select.id = 'theme-select';
-    select.className =
-      'w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white';
+    select.className = 'settings-select';
 
     const themes = this.themeManager.getAvailableThemes();
     for (const theme of themes) {
@@ -157,16 +181,20 @@ export class SettingsPanel {
 
   private createLanguageSection(): HTMLElement {
     const section = document.createElement('div');
-    section.className = 'space-y-2';
+    section.className = 'settings-form-group';
 
     const label = document.createElement('label');
-    label.className = 'block text-sm font-medium text-gray-700 dark:text-gray-300';
-    label.textContent = i18n.t('settings.language');
+    label.className = 'settings-label';
+    label.innerHTML = `
+      <span class="settings-label-text">
+        <i data-lucide="globe" class="settings-section-icon"></i>
+        ${i18n.t('settings.language')}
+      </span>
+    `;
 
     const select = document.createElement('select');
     select.id = 'language-select';
-    select.className =
-      'w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white';
+    select.className = 'settings-select';
 
     const languages = i18n.getAvailableLocales();
     for (const lang of languages) {
@@ -184,14 +212,17 @@ export class SettingsPanel {
 
   private createDurationsSection(): HTMLElement {
     const section = document.createElement('div');
-    section.className = 'space-y-4';
+    section.className = 'settings-section';
 
     const title = document.createElement('h3');
-    title.className = 'text-lg font-semibold text-gray-900 dark:text-white';
-    title.textContent = i18n.t('settings.durations');
+    title.className = 'settings-section-title';
+    title.innerHTML = `
+      <i data-lucide="clock" class="settings-section-icon"></i>
+      ${i18n.t('settings.durations')}
+    `;
 
     const grid = document.createElement('div');
-    grid.className = 'grid grid-cols-1 gap-4';
+    grid.className = 'settings-grid';
 
     // Work Duration
     grid.appendChild(this.createDurationInput('work-duration', 'settings.workDuration', 25));
@@ -208,9 +239,10 @@ export class SettingsPanel {
 
     // Sessions Until Long Break
     grid.appendChild(
-      this.createNumberInput(
+      this.createNumberInputWithDescription(
         'sessions-until-long-break',
         'settings.sessionsUntilLongBreak',
+        'settings.descriptions.sessionsUntilLongBreak',
         4,
         1,
         10
@@ -225,12 +257,16 @@ export class SettingsPanel {
 
   private createDurationInput(id: string, labelKey: string, defaultValue: number): HTMLElement {
     const wrapper = document.createElement('div');
-    wrapper.className = 'space-y-1';
+    wrapper.className = 'settings-form-group';
 
     const label = document.createElement('label');
     label.htmlFor = id;
-    label.className = 'block text-sm font-medium text-gray-700 dark:text-gray-300';
-    label.textContent = i18n.t(labelKey);
+    label.className = 'settings-label';
+    label.innerHTML = `
+      <span class="settings-label-text">
+        ${i18n.t(labelKey)}
+      </span>
+    `;
 
     const input = document.createElement('input');
     input.type = 'number';
@@ -238,15 +274,14 @@ export class SettingsPanel {
     input.min = '1';
     input.max = '120';
     input.value = defaultValue.toString();
-    input.className =
-      'w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white';
+    input.className = 'settings-input';
 
     const unit = document.createElement('span');
-    unit.className = 'text-sm text-gray-500 dark:text-gray-400 ml-2';
+    unit.className = 'settings-input-unit';
     unit.textContent = 'minutes';
 
     const inputContainer = document.createElement('div');
-    inputContainer.className = 'flex items-center';
+    inputContainer.className = 'settings-input-container';
     inputContainer.appendChild(input);
     inputContainer.appendChild(unit);
 
@@ -256,20 +291,25 @@ export class SettingsPanel {
     return wrapper;
   }
 
-  private createNumberInput(
+  private createNumberInputWithDescription(
     id: string,
     labelKey: string,
+    descriptionKey: string,
     defaultValue: number,
     min: number,
     max: number
   ): HTMLElement {
     const wrapper = document.createElement('div');
-    wrapper.className = 'space-y-1';
+    wrapper.className = 'settings-form-group-with-description';
 
     const label = document.createElement('label');
     label.htmlFor = id;
-    label.className = 'block text-sm font-medium text-gray-700 dark:text-gray-300';
-    label.textContent = i18n.t(labelKey);
+    label.className = 'settings-label';
+    label.innerHTML = `
+      <span class="settings-label-text">
+        ${i18n.t(labelKey)}
+      </span>
+    `;
 
     const input = document.createElement('input');
     input.type = 'number';
@@ -277,34 +317,51 @@ export class SettingsPanel {
     input.min = min.toString();
     input.max = max.toString();
     input.value = defaultValue.toString();
-    input.className =
-      'w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white';
+    input.className = 'settings-input';
+
+    const description = document.createElement('div');
+    description.className = 'settings-description';
+    description.textContent = i18n.t(descriptionKey);
 
     wrapper.appendChild(label);
     wrapper.appendChild(input);
+    wrapper.appendChild(description);
 
     return wrapper;
   }
 
   private createAutoStartSection(): HTMLElement {
     const section = document.createElement('div');
-    section.className = 'space-y-4';
+    section.className = 'settings-section';
 
     const title = document.createElement('h3');
-    title.className = 'text-lg font-semibold text-gray-900 dark:text-white';
-    title.textContent = i18n.t('settings.autoStart');
+    title.className = 'settings-section-title';
+    title.innerHTML = `
+      <i data-lucide="play" class="settings-section-icon"></i>
+      ${i18n.t('settings.autoStart')}
+    `;
 
     const checkboxes = document.createElement('div');
-    checkboxes.className = 'space-y-2';
+    checkboxes.className = 'settings-checkbox-group';
 
     // Auto Start Breaks
     checkboxes.appendChild(
-      this.createCheckbox('auto-start-breaks', 'settings.autoStartBreaks', false)
+      this.createCheckboxWithDescription(
+        'auto-start-breaks',
+        'settings.autoStartBreaks',
+        'settings.descriptions.autoStartBreaks',
+        false
+      )
     );
 
     // Auto Start Pomodoros
     checkboxes.appendChild(
-      this.createCheckbox('auto-start-pomodoros', 'settings.autoStartPomodoros', false)
+      this.createCheckboxWithDescription(
+        'auto-start-pomodoros',
+        'settings.autoStartPomodoros',
+        'settings.descriptions.autoStartPomodoros',
+        false
+      )
     );
 
     section.appendChild(title);
@@ -315,20 +372,37 @@ export class SettingsPanel {
 
   private createNotificationsSection(): HTMLElement {
     const section = document.createElement('div');
-    section.className = 'space-y-4';
+    section.className = 'settings-section';
 
     const title = document.createElement('h3');
-    title.className = 'text-lg font-semibold text-gray-900 dark:text-white';
-    title.textContent = i18n.t('settings.notifications');
+    title.className = 'settings-section-title';
+    title.innerHTML = `
+      <i data-lucide="bell" class="settings-section-icon"></i>
+      ${i18n.t('settings.notifications')}
+    `;
 
     const checkboxes = document.createElement('div');
-    checkboxes.className = 'space-y-2';
+    checkboxes.className = 'settings-checkbox-group';
 
     // Desktop Notifications
-    checkboxes.appendChild(this.createCheckbox('notifications-enabled', 'settings.desktop', true));
+    checkboxes.appendChild(
+      this.createCheckboxWithDescription(
+        'notifications-enabled',
+        'settings.desktop',
+        'settings.descriptions.desktop',
+        true
+      )
+    );
 
     // Sound Notifications
-    checkboxes.appendChild(this.createCheckbox('sound-enabled', 'settings.sound', true));
+    checkboxes.appendChild(
+      this.createCheckboxWithDescription(
+        'sound-enabled',
+        'settings.sound',
+        'settings.descriptions.sound',
+        true
+      )
+    );
 
     section.appendChild(title);
     section.appendChild(checkboxes);
@@ -336,44 +410,50 @@ export class SettingsPanel {
     return section;
   }
 
-  private createCheckbox(id: string, labelKey: string, defaultChecked: boolean): HTMLElement {
+  private createCheckboxWithDescription(
+    id: string,
+    labelKey: string,
+    descriptionKey: string,
+    defaultChecked: boolean
+  ): HTMLElement {
     const wrapper = document.createElement('div');
-    wrapper.className = 'flex items-center space-x-2';
+    wrapper.className = 'settings-form-group-with-description';
 
     const input = document.createElement('input');
     input.type = 'checkbox';
     input.id = id;
     input.checked = defaultChecked;
-    input.className =
-      'rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700';
+    input.className = 'settings-checkbox-input';
 
     const label = document.createElement('label');
     label.htmlFor = id;
-    label.className = 'text-sm font-medium text-gray-700 dark:text-gray-300';
+    label.className = 'settings-checkbox-label';
     label.textContent = i18n.t(labelKey);
+
+    const description = document.createElement('div');
+    description.className = 'settings-description';
+    description.textContent = i18n.t(descriptionKey);
 
     wrapper.appendChild(input);
     wrapper.appendChild(label);
+    wrapper.appendChild(description);
 
     return wrapper;
   }
 
   private createFooter(): HTMLElement {
     const footer = document.createElement('div');
-    footer.className =
-      'flex justify-end space-x-3 pt-6 border-t border-gray-200 dark:border-gray-600';
+    footer.className = 'settings-footer';
 
     const cancelButton = document.createElement('button');
     cancelButton.type = 'button';
-    cancelButton.className =
-      'px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 border border-gray-300 rounded-md hover:bg-gray-200 focus:ring-2 focus:ring-gray-500 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600';
+    cancelButton.className = 'settings-btn settings-btn-secondary';
     cancelButton.textContent = i18n.t('common.cancel');
     cancelButton.addEventListener('click', () => this.hide());
 
     const saveButton = document.createElement('button');
     saveButton.type = 'submit';
-    saveButton.className =
-      'px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500';
+    saveButton.className = 'settings-btn settings-btn-primary';
     saveButton.textContent = i18n.t('common.save');
 
     footer.appendChild(cancelButton);
@@ -506,6 +586,8 @@ export class SettingsPanel {
     this.container.classList.remove('hidden');
     this.container.classList.add('flex');
     this.isVisible = true;
+    // Refresh icons after showing the panel
+    IconManager.getInstance().refreshIcons();
   }
 
   public hide(): void {

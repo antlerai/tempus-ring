@@ -19,27 +19,38 @@
   },
   "settings": {
     "title": "设置",
+    "appearance": "外观",
     "theme": "主题",
     "language": "语言",
     "durations": "时长设置",
     "workDuration": "工作时长",
     "shortBreakDuration": "短休息时长",
     "longBreakDuration": "长休息时长",
-    "sessionsUntilLongBreak": "长休息前的番茄钟数",
+    "sessionsUntilLongBreak": "长休息前的工作轮数",
     "autoStart": "自动开始",
     "autoStartBreaks": "自动开始休息",
     "autoStartPomodoros": "自动开始番茄钟",
     "notifications": "通知",
     "sound": "声音",
-    "desktop": "桌面通知"
+    "desktop": "桌面通知",
+    "minutes": "分钟",
+    "descriptions": {
+      "sessionsUntilLongBreak": "进行长休息前需要完成的工作轮数。通常为4轮（2小时工作时间）。",
+      "autoStartBreaks": "工作时间结束后自动开始休息计时器。",
+      "autoStartPomodoros": "休息时间结束后自动开始工作计时器。",
+      "desktop": "在计时器开始、暂停或完成时显示系统通知。",
+      "sound": "在计时器开始、暂停或完成时播放音频通知。"
+    }
   },
   "themes": {
     "wabisabi": "侘寂",
     "cloudlight": "云光",
     "dawnDusk": "晨昏",
+    "dawn-dusk": "晨昏",
     "nightfall": "夜幕",
-    "artistic": "艺术手绘",
-    "handDrawn": "手绘风格"
+    "artistic": "艺术素描",
+    "handDrawn": "手绘",
+    "hand-drawn": "手绘"
   },
   "languages": {
     "en": "English",

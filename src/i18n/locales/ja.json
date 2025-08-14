@@ -19,6 +19,7 @@
   },
   "settings": {
     "title": "設定",
+    "appearance": "外観",
     "theme": "テーマ",
     "language": "言語",
     "durations": "時間設定",
@@ -31,7 +32,14 @@
     "autoStartPomodoros": "ポモドーロを自動開始",
     "notifications": "通知",
     "sound": "音",
-    "desktop": "デスクトップ通知"
+    "desktop": "デスクトップ通知",
+    "minutes": "分",
+    "descriptions": {
+      "sessionsUntilLongBreak": "長い休憩を取る前に完了する必要がある作業セッション数。通常は4セッション（2時間の作業時間）。",
+      "autoStartBreaks": "作業セッション終了後に休憩タイマーを自動的に開始します。",
+      "autoStartPomodoros": "休憩終了後に作業セッションを自動的に開始します。",
+      "desktop": "タイマーの開始、一時停止、完了時にシステム通知を表示します。"
+    }
   },
   "themes": {
     "wabisabi": "侘寂",

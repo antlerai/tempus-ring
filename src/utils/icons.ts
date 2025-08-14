@@ -1,13 +1,19 @@
 import {
+  Bell,
+  Brush,
   Clock,
   Coffee,
   createIcons,
+  Globe,
+  Palette,
   Pause,
   Play,
   RotateCcw,
+  RotateCw,
   Settings,
   Square,
   Timer,
+  X,
 } from 'lucide';
 
 /**
@@ -38,9 +44,15 @@ export class IconManager {
         Pause,
         Square,
         RotateCcw,
+        RotateCw,
         Timer,
         Coffee,
         Clock,
+        Brush,
+        Globe,
+        Bell,
+        Palette,
+        X,
       },
     });
   }
@@ -75,9 +87,15 @@ export class IconManager {
         Pause,
         Square,
         RotateCcw,
+        RotateCw,
         Timer,
         Coffee,
         Clock,
+        Brush,
+        Globe,
+        Bell,
+        Palette,
+        X,
       },
     });
   }

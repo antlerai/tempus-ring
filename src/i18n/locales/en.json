@@ -25,6 +25,7 @@
   },
   "settings": {
     "title": "Settings",
+    "appearance": "Appearance",
     "theme": "Theme",
     "language": "Language",
     "durations": "Durations",
@@ -37,15 +38,25 @@
     "autoStartPomodoros": "Auto Start Pomodoros",
     "notifications": "Notifications",
     "sound": "Sound",
-    "desktop": "Desktop Notifications"
+    "desktop": "Desktop Notifications",
+    "minutes": "minutes",
+    "descriptions": {
+      "sessionsUntilLongBreak": "Number of work sessions before taking a long break. Typically 4 sessions (2 hours of work).",
+      "autoStartBreaks": "Automatically start break timers when work sessions end.",
+      "autoStartPomodoros": "Automatically start work sessions when breaks end.",
+      "desktop": "Show system notifications when timers start, pause, or complete.",
+      "sound": "Play audio notifications when timers start, pause, or complete."
+    }
   },
   "themes": {
     "wabisabi": "Wabi-Sabi",
     "cloudlight": "Cloudlight",
     "dawnDusk": "Dawn & Dusk",
+    "dawn-dusk": "Dawn & Dusk",
     "nightfall": "Nightfall",
     "artistic": "Artistic Sketch",
-    "handDrawn": "Hand Drawn"
+    "handDrawn": "Hand Drawn",
+    "hand-drawn": "Hand Drawn"
   },
   "languages": {
     "en": "English",
