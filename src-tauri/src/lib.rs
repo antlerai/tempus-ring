@@ -63,19 +63,6 @@ pub fn run() {
         builder = builder.plugin(tauri_plugin_opener::init());
     }
 
-    // 只在启用 MCP feature 时启用 MCP 插件
-    #[cfg(feature = "mcp")]
-    {
-        use tauri_plugin_mcp::{init_with_config, PluginConfig};
-
-        builder = builder.plugin(init_with_config(
-            PluginConfig::new("tempus-ring".to_string())
-                .start_socket_server(true)
-                // 使用 IPC socket (默认)
-                .socket_path("/tmp/tempus-ring-mcp.sock".into()),
-        ));
-    }
-
     builder
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
