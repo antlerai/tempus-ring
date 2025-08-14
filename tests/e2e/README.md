@@ -5,6 +5,7 @@ This directory contains comprehensive end-to-end tests for the Tempus Ring Pomod
 ## Test Coverage
 
 ### 1. Timer Functionality (`timer.spec.ts`)
+
 - Initial timer state display
 - Start/pause/resume/reset operations
 - Progress tracking
@@ -12,6 +13,7 @@ This directory contains comprehensive end-to-end tests for the Tempus Ring Pomod
 - Timer state persistence
 
 ### 2. Theme Switching (`themes.spec.ts`)
+
 - Settings panel navigation
 - Theme selection and switching
 - Theme persistence across sessions
@@ -19,6 +21,7 @@ This directory contains comprehensive end-to-end tests for the Tempus Ring Pomod
 - Cancel/save functionality
 
 ### 3. Internationalization (`i18n.spec.ts`)
+
 - Language selection (English, Simplified Chinese, Traditional Chinese, Japanese)
 - UI text translation verification
 - Language persistence
@@ -26,6 +29,7 @@ This directory contains comprehensive end-to-end tests for the Tempus Ring Pomod
 - Graceful handling of missing translations
 
 ### 4. Notification System (`notifications.spec.ts`)
+
 - Notification permission handling
 - Settings toggle for desktop notifications and sound
 - Test notification sending
@@ -35,6 +39,7 @@ This directory contains comprehensive end-to-end tests for the Tempus Ring Pomod
 ## Running the Tests
 
 ### Prerequisites
+
 ```bash
 # Install dependencies (including Playwright)
 pnpm install
@@ -65,8 +70,9 @@ npx playwright test --debug
 ## Test Configuration
 
 The tests are configured in `playwright.config.ts` with:
+
 - **Viewport Size**: 400x600 (matching Tauri window size)
-- **Base URL**: http://localhost:1420
+- **Base URL**: <http://localhost:1420>
 - **Browser Support**: Chromium and WebKit
 - **Auto-start**: Tauri dev server starts automatically before tests
 - **Screenshots**: Captured on test failures
@@ -75,6 +81,7 @@ The tests are configured in `playwright.config.ts` with:
 ## Test Environment
 
 The tests expect:
+
 1. The Tauri development server to be running on `http://localhost:1420`
 2. The application to load within 2 minutes (for CI environments)
 3. Notification permissions to be grantable
@@ -83,14 +90,17 @@ The tests expect:
 ## Key Testing Patterns
 
 ### Page Object Model
+
 While not fully implemented, the tests use reusable selectors and patterns:
+
 ```typescript
 // Settings panel interaction
-await page.getByRole('button', { name: '⚙️' }).click();
+await page.locator('button[id="settings-button"]').click();
 await expect(page.locator('text=设置')).toBeVisible();
 ```
 
 ### Timer State Verification
+
 ```typescript
 // Check timer is running
 await expect(page.getByRole('button', { name: 'Pause' })).toBeVisible();
@@ -98,6 +108,7 @@ await expect(page.locator('text=工作')).toBeVisible();
 ```
 
 ### Language Testing
+
 ```typescript
 // Verify language switch
 await languageSelect.selectOption('en');
@@ -114,6 +125,7 @@ await expect(page.locator('text=Work')).toBeVisible();
 ## CI/CD Integration
 
 The tests are designed to run in CI environments with:
+
 - Retry logic for flaky tests
 - Optimized parallel execution
 - Comprehensive error reporting
@@ -129,6 +141,7 @@ The tests are designed to run in CI environments with:
 ## Contributing
 
 When adding new tests:
+
 1. Follow the existing naming convention (`feature.spec.ts`)
 2. Include proper test descriptions
 3. Use appropriate waiting strategies (`waitForTimeout`, `toBeVisible`)

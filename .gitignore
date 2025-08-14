@@ -37,3 +37,7 @@ dist-ssr
 context-engineering-v2.md
 
 .mcp.json
+
+# test
+playwright-report
+test-results

@@ -9,7 +9,7 @@ test.describe('Theme Switching', () => {
 
   test('should open and close settings panel', async ({ page }) => {
     // Open settings
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     await expect(page.locator('text=设置')).toBeVisible();
     
     // Close settings with X button
@@ -19,7 +19,7 @@ test.describe('Theme Switching', () => {
 
   test('should display all available themes', async ({ page }) => {
     // Open settings
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     
     // Check theme dropdown options
     const themeSelect = page.locator('#theme-select');
@@ -36,7 +36,7 @@ test.describe('Theme Switching', () => {
 
   test('should switch theme from Cloudlight to Wabi-Sabi', async ({ page }) => {
     // Open settings
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     
     // Verify current theme is Cloudlight
     const themeSelect = page.locator('#theme-select');
@@ -53,13 +53,13 @@ test.describe('Theme Switching', () => {
     await expect(page.locator('text=设置')).not.toBeVisible();
     
     // Reopen settings to verify theme persisted
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     await expect(themeSelect).toHaveValue('wabisabi');
   });
 
   test('should switch theme to Nightfall', async ({ page }) => {
     // Open settings
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     
     // Switch to Nightfall theme
     const themeSelect = page.locator('#theme-select');
@@ -70,13 +70,13 @@ test.describe('Theme Switching', () => {
     await page.getByRole('button', { name: 'Save' }).click();
     
     // Verify theme persisted
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     await expect(themeSelect).toHaveValue('nightfall');
   });
 
   test('should cancel theme changes', async ({ page }) => {
     // Open settings and note initial theme
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     const themeSelect = page.locator('#theme-select');
     const initialTheme = await themeSelect.inputValue();
     
@@ -88,7 +88,7 @@ test.describe('Theme Switching', () => {
     await expect(page.locator('text=设置')).not.toBeVisible();
     
     // Reopen and verify theme didn't change
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     await expect(themeSelect).toHaveValue(initialTheme);
   });
 
@@ -98,7 +98,7 @@ test.describe('Theme Switching', () => {
     await page.waitForTimeout(2000);
     
     // Open settings while timer is running
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     
     // Change theme
     const themeSelect = page.locator('#theme-select');
@@ -110,7 +110,7 @@ test.describe('Theme Switching', () => {
     await expect(page.locator('text=工作')).toBeVisible();
     
     // Verify theme change persisted
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     await expect(themeSelect).toHaveValue('artistic');
   });
 });

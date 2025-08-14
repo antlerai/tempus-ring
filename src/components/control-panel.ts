@@ -3,6 +3,7 @@ import { i18n } from '../i18n';
 import { TimerService } from '../services/timer-service';
 import type { TimerData, TimerState } from '../types';
 import { TimerState as TimerStateEnum } from '../types';
+import { IconManager } from '../utils/icons';
 
 export interface ControlPanelConfig {
   container: HTMLElement;
@@ -15,6 +16,7 @@ export class ControlPanel {
   private timerService: TimerService;
   private onStateChange: ((state: TimerState) => void) | undefined;
   private currentState: TimerState = TimerStateEnum.IDLE;
+  private iconManager: IconManager;
 
   private startButton: HTMLButtonElement;
   private pauseButton: HTMLButtonElement;
@@ -24,21 +26,22 @@ export class ControlPanel {
     this.container = config.container;
     this.timerService = config.timerService;
     this.onStateChange = config.onStateChange;
+    this.iconManager = IconManager.getInstance();
 
     this.startButton = this.createElement(
       'button',
       'start-btn',
-      'bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed'
+      'bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2'
     );
     this.pauseButton = this.createElement(
       'button',
       'pause-btn',
-      'bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed'
+      'bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2'
     );
     this.resetButton = this.createElement(
       'button',
       'reset-btn',
-      'bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed'
+      'bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2'
     );
 
     this.render();
@@ -169,24 +172,30 @@ export class ControlPanel {
     // Reset button - always available except when idle
     this.resetButton.disabled = isIdle;
 
-    // Update pause/resume button text
+    // Update pause/resume button text and icon
     if (isPaused) {
-      this.pauseButton.textContent = i18n.t('timer.controls.resume');
+      this.pauseButton.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i><span>${i18n.t('timer.controls.resume')}</span>`;
       this.pauseButton.className =
-        'bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed';
+        'bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2';
     } else {
-      this.pauseButton.textContent = i18n.t('timer.controls.pause');
+      this.pauseButton.innerHTML = `<i data-lucide="pause" class="w-4 h-4"></i><span>${i18n.t('timer.controls.pause')}</span>`;
       this.pauseButton.className =
-        'bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed';
+        'bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2';
     }
+
+    // Refresh icons after content update
+    this.iconManager.refreshIcons();
   }
 
   private updateLabels(): void {
-    this.startButton.textContent = i18n.t('timer.controls.start');
-    this.resetButton.textContent = i18n.t('timer.controls.reset');
+    this.startButton.innerHTML = `<i data-lucide="play" class="w-4 h-4"></i><span>${i18n.t('timer.controls.start')}</span>`;
+    this.resetButton.innerHTML = `<i data-lucide="square" class="w-4 h-4"></i><span>${i18n.t('timer.controls.reset')}</span>`;
 
     // Pause/Resume text is updated in updateButtons()
     this.updateButtons();
+
+    // Refresh icons after content update
+    this.iconManager.refreshIcons();
   }
 
   public updateState(timerData: TimerData): void {

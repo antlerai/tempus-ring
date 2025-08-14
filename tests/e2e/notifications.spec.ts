@@ -17,7 +17,7 @@ test.describe('Notification System', () => {
 
   test('should display notification settings in settings panel', async ({ page }) => {
     // Open settings
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     
     // Check notification settings
     await expect(page.locator('text=Notifications')).toBeVisible();
@@ -31,7 +31,7 @@ test.describe('Notification System', () => {
 
   test('should toggle notification settings', async ({ page }) => {
     // Open settings
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     
     // Toggle desktop notifications off
     const desktopNotificationCheckbox = page.getByRole('checkbox', { name: 'Desktop Notifications' });
@@ -47,7 +47,7 @@ test.describe('Notification System', () => {
     await page.getByRole('button', { name: 'Save' }).click();
     
     // Verify settings persisted
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     await expect(desktopNotificationCheckbox).not.toBeChecked();
     await expect(soundCheckbox).not.toBeChecked();
   });
@@ -108,7 +108,7 @@ test.describe('Notification System', () => {
 
   test('should maintain notification settings during app restart simulation', async ({ page }) => {
     // Configure notification settings
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     
     const desktopNotificationCheckbox = page.getByRole('checkbox', { name: 'Desktop Notifications' });
     await desktopNotificationCheckbox.uncheck();
@@ -120,7 +120,7 @@ test.describe('Notification System', () => {
     await expect(page.locator('h1').first()).toBeVisible();
     
     // Check if settings persisted (note: will fall back to localStorage since Tauri isn't available)
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     
     // The setting should persist in localStorage even if Tauri storage fails
     const isChecked = await desktopNotificationCheckbox.isChecked();
@@ -130,18 +130,18 @@ test.describe('Notification System', () => {
 
   test('should respect notification settings when disabled', async ({ page }) => {
     // Disable notifications
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     await page.getByRole('checkbox', { name: 'Desktop Notifications' }).uncheck();
     await page.getByRole('button', { name: 'Save' }).click();
     
     // In a real implementation, we would check if notifications are suppressed
     // For now, we verify the setting is off
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     await expect(page.getByRole('checkbox', { name: 'Desktop Notifications' })).not.toBeChecked();
   });
 
   test('should show sound setting toggle', async ({ page }) => {
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     
     const soundCheckbox = page.getByRole('checkbox', { name: 'Sound' });
     await expect(soundCheckbox).toBeVisible();

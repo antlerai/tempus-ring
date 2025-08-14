@@ -9,7 +9,7 @@ test.describe('Internationalization', () => {
 
   test('should display all available languages', async ({ page }) => {
     // Open settings
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     
     // Check language dropdown options
     const languageSelect = page.locator('#language-select');
@@ -28,7 +28,7 @@ test.describe('Internationalization', () => {
     await expect(page.locator('text=已完成: 0')).toBeVisible();
     
     // Open settings
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     await expect(page.locator('text=设置')).toBeVisible();
     
     // Switch to English
@@ -44,13 +44,13 @@ test.describe('Internationalization', () => {
     await expect(page.locator('text=Completed: 0')).toBeVisible();
     
     // Verify settings button text changed
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     await expect(page.locator('text=Settings')).toBeVisible();
   });
 
   test('should switch to Traditional Chinese', async ({ page }) => {
     // Open settings (assuming we start in Simplified Chinese)
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     
     // Switch to Traditional Chinese
     const languageSelect = page.locator('#language-select');
@@ -62,13 +62,13 @@ test.describe('Internationalization', () => {
     
     // Note: Traditional Chinese translations might be the same for basic terms
     // but the language selection should persist
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     await expect(languageSelect).toHaveValue('zh-TW');
   });
 
   test('should switch to Japanese', async ({ page }) => {
     // Open settings
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     
     // Switch to Japanese
     const languageSelect = page.locator('#language-select');
@@ -79,7 +79,7 @@ test.describe('Internationalization', () => {
     await page.getByRole('button', { name: 'Save' }).click();
     
     // Verify language selection persisted
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     await expect(languageSelect).toHaveValue('ja');
   });
 
@@ -89,7 +89,7 @@ test.describe('Internationalization', () => {
     await expect(page.locator('text=工作')).toBeVisible();
     
     // Switch language while timer is running
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     const languageSelect = page.locator('#language-select');
     await languageSelect.selectOption('en');
     await page.getByRole('button', { name: 'Save' }).click();
@@ -99,14 +99,14 @@ test.describe('Internationalization', () => {
     await expect(page.locator('text=Work')).toBeVisible();
     
     // Verify language persisted
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     await expect(languageSelect).toHaveValue('en');
     await expect(page.locator('text=Settings')).toBeVisible();
   });
 
   test('should cancel language changes', async ({ page }) => {
     // Open settings and note initial language
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     const languageSelect = page.locator('#language-select');
     const initialLanguage = await languageSelect.inputValue();
     
@@ -118,13 +118,13 @@ test.describe('Internationalization', () => {
     await expect(page.locator('text=设置')).not.toBeVisible();
     
     // Reopen and verify language didn't change
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     await expect(languageSelect).toHaveValue(initialLanguage);
   });
 
   test('should handle missing translations gracefully', async ({ page }) => {
     // Some theme names show as keys like "themes.dawn-dusk"
-    await page.getByRole('button', { name: '⚙️' }).click();
+    await page.locator('button[id="settings-button"]').click();
     
     // Check that missing translation keys are displayed as fallback
     const themeSelect = page.locator('#theme-select');

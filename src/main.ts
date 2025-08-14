@@ -10,6 +10,7 @@ import { ThemeManager } from './services/theme-manager';
 import { TimerService } from './services/timer-service';
 import type { ThemeName } from './types/theme-types';
 import type { TimerConfig } from './types/timer-types';
+import { IconManager } from './utils/icons';
 
 class TempusRingApp {
   private themeManager: ThemeManager;
@@ -17,6 +18,7 @@ class TempusRingApp {
   private storageService: StorageService;
   private notificationService: NotificationService;
   private timerFactory: TimerFactory;
+  private iconManager: IconManager;
 
   // UI Components
   private timerDisplay: TimerDisplay | undefined;
@@ -29,6 +31,7 @@ class TempusRingApp {
     this.timerService = new TimerService();
     this.notificationService = new NotificationService();
     this.timerFactory = new TimerFactory();
+    this.iconManager = IconManager.getInstance();
     // Statistics service will be used later for session tracking
   }
 
@@ -92,7 +95,7 @@ class TempusRingApp {
           <header class="text-center mb-6 relative">
             <h1 class="text-2xl font-bold text-muted-foreground" data-i18n="app.subtitle">Focus Timer</h1>
             <button id="settings-button" class="absolute top-0 right-0 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-              ⚙️
+              <i data-lucide="settings" class="w-5 h-5"></i>
             </button>
           </header>
           
@@ -138,6 +141,9 @@ class TempusRingApp {
       });
 
       console.log('UI components initialized successfully');
+
+      // Initialize icons after DOM is ready
+      this.iconManager.refreshIcons();
 
       // Setup settings button
       const settingsButton = document.getElementById('settings-button');

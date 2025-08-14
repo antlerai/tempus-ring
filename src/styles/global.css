@@ -199,7 +199,92 @@ select:focus {
   box-shadow: var(--shadow-md);
 }
 
-/* Responsive breakpoints */
+/* Desktop app specific breakpoints */
+@media (min-width: 280px) and (max-width: 320px) {
+  /* Ultra-narrow desktop app window */
+  .container {
+    max-width: 280px;
+    padding-left: var(--spacing-xs);
+    padding-right: var(--spacing-xs);
+  }
+
+  #timer-display {
+    max-width: 240px;
+    margin: 0 auto;
+  }
+
+  #control-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+
+  #control-panel button {
+    font-size: 0.75rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+}
+
+@media (min-width: 321px) and (max-width: 400px) {
+  /* Narrow desktop app window (default size) */
+  .container {
+    max-width: 400px;
+    padding-left: var(--spacing-sm);
+    padding-right: var(--spacing-sm);
+  }
+
+  #timer-display {
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  #control-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+
+  /* Stack settings in compact layout */
+  #settings-panel {
+    margin-top: var(--spacing-lg);
+  }
+
+  .lg\:grid-cols-3 {
+    grid-template-columns: 1fr; /* Override grid for narrow windows */
+  }
+
+  .lg\:col-span-2 {
+    grid-column: span 1; /* Override col-span for narrow windows */
+  }
+}
+
+@media (min-width: 401px) and (max-width: 600px) {
+  /* Medium desktop app window (when user resizes) */
+  .container {
+    max-width: 600px;
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+  }
+
+  #timer-display {
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  #control-panel {
+    display: flex;
+    flex-direction: row;
+    gap: var(--spacing-md);
+    justify-content: center;
+  }
+
+  /* Can show settings side by side if there's room */
+  .lg\:grid-cols-3 {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+/* Web responsive breakpoints (for potential web deployment) */
 @media (min-width: 640px) {
   .container {
     max-width: 640px;
@@ -224,8 +309,8 @@ select:focus {
   }
 }
 
-/* Mobile-first responsive design */
-@media (max-width: 639px) {
+/* Legacy mobile-first rule (now mainly for web) */
+@media (max-width: 279px) {
   .container {
     padding-left: var(--spacing-sm);
     padding-right: var(--spacing-sm);
