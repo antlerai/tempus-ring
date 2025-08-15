@@ -7,12 +7,34 @@ export class HandDrawnSVGRenderer extends SVGRenderer {
   private scribbles!: SVGGElement;
   private progressPath!: SVGPathElement;
 
+  // CSS variables cache for performance
+  private cssVars: Record<string, string> = {};
+
   protected override createSVGStructure(): void {
     // Call parent to create basic structure
     super.createSVGStructure();
 
+    // Update CSS variables cache
+    this.updateCSSVariables();
+
     // Add hand-drawn sketch elements
     this.createHandDrawnElements();
+  }
+
+  private updateCSSVariables(): void {
+    const computedStyle = getComputedStyle(document.documentElement);
+    this.cssVars = {
+      '--svg-border-color': computedStyle.getPropertyValue('--svg-border-color').trim(),
+      '--svg-progress-color': computedStyle.getPropertyValue('--svg-progress-color').trim(),
+      '--svg-tick-major': computedStyle.getPropertyValue('--svg-tick-major').trim(),
+      '--svg-tick-minor': computedStyle.getPropertyValue('--svg-tick-minor').trim(),
+      '--svg-doodle-star': computedStyle.getPropertyValue('--svg-doodle-star').trim(),
+      '--svg-doodle-heart': computedStyle.getPropertyValue('--svg-doodle-heart').trim(),
+      '--svg-doodle-spiral': computedStyle.getPropertyValue('--svg-doodle-spiral').trim(),
+      '--svg-doodle-arrow': computedStyle.getPropertyValue('--svg-doodle-arrow').trim(),
+      '--svg-scribble-color': computedStyle.getPropertyValue('--svg-scribble-color').trim(),
+      '--svg-notebook-line': computedStyle.getPropertyValue('--svg-notebook-line').trim(),
+    };
   }
 
   private createHandDrawnElements(): void {
@@ -36,7 +58,7 @@ export class HandDrawnSVGRenderer extends SVGRenderer {
     const roughCirclePath = this.generateRoughCircle(center.x, center.y, radius);
     this.handDrawnBorder.setAttribute('d', roughCirclePath);
     this.handDrawnBorder.setAttribute('fill', 'none');
-    this.handDrawnBorder.setAttribute('stroke', '#4b5563');
+    this.handDrawnBorder.setAttribute('stroke', this.cssVars['--svg-border-color'] || '#4b5563');
     this.handDrawnBorder.setAttribute('stroke-width', '2.5');
     this.handDrawnBorder.setAttribute('stroke-linecap', 'round');
     this.handDrawnBorder.setAttribute('opacity', '0.9');
@@ -45,7 +67,7 @@ export class HandDrawnSVGRenderer extends SVGRenderer {
     this.progressPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
     this.progressPath.setAttribute('class', 'hand-drawn-progress');
     this.progressPath.setAttribute('fill', 'none');
-    this.progressPath.setAttribute('stroke', '#f97316');
+    this.progressPath.setAttribute('stroke', this.cssVars['--svg-progress-color'] || '#f97316');
     this.progressPath.setAttribute('stroke-width', '4');
     this.progressPath.setAttribute('stroke-linecap', 'round');
     this.progressPath.setAttribute('opacity', '0.8');
@@ -170,7 +192,7 @@ export class HandDrawnSVGRenderer extends SVGRenderer {
 
     star.setAttribute('d', path);
     star.setAttribute('fill', 'none');
-    star.setAttribute('stroke', '#f97316');
+    star.setAttribute('stroke', this.cssVars['--svg-doodle-star'] || '#f97316');
     star.setAttribute('stroke-width', '1.5');
     star.setAttribute('opacity', '0.6');
 
@@ -188,7 +210,7 @@ export class HandDrawnSVGRenderer extends SVGRenderer {
 
     heart.setAttribute('d', path);
     heart.setAttribute('fill', 'none');
-    heart.setAttribute('stroke', '#ef4444');
+    heart.setAttribute('stroke', this.cssVars['--svg-doodle-heart'] || '#ef4444');
     heart.setAttribute('stroke-width', '1.5');
     heart.setAttribute('opacity', '0.6');
 
@@ -219,7 +241,7 @@ export class HandDrawnSVGRenderer extends SVGRenderer {
 
     spiral.setAttribute('d', path);
     spiral.setAttribute('fill', 'none');
-    spiral.setAttribute('stroke', '#9ca3af');
+    spiral.setAttribute('stroke', this.cssVars['--svg-doodle-spiral'] || '#9ca3af');
     spiral.setAttribute('stroke-width', '1.5');
     spiral.setAttribute('opacity', '0.5');
 
@@ -242,7 +264,7 @@ export class HandDrawnSVGRenderer extends SVGRenderer {
 
     arrow.setAttribute('d', path);
     arrow.setAttribute('fill', 'none');
-    arrow.setAttribute('stroke', '#6b7280');
+    arrow.setAttribute('stroke', this.cssVars['--svg-doodle-arrow'] || '#6b7280');
     arrow.setAttribute('stroke-width', '1.5');
     arrow.setAttribute('stroke-linecap', 'round');
     arrow.setAttribute('opacity', '0.6');
@@ -272,7 +294,7 @@ export class HandDrawnSVGRenderer extends SVGRenderer {
 
       scribble.setAttribute('d', path);
       scribble.setAttribute('fill', 'none');
-      scribble.setAttribute('stroke', '#9ca3af');
+      scribble.setAttribute('stroke', this.cssVars['--svg-scribble-color'] || '#9ca3af');
       scribble.setAttribute('stroke-width', '0.8');
       scribble.setAttribute('opacity', '0.3');
 
@@ -293,7 +315,7 @@ export class HandDrawnSVGRenderer extends SVGRenderer {
       line.setAttribute('y1', y.toString());
       line.setAttribute('x2', (center.x + radius).toString());
       line.setAttribute('y2', y.toString());
-      line.setAttribute('stroke', '#e5e7eb');
+      line.setAttribute('stroke', this.cssVars['--svg-notebook-line'] || '#e5e7eb');
       line.setAttribute('stroke-width', '0.5');
       line.setAttribute('opacity', '0.4');
 
@@ -338,7 +360,12 @@ export class HandDrawnSVGRenderer extends SVGRenderer {
       const tickPath = `M ${startX} ${startY} Q ${midX} ${midY} ${endX} ${endY}`;
 
       tickLine.setAttribute('d', tickPath);
-      tickLine.setAttribute('stroke', isMajor ? '#1f2937' : '#6b7280');
+      tickLine.setAttribute(
+        'stroke',
+        isMajor
+          ? this.cssVars['--svg-tick-major'] || '#1f2937'
+          : this.cssVars['--svg-tick-minor'] || '#6b7280'
+      );
       tickLine.setAttribute('stroke-width', isMajor ? '3' : '2');
       tickLine.setAttribute('stroke-linecap', 'round');
       tickLine.setAttribute('fill', 'none');
@@ -350,7 +377,9 @@ export class HandDrawnSVGRenderer extends SVGRenderer {
   }
 
   protected override updateProgressRing(progress: number): void {
-    // Call parent method first
+    // Update CSS variables in case theme changed
+    this.updateCSSVariables();
+
     // Call parent method to update basic progress ring
     const circumference = 2 * Math.PI * this.radius;
     const offset = circumference - progress * circumference;

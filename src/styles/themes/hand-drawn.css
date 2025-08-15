@@ -21,15 +21,28 @@
   --button-hover: #f3f4f6; /* gray-100 */
   --button-text: var(--text-primary);
 
+  /* Button color variants */
+  --button-pause-bg: #fef3c7; /* amber-100 */
+  --button-pause-hover: #fde68a; /* amber-200 */
+  --button-pause-text: #92400e; /* amber-800 */
+  --button-resume-bg: #dbeafe; /* blue-100 */
+  --button-resume-hover: #bfdbfe; /* blue-200 */
+  --button-resume-text: #1e40af; /* blue-800 */
+  --button-reset-bg: #fee2e2; /* red-100 */
+  --button-reset-hover: #fecaca; /* red-200 */
+  --button-reset-text: #991b1b; /* red-800 */
+
   /* Status colors - marker/highlighter colors */
   --success-color: #059669; /* emerald-600 */
   --warning-color: #d97706; /* amber-600 */
   --error-color: #dc2626; /* red-600 */
 
   /* Sizing and layout */
-  --timer-size: 320px;
-  --timer-size-mobile: 280px;
-  --timer-size-small: 240px;
+  --timer-size: 240px;
+  --timer-size-large: 280px;
+  --timer-size-xl: 320px;
+  --timer-size-mobile: 220px;
+  --timer-size-small: 180px;
   --ring-width: 6px;
   --tick-length: 8px;
   --major-tick-length: 14px;
@@ -39,9 +52,11 @@
   /* Typography - handwriting style */
   --font-family: 'Kalam', 'Caveat', 'Comic Neue', cursive;
   --font-mono: 'Courier New', 'Courier', monospace;
-  --time-font-size: 2.4rem;
-  --time-font-size-mobile: 2rem;
-  --time-font-size-small: 1.6rem;
+  --time-font-size: 1.8rem;
+  --time-font-size-large: 2.2rem;
+  --time-font-size-xl: 2.4rem;
+  --time-font-size-mobile: 1.5rem;
+  --time-font-size-small: 1.2rem;
 
   /* Animation settings - organic feel */
   --animation-duration: 1500s; /* 25 minutes */
@@ -84,6 +99,18 @@
   /* Hand-drawn glow effects - subtle */
   --glow-color: rgba(59, 130, 246, 0.2); /* blue-500 with low opacity */
   --center-dot-glow: 0 0 6px var(--glow-color);
+
+  /* SVG-specific hand-drawn colors */
+  --svg-border-color: #4b5563; /* gray-600 */
+  --svg-progress-color: #f97316; /* orange-500 */
+  --svg-tick-major: #1f2937; /* gray-800 */
+  --svg-tick-minor: #6b7280; /* gray-500 */
+  --svg-doodle-star: #f97316; /* orange-500 */
+  --svg-doodle-heart: #ef4444; /* red-500 */
+  --svg-doodle-spiral: #9ca3af; /* gray-400 */
+  --svg-doodle-arrow: #6b7280; /* gray-500 */
+  --svg-scribble-color: #9ca3af; /* gray-400 */
+  --svg-notebook-line: #e5e7eb; /* gray-200 */
 
   /* Body background with paper texture */
   --body-background: var(--background-color);
@@ -172,21 +199,20 @@
   transform: rotate(-0.5deg) translateX(1px);
 }
 
-/* Hand-drawn buttons */
-.theme-hand-drawn .timer-button {
-  background: var(--paper-texture), var(--button-bg);
-  border: var(--button-border);
-  color: var(--button-text);
+/* Hand-drawn specific button enhancements */
+.theme-hand-drawn .timer-button-standard,
+.theme-hand-drawn .timer-button-minimal {
+  background-image: var(--paper-texture);
   font-family: var(--font-family);
   font-weight: 600;
-  box-shadow: var(--button-shadow);
   position: relative;
   /* Slight rotation for hand-drawn feel */
   transform: rotate(0.3deg);
 }
 
 /* Add sketch marks to buttons */
-.theme-hand-drawn .timer-button::before {
+.theme-hand-drawn .timer-button-standard::before,
+.theme-hand-drawn .timer-button-minimal::before {
   content: '';
   position: absolute;
   inset: -1px;
@@ -200,32 +226,15 @@
   pointer-events: none;
 }
 
-.theme-hand-drawn .timer-button:hover::before {
+.theme-hand-drawn .timer-button-standard:hover::before,
+.theme-hand-drawn .timer-button-minimal:hover::before {
   opacity: 1;
 }
 
-.theme-hand-drawn .timer-button:hover {
-  background: var(--paper-texture), var(--button-hover);
+.theme-hand-drawn .timer-button-standard:hover,
+.theme-hand-drawn .timer-button-minimal:hover {
   transform: translateY(var(--button-hover-translate)) rotate(-0.2deg);
-  box-shadow: var(--button-hover-shadow);
   border-color: var(--accent-color);
-}
-
-/* Primary button with ink pen effect */
-.theme-hand-drawn .timer-button.primary {
-  background: var(--paper-texture), linear-gradient(135deg, var(--accent-color), #2563eb);
-  color: white;
-  border-color: var(--primary-color);
-  box-shadow:
-    var(--button-shadow),
-    0 0 10px rgba(59, 130, 246, 0.2);
-}
-
-.theme-hand-drawn .timer-button.primary:hover {
-  background: var(--paper-texture), linear-gradient(135deg, #2563eb, var(--accent-color));
-  box-shadow:
-    var(--button-hover-shadow),
-    0 0 15px rgba(59, 130, 246, 0.3);
 }
 
 /* Settings panel with notebook page styling */

@@ -48,6 +48,9 @@
       "sound": "Play audio notifications when timers start, pause, or complete."
     }
   },
+  "theme": {
+    "switch": "Switch Theme"
+  },
   "themes": {
     "wabisabi": "Wabi-Sabi",
     "cloudlight": "Cloudlight",

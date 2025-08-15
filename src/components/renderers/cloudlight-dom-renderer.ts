@@ -118,7 +118,28 @@ export class CloudlightDOMRenderer extends DOMRenderer {
     // Update hand position (instead of progress ring)
     this.updateHand(progress);
 
+    // Apply dynamic styling based on progress for enhanced visual feedback
+    this.updateProgressStyling(progress);
+
     this.renderState.lastRenderTime = performance.now();
+  }
+
+  private updateProgressStyling(progress: number): void {
+    if (!this.hand || !this.centerDot) return;
+
+    // Subtle color transition for the hand based on progress
+    const intensity = Math.min(1, progress * 1.2); // Slightly more intense than linear
+    const handColor = `hsl(0, ${Math.round(60 + intensity * 20)}%, ${Math.round(55 - intensity * 10)}%)`;
+
+    this.hand.style.background = handColor;
+    this.hand.style.boxShadow = `0 1px 2px rgba(239, 68, 68, ${0.3 + intensity * 0.2})`;
+
+    // Subtle pulsing effect for center dot when near completion
+    if (progress > 0.9) {
+      this.centerDot.style.animation = 'pulse 1s ease-in-out infinite';
+    } else {
+      this.centerDot.style.animation = 'none';
+    }
   }
 
   public override setAnimationState(isRunning: boolean): void {

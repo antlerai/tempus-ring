@@ -6,12 +6,35 @@ export class ArtisticSVGRenderer extends SVGRenderer {
   private handDrawnCircle!: SVGPathElement;
   private inkSplashes!: SVGGElement;
 
+  // CSS variables cache for performance
+  private cssVars: Record<string, string> = {};
+
   protected override createSVGStructure(): void {
     // Call parent to create basic structure
     super.createSVGStructure();
 
+    // Update CSS variables cache
+    this.updateCSSVariables();
+
     // Add artistic sketch elements
     this.createSketchElements();
+  }
+
+  private updateCSSVariables(): void {
+    const computedStyle = getComputedStyle(document.documentElement);
+    this.cssVars = {
+      '--svg-stroke-primary': computedStyle.getPropertyValue('--svg-stroke-primary').trim(),
+      '--svg-stroke-secondary': computedStyle.getPropertyValue('--svg-stroke-secondary').trim(),
+      '--svg-stroke-accent': computedStyle.getPropertyValue('--svg-stroke-accent').trim(),
+      '--svg-fill-primary': computedStyle.getPropertyValue('--svg-fill-primary').trim(),
+      '--svg-fill-secondary': computedStyle.getPropertyValue('--svg-fill-secondary').trim(),
+      '--svg-fill-accent': computedStyle.getPropertyValue('--svg-fill-accent').trim(),
+      '--svg-ink-splash': computedStyle.getPropertyValue('--svg-ink-splash').trim(),
+      '--svg-tick-major': computedStyle.getPropertyValue('--svg-tick-major').trim(),
+      '--svg-tick-minor': computedStyle.getPropertyValue('--svg-tick-minor').trim(),
+      '--svg-tick-decorative': computedStyle.getPropertyValue('--svg-tick-decorative').trim(),
+      '--svg-brush-stroke': computedStyle.getPropertyValue('--svg-brush-stroke').trim(),
+    };
   }
 
   private createSketchElements(): void {
@@ -35,7 +58,7 @@ export class ArtisticSVGRenderer extends SVGRenderer {
     const wavyCirclePath = this.generateWavyCircle(center.x, center.y, radius);
     this.handDrawnCircle.setAttribute('d', wavyCirclePath);
     this.handDrawnCircle.setAttribute('fill', 'none');
-    this.handDrawnCircle.setAttribute('stroke', '#374151');
+    this.handDrawnCircle.setAttribute('stroke', this.cssVars['--svg-stroke-primary'] || '#374151');
     this.handDrawnCircle.setAttribute('stroke-width', '3');
     this.handDrawnCircle.setAttribute('stroke-linecap', 'round');
     this.handDrawnCircle.setAttribute('opacity', '0.8');
@@ -113,7 +136,7 @@ export class ArtisticSVGRenderer extends SVGRenderer {
       splash.setAttribute('cx', splashX.toString());
       splash.setAttribute('cy', splashY.toString());
       splash.setAttribute('r', size.toString());
-      splash.setAttribute('fill', '#6b7280');
+      splash.setAttribute('fill', this.cssVars['--svg-ink-splash'] || '#6b7280');
       splash.setAttribute('opacity', opacity.toString());
 
       this.inkSplashes.appendChild(splash);
@@ -188,7 +211,12 @@ export class ArtisticSVGRenderer extends SVGRenderer {
       const tickPath = `M ${startX} ${startY} Q ${(startX + endX) / 2 + (Math.random() - 0.5)} ${(startY + endY) / 2 + (Math.random() - 0.5)} ${endX} ${endY}`;
 
       tickLine.setAttribute('d', tickPath);
-      tickLine.setAttribute('stroke', isMajor ? '#111827' : '#6b7280');
+      tickLine.setAttribute(
+        'stroke',
+        isMajor
+          ? this.cssVars['--svg-tick-major'] || '#111827'
+          : this.cssVars['--svg-tick-minor'] || '#6b7280'
+      );
       tickLine.setAttribute('stroke-width', isMajor ? '2.5' : '1.5');
       tickLine.setAttribute('stroke-linecap', 'round');
       tickLine.setAttribute('fill', 'none');
@@ -200,7 +228,7 @@ export class ArtisticSVGRenderer extends SVGRenderer {
         dot.setAttribute('cx', (endX + (Math.random() - 0.5) * 3).toString());
         dot.setAttribute('cy', (endY + (Math.random() - 0.5) * 3).toString());
         dot.setAttribute('r', '1');
-        dot.setAttribute('fill', '#ef4444');
+        dot.setAttribute('fill', this.cssVars['--svg-tick-decorative'] || '#ef4444');
         dot.setAttribute('opacity', '0.6');
         tickGroup.appendChild(dot);
       }
@@ -211,7 +239,9 @@ export class ArtisticSVGRenderer extends SVGRenderer {
   }
 
   protected override updateProgressRing(progress: number): void {
-    // Call parent method first
+    // Update CSS variables in case theme changed
+    this.updateCSSVariables();
+
     // Call parent method to update basic progress ring
     const circumference = 2 * Math.PI * this.radius;
     const offset = circumference - progress * circumference;
@@ -251,7 +281,7 @@ export class ArtisticSVGRenderer extends SVGRenderer {
       const strokePath = `M ${startX} ${startY} L ${endX} ${endY}`;
 
       stroke.setAttribute('d', strokePath);
-      stroke.setAttribute('stroke', '#ef4444');
+      stroke.setAttribute('stroke', this.cssVars['--svg-brush-stroke'] || '#ef4444');
       stroke.setAttribute('stroke-width', (2 + Math.random()).toString());
       stroke.setAttribute('stroke-linecap', 'round');
       stroke.setAttribute('opacity', (0.4 + Math.random() * 0.4).toString());

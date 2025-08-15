@@ -26,15 +26,28 @@ body.theme-cloudlight {
   --button-hover: #d1d5db; /* gray-300 */
   --button-text: #374151; /* gray-700 */
 
+  /* Button color variants */
+  --button-pause-bg: #fef3c7; /* amber-100 */
+  --button-pause-hover: #fde68a; /* amber-200 */
+  --button-pause-text: #92400e; /* amber-800 */
+  --button-resume-bg: #dbeafe; /* blue-100 */
+  --button-resume-hover: #bfdbfe; /* blue-200 */
+  --button-resume-text: #1e40af; /* blue-800 */
+  --button-reset-bg: #fee2e2; /* red-100 */
+  --button-reset-hover: #fecaca; /* red-200 */
+  --button-reset-text: #991b1b; /* red-800 */
+
   /* Status colors - clean and modern */
   --success-color: #10b981; /* emerald-500 */
   --warning-color: #f59e0b; /* amber-500 */
   --error-color: #ef4444; /* red-500 */
 
   /* Sizing and layout - precise and clean */
-  --timer-size: 320px;
-  --timer-size-mobile: 280px;
-  --timer-size-small: 240px;
+  --timer-size: 240px;
+  --timer-size-large: 280px;
+  --timer-size-xl: 320px;
+  --timer-size-mobile: 220px;
+  --timer-size-small: 180px;
   --ring-width: 8px;
   --tick-length: 8px;
   --major-tick-length: 12px;
@@ -44,9 +57,11 @@ body.theme-cloudlight {
   /* Typography - clean and modern */
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: 'Roboto Mono', 'SF Mono', 'Monaco', monospace;
-  --time-font-size: 3rem;
-  --time-font-size-mobile: 2.5rem;
-  --time-font-size-small: 2rem;
+  --time-font-size: 2.25rem;
+  --time-font-size-large: 2.6rem;
+  --time-font-size-xl: 3rem;
+  --time-font-size-mobile: 1.9rem;
+  --time-font-size-small: 1.5rem;
 
   /* Animation settings - smooth and precise */
   --animation-duration: 1500s; /* 25 minutes */
@@ -139,6 +154,19 @@ body.theme-cloudlight {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+/* Pulse animation for center dot */
+@keyframes pulse {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 0.8;
+  }
+}
+
 .cloudlight-tick {
   position: absolute;
   background: var(--tick-color);
@@ -156,42 +184,7 @@ body.theme-cloudlight {
   filter: drop-shadow(0 2px 4px rgba(239, 68, 68, 0.2));
 }
 
-/* Clean button styles */
-.theme-cloudlight .timer-button {
-  background: var(--button-bg);
-  border: var(--button-border);
-  color: var(--button-text);
-  font-weight: 500;
-  letter-spacing: 0.025em;
-}
-
-.theme-cloudlight .timer-button:hover {
-  background: var(--button-hover);
-  transform: translateY(var(--button-hover-translate));
-  box-shadow: var(--button-hover-shadow);
-}
-
-.theme-cloudlight .timer-button:active {
-  transform: translateY(0) scale(var(--active-scale));
-}
-
-.theme-cloudlight .timer-button:focus {
-  outline: none;
-  border-color: var(--focus-border);
-  box-shadow: var(--focus-ring);
-}
-
-/* Primary action button variant */
-.theme-cloudlight .timer-button.primary {
-  background: var(--accent-color);
-  color: white;
-  border-color: var(--accent-color);
-}
-
-.theme-cloudlight .timer-button.primary:hover {
-  background: #dc2626; /* red-600 */
-  border-color: #dc2626;
-}
+/* Cloudlight uses the unified button styles from theme-common.css */
 
 /* Clean typography */
 .theme-cloudlight .timer-text {
@@ -290,6 +283,39 @@ body.theme-cloudlight {
   font-size: 0.875rem;
   font-weight: 500;
 }
+
+/* Cloudlight status components layout - between clock and buttons */
+.theme-cloudlight .timer-state-minimal {
+  background: var(--surface-color);
+  color: var(--text-primary);
+  padding: 6px 16px;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  margin: 8px 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.theme-cloudlight .timer-session-minimal {
+  background: var(--background-color);
+  color: var(--text-secondary);
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.theme-cloudlight .timer-progress-text {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin: 4px 0;
+}
+
+/* Theme switcher uses same styling as settings button */
 
 /* Clean notification styles */
 .theme-cloudlight .notification {

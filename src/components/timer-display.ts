@@ -61,19 +61,30 @@ export class TimerDisplay {
 
   private setupThemeEventListeners(): void {
     this.themeManager.on('theme:changed', () => {
-      this.recreateDisplayElements();
-      this.render();
-      this.updateDisplay();
+      this.handleThemeChange();
     });
   }
 
-  private recreateDisplayElements(): void {
+  private async handleThemeChange(): Promise<void> {
+    // Clear the container completely
+    this.container.innerHTML = '';
+
     // Recreate all display elements with updated theme styles
     this.displayContainer = this.createDisplayContainer();
+    this.rendererContainer = this.createRendererContainer();
     this.timeDisplay = this.createTimeDisplay();
     this.stateDisplay = this.createStateDisplay();
     this.sessionCounter = this.createSessionCounter();
     this.progressText = this.createProgressText();
+
+    // Re-render the layout
+    this.render();
+
+    // Recreate the renderer
+    await this.recreateRenderer();
+
+    // Update display with current data
+    this.updateDisplay();
   }
 
   private createDisplayContainer(): HTMLElement {
@@ -170,14 +181,19 @@ export class TimerDisplay {
   private render(): void {
     const isCloudlight = this.themeManager.getCurrentThemeName() === 'cloudlight';
 
+    // Clear the display container first
+    this.displayContainer.innerHTML = '';
+
     if (isCloudlight) {
-      // Cloudlight theme has different layout
+      // Cloudlight theme layout with status components between clock and buttons
       this.container.className = '';
 
-      // Add components in the cloudlight order
+      // Add components in the cloudlight order: clock, time, status components
       this.displayContainer.appendChild(this.rendererContainer);
       this.displayContainer.appendChild(this.timeDisplay);
-      // Don't show state, session counter, and progress for cloudlight minimal design
+      this.displayContainer.appendChild(this.stateDisplay);
+      this.displayContainer.appendChild(this.sessionCounter);
+      this.displayContainer.appendChild(this.progressText);
     } else {
       this.container.className = 'flex flex-col items-center justify-center min-h-screen p-8';
 
@@ -189,6 +205,8 @@ export class TimerDisplay {
       this.displayContainer.appendChild(this.progressText);
     }
 
+    // Clear container and add the display container
+    this.container.innerHTML = '';
     this.container.appendChild(this.displayContainer);
   }
 

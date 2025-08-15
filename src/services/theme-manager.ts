@@ -44,8 +44,8 @@ export class ThemeManager extends EventEmitter<ThemeManagerEvents> {
         renderer: 'canvas',
         layoutMode: 'standard',
         controlPanel: {
-          buttonLayout: 'standard',
-          showLabels: true,
+          buttonLayout: 'minimal',
+          showLabels: false,
           showIcons: true,
         },
         colors: {
@@ -161,8 +161,8 @@ export class ThemeManager extends EventEmitter<ThemeManagerEvents> {
         renderer: 'dom',
         layoutMode: 'standard',
         controlPanel: {
-          buttonLayout: 'standard',
-          showLabels: true,
+          buttonLayout: 'minimal',
+          showLabels: false,
           showIcons: true,
         },
         colors: {
@@ -216,8 +216,8 @@ export class ThemeManager extends EventEmitter<ThemeManagerEvents> {
         renderer: 'dom',
         layoutMode: 'standard',
         controlPanel: {
-          buttonLayout: 'standard',
-          showLabels: true,
+          buttonLayout: 'minimal',
+          showLabels: false,
           showIcons: true,
         },
         colors: {
@@ -271,8 +271,8 @@ export class ThemeManager extends EventEmitter<ThemeManagerEvents> {
         renderer: 'svg',
         layoutMode: 'standard',
         controlPanel: {
-          buttonLayout: 'standard',
-          showLabels: true,
+          buttonLayout: 'minimal',
+          showLabels: false,
           showIcons: true,
         },
         colors: {
@@ -326,8 +326,8 @@ export class ThemeManager extends EventEmitter<ThemeManagerEvents> {
         renderer: 'svg',
         layoutMode: 'standard',
         controlPanel: {
-          buttonLayout: 'standard',
-          showLabels: true,
+          buttonLayout: 'minimal',
+          showLabels: false,
           showIcons: true,
         },
         colors: {

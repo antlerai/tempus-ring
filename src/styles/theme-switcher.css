@@ -1,0 +1,44 @@
+/* Theme Switcher Component Styles */
+
+.theme-switcher {
+  display: inline-block;
+}
+
+/* Only apply relative positioning if not absolutely positioned */
+.theme-switcher:not([class*='absolute']) {
+  position: relative;
+}
+
+/* Theme switcher button inherits styles from Tailwind classes */
+
+/* Animation for dropdown */
+.theme-switcher .absolute:not(.hidden) {
+  animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-0.25rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Ensure dropdown appears above other elements */
+.theme-switcher .absolute {
+  z-index: 1000;
+}
+
+/* Responsive adjustments for dropdown positioning */
+@media (max-width: 768px) {
+  .theme-switcher .absolute {
+    right: 0;
+    left: auto;
+    min-width: 10rem;
+  }
+}
+
+/* Dark mode is handled by Tailwind's dark: classes */

@@ -1,6 +1,7 @@
 import './styles/global.css';
 import { ControlPanel } from './components/control-panel';
 import { SettingsPanel } from './components/settings-panel';
+import { ThemeSwitcher } from './components/theme-switcher';
 import { TimerDisplay } from './components/timer-display';
 import { TimerFactory } from './factories/timer-factory';
 import { i18n } from './i18n';
@@ -24,6 +25,7 @@ class TempusRingApp {
   private timerDisplay: TimerDisplay | undefined;
   private controlPanel: ControlPanel | undefined;
   private settingsPanel: SettingsPanel | undefined;
+  private themeSwitcher: ThemeSwitcher | undefined;
 
   constructor() {
     this.storageService = StorageService.getInstance();
@@ -94,13 +96,18 @@ class TempusRingApp {
     // Create main layout
     appContainer.innerHTML = isCloudlight
       ? `
-      <div class="min-h-screen flex items-center justify-center transition-colors duration-300">
+      <div class="min-h-screen flex items-center justify-center transition-colors duration-300 relative">
+        <!-- Settings button on the left -->
+        <button id="settings-button" class="absolute top-6 left-6 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
+          <i data-lucide="settings" class="w-5 h-5"></i>
+        </button>
+        
+        <!-- Theme switcher on the right -->
+        <div id="theme-switcher" class="absolute top-6 right-6"></div>
+        
         <div class="flex flex-col items-center gap-12">
           <div id="timer-display"></div>
           <div id="control-panel"></div>
-          <button id="settings-button" class="absolute top-4 right-4 p-2 text-gray-500 hover:text-gray-700">
-            <i data-lucide="settings" class="w-5 h-5"></i>
-          </button>
         </div>
         <div id="settings-panel" class="hidden"></div>
       </div>
@@ -110,9 +117,14 @@ class TempusRingApp {
         <div class="container mx-auto px-4 py-8">
           <header class="text-center mb-6 relative">
             <h1 class="text-2xl font-bold text-muted-foreground" data-i18n="app.subtitle">Focus Timer</h1>
-            <button id="settings-button" class="absolute top-0 right-0 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+            
+            <!-- Settings button on the left -->
+            <button id="settings-button" class="absolute -top-2 -left-2 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors duration-200 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800">
               <i data-lucide="settings" class="w-5 h-5"></i>
             </button>
+            
+            <!-- Theme switcher on the right -->
+            <div id="theme-switcher" class="absolute -top-2 -right-2"></div>
           </header>
           
           <main class="grid gap-8 lg:grid-cols-3">
@@ -133,8 +145,14 @@ class TempusRingApp {
     const timerDisplayContainer = document.getElementById('timer-display');
     const controlPanelContainer = document.getElementById('control-panel');
     const settingsPanelContainer = document.getElementById('settings-panel');
+    const themeSwitcherContainer = document.getElementById('theme-switcher');
 
-    if (timerDisplayContainer && controlPanelContainer && settingsPanelContainer) {
+    if (
+      timerDisplayContainer &&
+      controlPanelContainer &&
+      settingsPanelContainer &&
+      themeSwitcherContainer
+    ) {
       // Initialize Timer Display
       this.timerDisplay = new TimerDisplay({
         container: timerDisplayContainer,
@@ -155,6 +173,12 @@ class TempusRingApp {
         container: settingsPanelContainer,
         themeManager: this.themeManager,
         timerService: this.timerService,
+      });
+
+      // Initialize Theme Switcher
+      this.themeSwitcher = new ThemeSwitcher({
+        container: themeSwitcherContainer,
+        themeManager: this.themeManager,
       });
 
       console.log('UI components initialized successfully');
@@ -276,6 +300,11 @@ class TempusRingApp {
     if (this.settingsPanel) {
       this.settingsPanel.destroy();
       this.settingsPanel = undefined;
+    }
+
+    if (this.themeSwitcher) {
+      this.themeSwitcher.destroy();
+      this.themeSwitcher = undefined;
     }
   }
 }

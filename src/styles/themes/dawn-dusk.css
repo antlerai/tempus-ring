@@ -1,5 +1,59 @@
 /* Dawn-Dusk Theme - Gradient transitions representing time of day */
-/* SVG renderer with dynamic gradients */
+/* DOM renderer with dynamic gradients */
+
+/* Dawn-Dusk DOM Renderer Components */
+.dawn-dusk-sky {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #fef3c7 0%, #fbbf24 30%, #f59e0b 60%, #d97706 100%);
+  border: 8px solid #f59e0b;
+}
+
+.dawn-dusk-gradient-container {
+  position: relative;
+  width: 95%;
+  height: 95%;
+  border-radius: 50%;
+  background: linear-gradient(45deg, rgba(254, 243, 199, 0.9), rgba(251, 191, 36, 0.9));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  margin-top: 2.5%;
+}
+
+.dawn-dusk-sun {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(circle, #fbbf24 0%, #f59e0b 70%);
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.8);
+  transform-origin: center 130px;
+  transition: transform 1s linear;
+}
+
+.dawn-dusk-ticks {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.dawn-dusk-tick {
+  position: absolute;
+  border-radius: 1px;
+}
+
+.dawn-dusk-tick.major {
+  background: #92400e;
+}
+
+.dawn-dusk-tick.minor {
+  background: #d97706;
+}
 
 .theme-dawn-dusk {
   /* Dynamic color palette - transitions through the day */
@@ -17,9 +71,20 @@
   --surface-color: #f5f3ff; /* violet-50 */
   --border-color: #c4b5fd; /* violet-300 */
   --shadow-color: rgba(67, 56, 202, 0.2); /* indigo-700 with opacity */
-  --button-bg: #e0e7ff; /* indigo-100 */
-  --button-hover: #c7d2fe; /* indigo-200 */
-  --button-text: var(--text-primary);
+  --button-bg: #fef3c7; /* amber-100 */
+  --button-hover: #fde68a; /* amber-200 */
+  --button-text: #92400e; /* amber-800 */
+
+  /* Button color variants */
+  --button-pause-bg: #fed7aa; /* orange-200 */
+  --button-pause-hover: #fdba74; /* orange-300 */
+  --button-pause-text: #c2410c; /* orange-700 */
+  --button-resume-bg: #dbeafe; /* blue-100 */
+  --button-resume-hover: #bfdbfe; /* blue-200 */
+  --button-resume-text: #1d4ed8; /* blue-700 */
+  --button-reset-bg: #fecaca; /* red-200 */
+  --button-reset-hover: #fca5a5; /* red-300 */
+  --button-reset-text: #dc2626; /* red-600 */
 
   /* Status colors - warm tones */
   --success-color: #059669; /* emerald-600 */
@@ -27,9 +92,11 @@
   --error-color: #dc2626; /* red-600 */
 
   /* Sizing and layout */
-  --timer-size: 320px;
-  --timer-size-mobile: 280px;
-  --timer-size-small: 240px;
+  --timer-size: 240px;
+  --timer-size-large: 280px;
+  --timer-size-xl: 320px;
+  --timer-size-mobile: 220px;
+  --timer-size-small: 180px;
   --ring-width: 10px;
   --tick-length: 10px;
   --major-tick-length: 16px;
@@ -39,9 +106,11 @@
   /* Typography - elegant and readable */
   --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: 'Fira Code', 'Roboto Mono', monospace;
-  --time-font-size: 2.8rem;
-  --time-font-size-mobile: 2.3rem;
-  --time-font-size-small: 1.8rem;
+  --time-font-size: 2.1rem;
+  --time-font-size-large: 2.5rem;
+  --time-font-size-xl: 2.8rem;
+  --time-font-size-mobile: 1.7rem;
+  --time-font-size-small: 1.4rem;
 
   /* Animation settings - smooth transitions */
   --animation-duration: 1500s; /* 25 minutes */
@@ -212,17 +281,15 @@
   text-shadow: 0 2px 4px var(--shadow-color);
 }
 
-/* Gradient buttons */
-.theme-dawn-dusk .timer-button {
-  background: linear-gradient(135deg, var(--button-bg), var(--button-hover));
-  border: var(--button-border);
-  color: var(--button-text);
-  font-weight: 600;
+/* Dawn-Dusk specific button enhancements */
+.theme-dawn-dusk .timer-button-standard,
+.theme-dawn-dusk .timer-button-minimal {
   position: relative;
   overflow: hidden;
 }
 
-.theme-dawn-dusk .timer-button::before {
+.theme-dawn-dusk .timer-button-standard::before,
+.theme-dawn-dusk .timer-button-minimal::before {
   content: '';
   position: absolute;
   top: 0;
@@ -233,25 +300,9 @@
   transition: left 0.5s;
 }
 
-.theme-dawn-dusk .timer-button:hover::before {
+.theme-dawn-dusk .timer-button-standard:hover::before,
+.theme-dawn-dusk .timer-button-minimal:hover::before {
   left: 100%;
-}
-
-.theme-dawn-dusk .timer-button:hover {
-  transform: translateY(var(--button-hover-translate));
-  box-shadow: var(--button-hover-shadow);
-  background: linear-gradient(135deg, var(--button-hover), var(--surface-color));
-}
-
-/* Primary button with accent gradient */
-.theme-dawn-dusk .timer-button.primary {
-  background: linear-gradient(135deg, var(--accent-color), var(--warning-color));
-  color: white;
-  border-color: var(--accent-color);
-}
-
-.theme-dawn-dusk .timer-button.primary:hover {
-  background: linear-gradient(135deg, var(--warning-color), var(--accent-color));
 }
 
 /* Settings panel with gradient border */

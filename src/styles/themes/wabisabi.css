@@ -21,6 +21,17 @@
   --button-hover: #cd853f; /* peru */
   --button-text: #2f1b14; /* dark brown */
 
+  /* Button color variants */
+  --button-pause-bg: #ffeaa7; /* warm yellow */
+  --button-pause-hover: #fdcb6e; /* darker yellow */
+  --button-pause-text: #8b4513; /* saddle brown */
+  --button-resume-bg: #74b9ff; /* soft blue */
+  --button-resume-hover: #0984e3; /* darker blue */
+  --button-resume-text: #2f1b14; /* dark brown */
+  --button-reset-bg: #fab1a0; /* soft red */
+  --button-reset-hover: #e17055; /* darker red */
+  --button-reset-text: #2f1b14; /* dark brown */
+
   /* Canvas-specific colors */
   --canvas-background: #faf0e6; /* linen */
   --canvas-stroke: #8b4513; /* saddle brown */
@@ -32,9 +43,11 @@
   --error-color: #cd5c5c; /* indian red */
 
   /* Sizing and layout */
-  --timer-size: 320px;
-  --timer-size-mobile: 280px;
-  --timer-size-small: 240px;
+  --timer-size: 240px;
+  --timer-size-large: 280px;
+  --timer-size-xl: 320px;
+  --timer-size-mobile: 220px;
+  --timer-size-small: 180px;
   --ring-width: 6px;
   --tick-length: 6px;
   --major-tick-length: 10px;
@@ -44,9 +57,11 @@
   /* Typography */
   --font-family: 'Georgia', 'Times New Roman', serif;
   --font-mono: 'Courier New', monospace;
-  --time-font-size: 2.8rem;
-  --time-font-size-mobile: 2.3rem;
-  --time-font-size-small: 1.8rem;
+  --time-font-size: 2.1rem;
+  --time-font-size-large: 2.5rem;
+  --time-font-size-xl: 2.8rem;
+  --time-font-size-mobile: 1.7rem;
+  --time-font-size-small: 1.4rem;
 
   /* Rough.js Canvas effects */
   --roughness: 2.5; /* Hand-drawn roughness level */
@@ -159,8 +174,17 @@
   animation: var(--organic-float);
 }
 
+/* Wabisabi specific button enhancements */
+.theme-wabisabi .timer-button-standard,
+.theme-wabisabi .timer-button-minimal {
+  background-image: var(--paper-texture);
+  position: relative;
+  transform: rotate(0.2deg); /* Slight rotation for organic feel */
+}
+
 /* Button hover effects with organic feel */
-.theme-wabisabi .timer-button:hover {
+.theme-wabisabi .timer-button-standard:hover,
+.theme-wabisabi .timer-button-minimal:hover {
   transform: translateY(-1px) rotate(0.5deg);
 }
 

@@ -42,6 +42,9 @@
       "sound": "在计时器开始、暂停或完成时播放音频通知。"
     }
   },
+  "theme": {
+    "switch": "切换主题"
+  },
   "themes": {
     "wabisabi": "侘寂",
     "cloudlight": "云光",

@@ -21,15 +21,28 @@
   --button-hover: #fb923c; /* orange-400 */
   --button-text: var(--text-primary);
 
+  /* Button color variants */
+  --button-pause-bg: #fef3c7; /* amber-100 */
+  --button-pause-hover: #fde68a; /* amber-200 */
+  --button-pause-text: #92400e; /* amber-800 */
+  --button-resume-bg: #dbeafe; /* blue-100 */
+  --button-resume-hover: #bfdbfe; /* blue-200 */
+  --button-resume-text: #1e40af; /* blue-800 */
+  --button-reset-bg: #fee2e2; /* red-100 */
+  --button-reset-hover: #fecaca; /* red-200 */
+  --button-reset-text: #991b1b; /* red-800 */
+
   /* Status colors - muted artistic tones */
   --success-color: #16a34a; /* green-600 */
   --warning-color: #ca8a04; /* yellow-600 */
   --error-color: #dc2626; /* red-600 */
 
   /* Sizing and layout */
-  --timer-size: 320px;
-  --timer-size-mobile: 280px;
-  --timer-size-small: 240px;
+  --timer-size: 240px;
+  --timer-size-large: 280px;
+  --timer-size-xl: 320px;
+  --timer-size-mobile: 220px;
+  --timer-size-small: 180px;
   --ring-width: 8px;
   --tick-length: 6px;
   --major-tick-length: 12px;
@@ -39,9 +52,11 @@
   /* Typography - artistic and expressive */
   --font-family: 'Brush Script MT', 'Lucida Handwriting', cursive;
   --font-mono: 'Courier New', 'Courier', monospace;
-  --time-font-size: 2.6rem;
-  --time-font-size-mobile: 2.2rem;
-  --time-font-size-small: 1.8rem;
+  --time-font-size: 1.95rem;
+  --time-font-size-large: 2.3rem;
+  --time-font-size-xl: 2.6rem;
+  --time-font-size-mobile: 1.65rem;
+  --time-font-size-small: 1.35rem;
 
   /* Animation settings - organic feel */
   --animation-duration: 1500s; /* 25 minutes */
@@ -83,6 +98,27 @@
   /* Artistic glow effects */
   --glow-color: rgba(194, 65, 12, 0.4); /* orange-700 with opacity */
   --center-dot-glow: 0 0 10px var(--glow-color);
+
+  /* SVG-specific artistic colors */
+  --svg-stroke-primary: #7c2d12; /* red-900 */
+  --svg-stroke-secondary: #a16207; /* yellow-700 */
+  --svg-stroke-accent: #c2410c; /* orange-700 */
+  --svg-fill-primary: rgba(124, 45, 18, 0.1); /* red-900 with low opacity */
+  --svg-fill-secondary: rgba(161, 98, 7, 0.15); /* yellow-700 with low opacity */
+  --svg-fill-accent: rgba(194, 65, 12, 0.2); /* orange-700 with opacity */
+
+  /* SVG ink splash colors */
+  --svg-ink-splash: #6b7280; /* gray-500 */
+  --svg-ink-opacity: 0.4;
+
+  /* SVG tick colors */
+  --svg-tick-major: #111827; /* gray-900 */
+  --svg-tick-minor: #6b7280; /* gray-500 */
+  --svg-tick-decorative: #ef4444; /* red-500 */
+
+  /* SVG brush stroke colors */
+  --svg-brush-stroke: #ef4444; /* red-500 */
+  --svg-brush-opacity: 0.4;
 
   /* Body background with artistic texture */
   --body-background: var(--background-color);
@@ -172,20 +208,19 @@
   transform: rotate(-1deg); /* Slight tilt for hand-drawn feel */
 }
 
-/* Artistic buttons with sketch styling */
-.theme-artistic .timer-button {
-  background: var(--brush-texture), linear-gradient(135deg, var(--button-bg), var(--surface-color));
-  border: var(--button-border);
+/* Artistic specific button enhancements */
+.theme-artistic .timer-button-standard,
+.theme-artistic .timer-button-minimal {
+  background-image: var(--brush-texture);
   border-style: dashed;
-  color: var(--button-text);
   font-family: var(--font-family);
   font-weight: bold;
-  box-shadow: var(--button-shadow);
   position: relative;
   transform: rotate(0.5deg); /* Slight rotation for organic feel */
 }
 
-.theme-artistic .timer-button::before {
+.theme-artistic .timer-button-standard::before,
+.theme-artistic .timer-button-minimal::before {
   content: '';
   position: absolute;
   inset: -2px;
@@ -196,32 +231,15 @@
   pointer-events: none;
 }
 
-.theme-artistic .timer-button:hover::before {
+.theme-artistic .timer-button-standard:hover::before,
+.theme-artistic .timer-button-minimal:hover::before {
   opacity: 1;
 }
 
-.theme-artistic .timer-button:hover {
-  background: var(--brush-texture), linear-gradient(135deg, var(--button-hover), var(--button-bg));
+.theme-artistic .timer-button-standard:hover,
+.theme-artistic .timer-button-minimal:hover {
   transform: translateY(var(--button-hover-translate)) rotate(-0.5deg);
-  box-shadow: var(--button-hover-shadow);
   border-color: var(--accent-color);
-}
-
-/* Primary button with paint brush effect */
-.theme-artistic .timer-button.primary {
-  background: var(--brush-texture), linear-gradient(135deg, var(--accent-color), var(--warning-color));
-  color: var(--background-color);
-  border-color: var(--primary-color);
-  box-shadow:
-    var(--button-shadow),
-    0 0 15px rgba(194, 65, 12, 0.3);
-}
-
-.theme-artistic .timer-button.primary:hover {
-  background: var(--brush-texture), linear-gradient(135deg, var(--warning-color), var(--accent-color));
-  box-shadow:
-    var(--button-hover-shadow),
-    0 0 20px rgba(194, 65, 12, 0.4);
 }
 
 /* Settings panel with artistic sketch styling */

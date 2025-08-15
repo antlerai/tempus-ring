@@ -69,6 +69,9 @@ export class ControlPanel {
   private render(): void {
     const buttonLayout = this.currentTheme.controlPanel?.buttonLayout || 'standard';
 
+    // Clear container first
+    this.container.innerHTML = '';
+
     // Apply appropriate container class based on button layout
     if (buttonLayout === 'minimal') {
       this.container.className = 'control-panel-minimal';
@@ -150,11 +153,11 @@ export class ControlPanel {
   }
 
   private recreateButtons(): void {
-    // Remove old buttons from DOM
-    this.container.innerHTML = '';
-
     // Create new buttons with updated theme styles
     this.createButtons();
+
+    // Re-attach event listeners to new buttons
+    this.attachEventListeners();
   }
 
   private handleStart(): void {
@@ -242,7 +245,7 @@ export class ControlPanel {
 
   private updatePauseButton(isPaused: boolean, buttonLayout: string): void {
     const showLabels = this.currentTheme.controlPanel?.showLabels !== false;
-    const iconSize = buttonLayout === 'minimal' ? 'w-8 h-8' : 'w-4 h-4';
+    const iconSize = buttonLayout === 'minimal' ? 'w-6 h-6' : 'w-4 h-4';
 
     // Update button content based on state and theme preferences
     if (buttonLayout === 'minimal' || !showLabels) {
@@ -265,7 +268,7 @@ export class ControlPanel {
   private updateLabels(): void {
     const buttonLayout = this.currentTheme.controlPanel?.buttonLayout || 'standard';
     const showLabels = this.currentTheme.controlPanel?.showLabels !== false;
-    const iconSize = buttonLayout === 'minimal' ? 'w-8 h-8' : 'w-4 h-4';
+    const iconSize = buttonLayout === 'minimal' ? 'w-6 h-6' : 'w-4 h-4';
 
     // Update button content based on theme preferences
     if (buttonLayout === 'minimal' || !showLabels) {

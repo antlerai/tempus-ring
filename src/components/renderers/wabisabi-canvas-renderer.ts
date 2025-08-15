@@ -5,25 +5,50 @@ export class WabiSabiCanvasRenderer extends CanvasRenderer {
   private roughnessLevel: number = 2.5;
   private asymmetryFactor: number = 0.3;
 
+  // CSS variables cache for performance
+  private cssVars: Record<string, string> = {};
+
   protected override setupRoughHelper(): void {
     // Call parent setup
     super.setupRoughHelper();
 
-    // Configure rough.js for Wabi-sabi aesthetic
+    // Cache CSS variables for performance
+    this.updateCSSVariables();
+
+    // Configure rough.js for Wabi-sabi aesthetic using CSS variables
     this.roughHelper.updateConfig({
       ...this.config,
       theme: {
         ...this.config.theme,
         effects: {
           ...this.config.theme.effects,
-          roughness: this.roughnessLevel,
-          strokeWidth: 3,
+          roughness: Number.parseFloat(this.cssVars['--canvas-roughness'] || '2.5'),
+          strokeWidth: Number.parseFloat(this.cssVars['--canvas-stroke-width'] || '3'),
           fillStyle: 'hachure',
-          hachureGap: 6,
-          hachureAngle: 45,
+          hachureGap: Number.parseFloat(this.cssVars['--canvas-hachure-gap'] || '6'),
+          hachureAngle: Number.parseFloat(this.cssVars['--canvas-hachure-angle'] || '45'),
         },
       },
     });
+  }
+
+  private updateCSSVariables(): void {
+    const computedStyle = getComputedStyle(document.documentElement);
+    this.cssVars = {
+      '--canvas-background': computedStyle.getPropertyValue('--canvas-background').trim(),
+      '--canvas-roughness': computedStyle.getPropertyValue('--canvas-roughness').trim(),
+      '--canvas-stroke-width': computedStyle.getPropertyValue('--canvas-stroke-width').trim(),
+      '--canvas-stroke-color': computedStyle.getPropertyValue('--canvas-stroke-color').trim(),
+      '--canvas-fill-color': computedStyle.getPropertyValue('--canvas-fill-color').trim(),
+      '--canvas-hachure-gap': computedStyle.getPropertyValue('--canvas-hachure-gap').trim(),
+      '--canvas-hachure-angle': computedStyle.getPropertyValue('--canvas-hachure-angle').trim(),
+      '--canvas-progress-stroke-color': computedStyle
+        .getPropertyValue('--canvas-progress-stroke-color')
+        .trim(),
+      '--primary-color': computedStyle.getPropertyValue('--primary-color').trim(),
+      '--secondary-color': computedStyle.getPropertyValue('--secondary-color').trim(),
+      '--accent-color': computedStyle.getPropertyValue('--accent-color').trim(),
+    };
   }
 
   protected override drawBackground(): void {
@@ -31,8 +56,8 @@ export class WabiSabiCanvasRenderer extends CanvasRenderer {
 
     const canvas = this.canvas;
 
-    // Clear canvas with aged paper color
-    this.ctx.fillStyle = '#fafaf9';
+    // Clear canvas with aged paper color from CSS
+    this.ctx.fillStyle = this.cssVars['--canvas-background'] || '#fafaf9';
     this.ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Add subtle paper texture
@@ -81,7 +106,7 @@ export class WabiSabiCanvasRenderer extends CanvasRenderer {
 
       this.ctx.save();
       this.ctx.globalAlpha = opacity;
-      this.ctx.fillStyle = '#d6d3d1';
+      this.ctx.fillStyle = this.cssVars['--secondary-color'] || '#d6d3d1';
       this.ctx.beginPath();
       this.ctx.ellipse(
         x,
@@ -104,7 +129,7 @@ export class WabiSabiCanvasRenderer extends CanvasRenderer {
 
       this.ctx.save();
       this.ctx.globalAlpha = 0.05;
-      this.ctx.strokeStyle = '#a8a29e';
+      this.ctx.strokeStyle = this.cssVars['--primary-color'] || '#a8a29e';
       this.ctx.lineWidth = 0.5;
       this.ctx.beginPath();
       this.ctx.moveTo(x, y1);
@@ -141,13 +166,13 @@ export class WabiSabiCanvasRenderer extends CanvasRenderer {
     // Draw the base circle using rough canvas directly
     const roughCanvas = this.roughHelper.getRoughCanvas();
     const circle = roughCanvas.generator.circle(center.x, center.y, this.radius * 2, {
-      stroke: '#78716c',
-      strokeWidth: 2.5,
+      stroke: this.cssVars['--canvas-stroke-color'] || '#78716c',
+      strokeWidth: Number.parseFloat(this.cssVars['--canvas-stroke-width'] || '2.5'),
       roughness: this.roughnessLevel,
-      fill: 'rgba(245, 245, 244, 0.3)',
+      fill: this.cssVars['--canvas-fill-color'] || 'rgba(245, 245, 244, 0.3)',
       fillStyle: 'hachure',
-      hachureGap: 8,
-      hachureAngle: 30,
+      hachureGap: Number.parseFloat(this.cssVars['--canvas-hachure-gap'] || '8'),
+      hachureAngle: Number.parseFloat(this.cssVars['--canvas-hachure-angle'] || '30'),
     });
     roughCanvas.draw(circle);
   }
@@ -155,8 +180,6 @@ export class WabiSabiCanvasRenderer extends CanvasRenderer {
   public drawTicks(): void {
     if (!this.roughHelper) return;
 
-    const center = this.center;
-    const radius = this.radius;
     const tickCount = 60; // More ticks for detailed feel, but irregular
 
     // Draw imperfect, weathered tick marks
@@ -164,56 +187,95 @@ export class WabiSabiCanvasRenderer extends CanvasRenderer {
       // Skip some ticks randomly for imperfect, aged appearance
       if (Math.random() < 0.15) continue;
 
-      const angle = (i * Math.PI * 2) / tickCount - Math.PI / 2;
-      const isMajor = i % 5 === 0;
-      const isHour = i % 15 === 0;
+      this.drawSingleTick(i, tickCount);
+    }
+  }
 
-      // Varying tick lengths with imperfection
-      let tickLength = 8;
-      let strokeWidth = 1.5;
+  private drawSingleTick(index: number, totalTicks: number): void {
+    const angle = (index * Math.PI * 2) / totalTicks - Math.PI / 2;
+    const tickType = this.getTickType(index);
+    const tickDimensions = this.calculateTickDimensions(tickType);
+    const tickPosition = this.calculateTickPosition(angle, tickDimensions.length);
+    const tickColor = this.getTickColor(tickType);
 
-      if (isHour) {
-        tickLength = 20 + (Math.random() - 0.5) * 4;
-        strokeWidth = 3 + (Math.random() - 0.5) * 0.8;
-      } else if (isMajor) {
-        tickLength = 12 + (Math.random() - 0.5) * 3;
-        strokeWidth = 2 + (Math.random() - 0.5) * 0.5;
-      } else {
-        tickLength += (Math.random() - 0.5) * 2;
-      }
+    this.renderTick(tickPosition, tickColor, tickDimensions);
+  }
 
-      // Add asymmetric positioning
-      const radiusOffset = (Math.random() - 0.5) * 3;
-      const angleOffset = (Math.random() - 0.5) * 0.05;
-      const adjustedAngle = angle + angleOffset;
+  private getTickType(index: number): 'hour' | 'major' | 'minor' {
+    if (index % 15 === 0) return 'hour';
+    if (index % 5 === 0) return 'major';
+    return 'minor';
+  }
 
-      const startRadius = radius - radiusOffset;
-      const endRadius = startRadius - tickLength;
+  private calculateTickDimensions(tickType: 'hour' | 'major' | 'minor'): {
+    length: number;
+    width: number;
+  } {
+    let tickLength = 8;
+    let strokeWidth = 1.5;
 
-      const x1 = center.x + Math.cos(adjustedAngle) * startRadius;
-      const y1 = center.y + Math.sin(adjustedAngle) * startRadius;
-      const x2 = center.x + Math.cos(adjustedAngle) * endRadius;
-      const y2 = center.y + Math.sin(adjustedAngle) * endRadius;
+    if (tickType === 'hour') {
+      tickLength = 20 + (Math.random() - 0.5) * 4;
+      strokeWidth = 3 + (Math.random() - 0.5) * 0.8;
+    } else if (tickType === 'major') {
+      tickLength = 12 + (Math.random() - 0.5) * 3;
+      strokeWidth = 2 + (Math.random() - 0.5) * 0.5;
+    } else {
+      tickLength += (Math.random() - 0.5) * 2;
+    }
 
-      // Draw tick with varying opacity for weathered effect
-      const opacity = 0.6 + Math.random() * 0.3;
-      const color = isHour ? '#57534e' : isMajor ? '#78716c' : '#a8a29e';
+    return { length: tickLength, width: strokeWidth };
+  }
 
-      // Draw tick using rough canvas directly
-      const roughCanvas = this.roughHelper.getRoughCanvas();
-      const line = roughCanvas.generator.line(x1, y1, x2, y2, {
-        stroke: color,
-        strokeWidth: strokeWidth,
-        roughness: this.roughnessLevel + (Math.random() - 0.5) * 0.5,
-      });
+  private calculateTickPosition(
+    angle: number,
+    tickLength: number
+  ): { x1: number; y1: number; x2: number; y2: number } {
+    const radiusOffset = (Math.random() - 0.5) * 3;
+    const angleOffset = (Math.random() - 0.5) * 0.05;
+    const adjustedAngle = angle + angleOffset;
 
-      // Apply opacity through canvas context
-      if (this.ctx) {
-        this.ctx.save();
-        this.ctx.globalAlpha = opacity;
-        roughCanvas.draw(line);
-        this.ctx.restore();
-      }
+    const startRadius = this.radius - radiusOffset;
+    const endRadius = startRadius - tickLength;
+
+    return {
+      x1: this.center.x + Math.cos(adjustedAngle) * startRadius,
+      y1: this.center.y + Math.sin(adjustedAngle) * startRadius,
+      x2: this.center.x + Math.cos(adjustedAngle) * endRadius,
+      y2: this.center.y + Math.sin(adjustedAngle) * endRadius,
+    };
+  }
+
+  private getTickColor(tickType: 'hour' | 'major' | 'minor'): string {
+    if (tickType === 'hour') {
+      return this.cssVars['--primary-color'] || '#57534e';
+    }
+    if (tickType === 'major') {
+      return this.cssVars['--canvas-stroke-color'] || '#78716c';
+    }
+    return this.cssVars['--secondary-color'] || '#a8a29e';
+  }
+
+  private renderTick(
+    position: { x1: number; y1: number; x2: number; y2: number },
+    color: string,
+    dimensions: { length: number; width: number }
+  ): void {
+    const roughCanvas = this.roughHelper!.getRoughCanvas();
+    const opacity = 0.6 + Math.random() * 0.3;
+
+    const line = roughCanvas.generator.line(position.x1, position.y1, position.x2, position.y2, {
+      stroke: color,
+      strokeWidth: dimensions.width,
+      roughness: this.roughnessLevel + (Math.random() - 0.5) * 0.5,
+    });
+
+    // Apply opacity through canvas context
+    if (this.ctx) {
+      this.ctx.save();
+      this.ctx.globalAlpha = opacity;
+      roughCanvas.draw(line);
+      this.ctx.restore();
     }
   }
 
@@ -253,7 +315,7 @@ export class WabiSabiCanvasRenderer extends CanvasRenderer {
       // Draw progress line using rough canvas directly
       const roughCanvas = this.roughHelper.getRoughCanvas();
       const line = roughCanvas.generator.line(x1, y1, x2, y2, {
-        stroke: '#ef4444',
+        stroke: this.cssVars['--canvas-progress-stroke-color'] || '#ef4444',
         strokeWidth: width,
         roughness: this.roughnessLevel,
       });
@@ -272,8 +334,8 @@ export class WabiSabiCanvasRenderer extends CanvasRenderer {
       // Draw progress indicator using rough canvas directly
       const roughCanvas = this.roughHelper.getRoughCanvas();
       const circle = roughCanvas.generator.circle(endX, endY, 8, {
-        stroke: '#dc2626',
-        fill: '#ef4444',
+        stroke: this.cssVars['--accent-color'] || '#dc2626',
+        fill: this.cssVars['--canvas-progress-stroke-color'] || '#ef4444',
         fillStyle: 'solid',
         strokeWidth: 2,
         roughness: this.roughnessLevel * 1.2,
@@ -314,7 +376,7 @@ export class WabiSabiCanvasRenderer extends CanvasRenderer {
     // Draw hour hand using rough canvas directly
     const roughCanvas = this.roughHelper.getRoughCanvas();
     const hourHand = roughCanvas.generator.line(center.x, center.y, hourEndX, hourEndY, {
-      stroke: '#57534e',
+      stroke: this.cssVars['--primary-color'] || '#57534e',
       strokeWidth: 4 + (Math.random() - 0.5) * 0.8,
       roughness: this.roughnessLevel,
     });
@@ -333,7 +395,7 @@ export class WabiSabiCanvasRenderer extends CanvasRenderer {
 
     // Draw minute hand using rough canvas directly
     const minuteHand = roughCanvas.generator.line(center.x, center.y, minuteEndX, minuteEndY, {
-      stroke: '#44403c',
+      stroke: this.cssVars['--text-primary'] || '#44403c',
       strokeWidth: 2.5 + (Math.random() - 0.5) * 0.5,
       roughness: this.roughnessLevel,
     });
@@ -348,6 +410,9 @@ export class WabiSabiCanvasRenderer extends CanvasRenderer {
 
   public override render(progress: number, _theme: ThemeConfig): void {
     if (!this.initialized || !this.ctx) return;
+
+    // Update CSS variables in case theme changed
+    this.updateCSSVariables();
 
     // Clear and setup
     this.drawBackground();
