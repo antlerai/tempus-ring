@@ -14,11 +14,13 @@
     "windows": [
       {
         "title": "Tempus Ring",
-        "width": 480,
-        "height": 670,
-        "minWidth": 280,
-        "minHeight": 400,
-        "resizable": true,
+        "width": 350,
+        "height": 600,
+        "minWidth": 350,
+        "minHeight": 500,
+        "maxWidth": 350,
+        "maxHeight": 500,
+        "resizable": false,
         "fullscreen": false,
         "decorations": true,
         "alwaysOnTop": false,

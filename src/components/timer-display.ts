@@ -1,11 +1,10 @@
 // biome-ignore lint/style/useImportType: TimerFactory is used as constructor parameter
 import { TimerFactory } from '../factories/timer-factory';
-import { i18n } from '../i18n';
 // biome-ignore lint/style/useImportType: ThemeManager is used as constructor parameter
 import { ThemeManager } from '../services/theme-manager';
 // biome-ignore lint/style/useImportType: TimerService is used as constructor parameter
 import { TimerService } from '../services/timer-service';
-import type { TimerData, TimerState } from '../types';
+import type { TimerData } from '../types';
 import { TimerState as TimerStateEnum } from '../types';
 import type { TimerRenderer } from '../types/renderer-types';
 
@@ -29,9 +28,7 @@ export class TimerDisplay {
   private displayContainer: HTMLElement;
   private rendererContainer: HTMLElement;
   private timeDisplay: HTMLElement;
-  private stateDisplay: HTMLElement;
   private sessionCounter: HTMLElement;
-  private progressText: HTMLElement;
 
   constructor(config: TimerDisplayConfig) {
     this.container = config.container;
@@ -43,9 +40,7 @@ export class TimerDisplay {
     this.displayContainer = this.createDisplayContainer();
     this.rendererContainer = this.createRendererContainer();
     this.timeDisplay = this.createTimeDisplay();
-    this.stateDisplay = this.createStateDisplay();
     this.sessionCounter = this.createSessionCounter();
-    this.progressText = this.createProgressText();
 
     this.render();
     this.setupEventListeners();
@@ -73,9 +68,7 @@ export class TimerDisplay {
     this.displayContainer = this.createDisplayContainer();
     this.rendererContainer = this.createRendererContainer();
     this.timeDisplay = this.createTimeDisplay();
-    this.stateDisplay = this.createStateDisplay();
     this.sessionCounter = this.createSessionCounter();
-    this.progressText = this.createProgressText();
 
     // Re-render the layout
     this.render();
@@ -125,57 +118,25 @@ export class TimerDisplay {
     return timeDisplay;
   }
 
-  private createStateDisplay(): HTMLElement {
-    const stateDisplay = document.createElement('div');
-    const currentTheme = this.themeManager.getCurrentTheme();
-    const layoutMode = currentTheme.layoutMode || 'standard';
-
-    // Apply appropriate state display class based on theme
-    if (layoutMode === 'minimal') {
-      stateDisplay.className = 'timer-state-minimal';
-    } else {
-      stateDisplay.className = 'timer-state-standard';
-    }
-
-    stateDisplay.textContent = i18n.t('timer.work');
-    return stateDisplay;
-  }
-
   private createSessionCounter(): HTMLElement {
     const sessionCounter = document.createElement('div');
-    const currentTheme = this.themeManager.getCurrentTheme();
-    const layoutMode = currentTheme.layoutMode || 'standard';
+    sessionCounter.className = 'timer-session-dots';
+    sessionCounter.id = 'session-dots-container';
 
-    // Base container styling
-    sessionCounter.className = 'flex items-center justify-between w-full max-w-sm';
+    // Create dots based on the long break interval (default 4)
+    const totalSessions =
+      this.timerService.getState().sessionsUntilLongBreak +
+      this.timerService.getState().completedSessions;
+    const maxSessions = Math.max(4, totalSessions); // Ensure at least 4 dots
 
-    const completedSessions = document.createElement('span');
-    completedSessions.id = 'completed-sessions';
-    // Apply appropriate session counter class based on theme
-    if (layoutMode === 'minimal') {
-      completedSessions.className = 'timer-session-minimal';
-    } else {
-      completedSessions.className = 'timer-session-standard';
+    for (let i = 0; i < maxSessions; i++) {
+      const dot = document.createElement('div');
+      dot.className = 'timer-dot remaining';
+      dot.dataset.sessionIndex = i.toString();
+      sessionCounter.appendChild(dot);
     }
-    completedSessions.textContent = `${i18n.t('timer.completed')}: 0`;
-
-    const remainingSessions = document.createElement('span');
-    remainingSessions.id = 'remaining-sessions';
-    // Apply same class to remaining sessions
-    remainingSessions.className = completedSessions.className;
-    remainingSessions.textContent = `${i18n.t('timer.remaining')}: 4`;
-
-    sessionCounter.appendChild(completedSessions);
-    sessionCounter.appendChild(remainingSessions);
 
     return sessionCounter;
-  }
-
-  private createProgressText(): HTMLElement {
-    const progressText = document.createElement('div');
-    progressText.className = 'timer-progress-text';
-    progressText.textContent = '0% complete';
-    return progressText;
   }
 
   private render(): void {
@@ -188,21 +149,17 @@ export class TimerDisplay {
       // Cloudlight theme layout with status components between clock and buttons
       this.container.className = '';
 
-      // Add components in the cloudlight order: clock, time, status components
+      // Add components in the cloudlight order: clock, time, session counter
       this.displayContainer.appendChild(this.rendererContainer);
       this.displayContainer.appendChild(this.timeDisplay);
-      this.displayContainer.appendChild(this.stateDisplay);
       this.displayContainer.appendChild(this.sessionCounter);
-      this.displayContainer.appendChild(this.progressText);
     } else {
       this.container.className = 'flex flex-col items-center justify-center min-h-screen p-8';
 
       // Add all components to display container
       this.displayContainer.appendChild(this.rendererContainer);
       this.displayContainer.appendChild(this.timeDisplay);
-      this.displayContainer.appendChild(this.stateDisplay);
       this.displayContainer.appendChild(this.sessionCounter);
-      this.displayContainer.appendChild(this.progressText);
     }
 
     // Clear container and add the display container
@@ -216,10 +173,6 @@ export class TimerDisplay {
       this.currentData = data;
       this.updateDisplay();
       this.updateRenderer();
-    });
-
-    this.timerService.on('timer:stateChange', ({ to }) => {
-      this.updateStateDisplay(to);
     });
 
     this.timerService.on('timer:sessionStart', () => {
@@ -287,14 +240,8 @@ export class TimerDisplay {
     const timeString = this.formatTime(data.remainingTime);
     this.timeDisplay.textContent = timeString;
 
-    // Update state display
-    this.updateStateDisplay(data.state);
-
     // Update session counters
     this.updateSessionCounters(data);
-
-    // Update progress text
-    this.updateProgressText(data.progress);
 
     // Update renderer with time
     if (this.renderer) {
@@ -317,53 +264,31 @@ export class TimerDisplay {
     this.renderer.setAnimationState(isRunning);
   }
 
-  private updateStateDisplay(state: TimerState): void {
-    let stateText: string;
-    let stateClass: string;
-
-    switch (state) {
-      case TimerStateEnum.WORK:
-        stateText = i18n.t('timer.work');
-        stateClass = 'text-blue-600 dark:text-blue-400';
-        break;
-      case TimerStateEnum.SHORT_BREAK:
-        stateText = i18n.t('timer.shortBreak');
-        stateClass = 'text-green-600 dark:text-green-400';
-        break;
-      case TimerStateEnum.LONG_BREAK:
-        stateText = i18n.t('timer.longBreak');
-        stateClass = 'text-purple-600 dark:text-purple-400';
-        break;
-      case TimerStateEnum.PAUSED:
-        stateText = i18n.t('timer.pause');
-        stateClass = 'text-orange-600 dark:text-orange-400';
-        break;
-      default:
-        stateText = i18n.t('timer.work');
-        stateClass = 'text-gray-600 dark:text-gray-300';
-        break;
-    }
-
-    this.stateDisplay.textContent = stateText;
-    this.stateDisplay.className = `text-2xl font-semibold text-center capitalize ${stateClass}`;
-  }
-
   private updateSessionCounters(data: TimerData): void {
-    const completedElement = this.sessionCounter.querySelector('#completed-sessions');
-    const remainingElement = this.sessionCounter.querySelector('#remaining-sessions');
+    const dots = this.sessionCounter.querySelectorAll('.timer-dot');
+    const totalSessions = data.completedSessions + data.sessionsUntilLongBreak;
+    const currentSessionIndex = data.completedSessions;
 
-    if (completedElement) {
-      completedElement.textContent = `${i18n.t('timer.completed')}: ${data.completedSessions}`;
-    }
+    dots.forEach((dot, index) => {
+      const dotElement = dot as HTMLElement;
 
-    if (remainingElement) {
-      remainingElement.textContent = `${i18n.t('timer.remaining')}: ${data.sessionsUntilLongBreak}`;
-    }
-  }
-
-  private updateProgressText(progress: number): void {
-    const percentage = Math.round(progress * 100);
-    this.progressText.textContent = `${percentage}% complete`;
+      if (index < data.completedSessions) {
+        // Completed sessions
+        dotElement.className = 'timer-dot completed';
+      } else if (
+        index === currentSessionIndex &&
+        (data.state === 'work' || data.state === 'short_break' || data.state === 'long_break')
+      ) {
+        // Current active session
+        dotElement.className = 'timer-dot current';
+      } else if (index < totalSessions) {
+        // Remaining sessions
+        dotElement.className = 'timer-dot remaining';
+      } else {
+        // Hide extra dots if any
+        dotElement.style.display = 'none';
+      }
+    });
   }
 
   private formatTime(seconds: number): string {
@@ -376,12 +301,10 @@ export class TimerDisplay {
   private updateLabels(): void {
     // Update all text content when language changes
     if (this.currentData) {
-      this.updateStateDisplay(this.currentData.state);
       this.updateSessionCounters(this.currentData);
     } else {
       // Update with default values
       const data = this.timerService.getState();
-      this.updateStateDisplay(data.state);
       this.updateSessionCounters(data);
     }
   }

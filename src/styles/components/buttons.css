@@ -96,8 +96,8 @@
   height: 100%;
 }
 
-.timer-button-minimal > i > svg,
-.timer-button-minimal svg {
+.timer-button-minimal svg,
+.timer-button-minimal > i > svg {
   width: 1.5rem;
   height: 1.5rem;
 }

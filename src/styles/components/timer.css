@@ -212,6 +212,68 @@
   color: var(--text-secondary);
 }
 
+/* Session dots display */
+.timer-session-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm, 8px);
+  padding: var(--spacing-sm, 8px);
+}
+
+.timer-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--border-color);
+  background-color: transparent;
+  transition: all var(--duration-normal) var(--ease-out);
+  position: relative;
+}
+
+.timer-dot.completed {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.timer-dot.current {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  animation: pulse-glow 2s ease-in-out infinite;
+  box-shadow: 0 0 8px var(--accent-color);
+}
+
+.timer-dot.remaining {
+  background-color: transparent;
+  border-color: var(--border-color);
+  opacity: 0.6;
+}
+
+/* High contrast mode adjustments for dots */
+@media (prefers-contrast: high) {
+  .timer-dot {
+    border-width: 3px;
+  }
+
+  .timer-dot.completed,
+  .timer-dot.current {
+    border-color: var(--text-primary);
+    background-color: var(--text-primary);
+  }
+
+  .timer-dot.remaining {
+    border-color: var(--text-secondary);
+  }
+}
+
+/* Reduced motion preferences for dots */
+@media (prefers-reduced-motion: reduce) {
+  .timer-dot.current {
+    animation: none !important;
+    box-shadow: 0 0 4px var(--accent-color);
+  }
+}
+
 /* Dynamic content using data attributes */
 [data-timer-state='work'] .timer-display {
   border-color: var(--accent-color);
