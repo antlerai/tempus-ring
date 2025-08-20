@@ -261,43 +261,6 @@
   --animation-state: 'idle';
 }
 
-/* Responsive typography */
-@media (min-width: 1400px) {
-  .timer-text {
-    font-size: var(--time-font-size-xl);
-  }
-}
-
-@media (min-width: 1200px) and (max-width: 1399px) {
-  .timer-text {
-    font-size: var(--time-font-size-xl);
-  }
-}
-
-@media (min-width: 992px) and (max-width: 1199px) {
-  .timer-text {
-    font-size: var(--time-font-size-large);
-  }
-}
-
-@media (min-width: 769px) and (max-width: 991px) {
-  .timer-text {
-    font-size: var(--time-font-size);
-  }
-}
-
-@media (max-width: 768px) {
-  .timer-text {
-    font-size: var(--time-font-size-mobile);
-  }
-}
-
-@media (max-width: 480px) {
-  .timer-text {
-    font-size: var(--time-font-size-small);
-  }
-}
-
 /* High contrast mode adjustments */
 @media (prefers-contrast: high) {
   .timer-display {

@@ -295,63 +295,6 @@
   }
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-  .settings-form {
-    margin: 0 1rem;
-    min-width: 320px;
-    max-width: calc(90vw);
-    max-height: calc(90vh);
-  }
-
-  .settings-content {
-    max-height: calc(70vh);
-    overflow-y: auto;
-  }
-
-  .settings-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .settings-section {
-    padding: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .settings-form {
-    margin: 0 0.5rem;
-    min-width: 300px;
-    max-width: calc(95vw);
-    max-height: calc(95vh);
-  }
-
-  .settings-header,
-  .settings-content,
-  .settings-footer {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  .settings-title {
-    font-size: 1.125rem;
-  }
-
-  .settings-section {
-    padding: 0.75rem;
-  }
-
-  .settings-form-group {
-    gap: 0.5rem;
-  }
-
-  .settings-input,
-  .settings-select {
-    font-size: 16px; /* Prevent zoom on iOS */
-  }
-}
-
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   .settings-form {

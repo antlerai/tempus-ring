@@ -462,24 +462,6 @@
   transform: scale(1.5, 0.8) rotate(15deg);
 }
 
-/* Responsive hand-drawn adjustments */
-@media (max-width: 768px) {
-  .theme-hand-drawn {
-    background-size:
-      15px 15px,
-      100px 100px,
-      100% 100%;
-  }
-
-  .theme-hand-drawn .timer-text {
-    transform: rotate(-0.3deg) translateX(0.5px);
-  }
-
-  .theme-hand-drawn .settings-panel {
-    transform: rotate(-0.1deg);
-  }
-}
-
 /* Accessibility for reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .theme-hand-drawn .timer-display,

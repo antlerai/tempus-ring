@@ -406,15 +406,6 @@
   animation: night-transition 4s ease-in-out infinite alternate;
 }
 
-/* Responsive gradient adjustments */
-@media (max-width: 768px) {
-  .theme-dawn-dusk .timer-text {
-    /* Fallback for mobile if gradient text isn't supported */
-    -webkit-text-fill-color: var(--text-primary);
-    color: var(--text-primary);
-  }
-}
-
 /* Accessibility for reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .theme-dawn-dusk.progress-dawn .timer-container,

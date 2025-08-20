@@ -207,21 +207,3 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 }
-
-/* Touch device optimizations */
-@media (hover: none) and (pointer: coarse) {
-  .timer-button {
-    min-height: 44px; /* Minimum touch target size */
-    min-width: 44px;
-  }
-
-  .timer-button:hover {
-    transform: none;
-    box-shadow: var(--button-shadow);
-  }
-
-  .timer-button:active {
-    transform: scale(0.95);
-    background-color: var(--button-hover);
-  }
-}

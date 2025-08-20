@@ -7,7 +7,6 @@ export interface ThemeStyleConfig {
   modules?: {
     animations?: string;
     effects?: string;
-    responsive?: string;
   };
   /** CSS custom properties that can be overridden */
   customProperties?: Record<string, string>;

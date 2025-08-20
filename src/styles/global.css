@@ -73,53 +73,6 @@ body {
   box-shadow: var(--shadow-md);
 }
 
-/* Desktop app specific responsive behavior */
-@media (min-width: 280px) and (max-width: 320px) {
-  .container {
-    max-width: 280px;
-    padding-left: var(--spacing-xs);
-    padding-right: var(--spacing-xs);
-  }
-}
-
-@media (min-width: 321px) and (max-width: 400px) {
-  .container {
-    max-width: 400px;
-    padding-left: var(--spacing-sm);
-    padding-right: var(--spacing-sm);
-  }
-}
-
-@media (min-width: 401px) and (max-width: 600px) {
-  .container {
-    max-width: 600px;
-    padding-left: var(--spacing-md);
-    padding-right: var(--spacing-md);
-  }
-}
-
-/* Web responsive breakpoints */
-@media (min-width: 640px) {
-  .container {
-    max-width: 640px;
-  }
-}
-@media (min-width: 768px) {
-  .container {
-    max-width: 768px;
-  }
-}
-@media (min-width: 1024px) {
-  .container {
-    max-width: 1024px;
-  }
-}
-@media (min-width: 1280px) {
-  .container {
-    max-width: 1280px;
-  }
-}
-
 /* Spacing utilities */
 .space-y-2 > * + * {
   margin-top: var(--spacing-sm);
@@ -161,15 +114,6 @@ body {
 }
 .gap-8 {
   gap: var(--spacing-xl);
-}
-
-@media (min-width: 1024px) {
-  .lg\:grid-cols-3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .lg\:col-span-2 {
-    grid-column: span 2 / span 2;
-  }
 }
 
 /* Print styles - moved to end to ensure proper cascade order */

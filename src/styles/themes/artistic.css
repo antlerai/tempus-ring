@@ -435,24 +435,6 @@
   transform: rotate(0.5deg) scale(0.99);
 }
 
-/* Responsive artistic adjustments */
-@media (max-width: 768px) {
-  .theme-artistic {
-    background-size:
-      80px 80px,
-      50px 50px,
-      100% 100%;
-  }
-
-  .theme-artistic .timer-text {
-    transform: rotate(-0.5deg);
-  }
-
-  .theme-artistic .settings-panel {
-    transform: rotate(-0.2deg);
-  }
-}
-
 /* Accessibility for reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .theme-artistic .timer-display,

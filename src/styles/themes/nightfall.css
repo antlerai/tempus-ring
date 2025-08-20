@@ -474,21 +474,6 @@
   pointer-events: none;
 }
 
-/* Responsive dark theme adjustments */
-@media (max-width: 768px) {
-  .theme-nightfall {
-    background-size:
-      150px 150px,
-      100px 100px,
-      80px 80px,
-      100% 100%;
-  }
-
-  .theme-nightfall .settings-panel {
-    backdrop-filter: blur(8px);
-  }
-}
-
 /* High contrast mode adjustments */
 @media (prefers-contrast: high) {
   .theme-nightfall {

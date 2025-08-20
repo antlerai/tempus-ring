@@ -6,7 +6,6 @@ Development guidance for Tempus Ring - a cross-platform Pomodoro timer built wit
 
 **Development**: `pnpm tauri dev` (desktop) | `pnpm dev` (web) | `pnpm tauri build` (production)
 **Testing**: `pnpm test` | `pnpm test:e2e` | `pnpm check:all` (all quality checks)
-**Mobile**: `pnpm tauri:android` | `pnpm tauri:ios`
 
 ## Architecture
 
@@ -108,7 +107,6 @@ this.element.style.opacity = '0.5';
 
 **Theme Configuration**: Each theme must have corresponding CSS files in `src/styles/themes/`
 **Performance**: Use `will-change`, `contain`, and `transform: translateZ(0)` for animation elements
-**Responsive**: Define breakpoints in CSS, not JavaScript
 
 ## Library Quirks & Critical Rules
 

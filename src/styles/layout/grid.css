@@ -68,12 +68,6 @@
   margin: 0 auto;
 }
 
-@media (min-width: 640px) {
-  .control-panel-standard {
-    flex-direction: row;
-  }
-}
-
 /* Standard button container for multi-button layout */
 .control-panel-standard .control-buttons {
   display: flex;
@@ -132,96 +126,4 @@
   top: var(--spacing-lg);
   right: var(--spacing-lg);
   z-index: var(--z-raised);
-}
-
-/* Responsive breakpoints */
-
-/* Extra large screens - prevent timer from becoming too small */
-@media (min-width: 1400px) {
-  .timer-container {
-    width: var(--timer-size-xl, 320px);
-    height: var(--timer-size-xl, 320px);
-    min-width: 280px;
-    min-height: 280px;
-  }
-}
-
-/* Large screens */
-@media (min-width: 1200px) and (max-width: 1399px) {
-  .timer-container {
-    width: var(--timer-size-xl, 320px);
-    height: var(--timer-size-xl, 320px);
-    min-width: 260px;
-    min-height: 260px;
-  }
-}
-
-/* Medium-large screens */
-@media (min-width: 992px) and (max-width: 1199px) {
-  .timer-container {
-    width: var(--timer-size-large, 280px);
-    height: var(--timer-size-large, 280px);
-    min-width: 240px;
-    min-height: 240px;
-  }
-}
-
-/* Medium screens */
-@media (min-width: 769px) and (max-width: 991px) {
-  .timer-container {
-    width: var(--timer-size, 240px);
-    height: var(--timer-size, 240px);
-    min-width: 220px;
-    min-height: 220px;
-  }
-}
-
-/* Mobile and small tablets */
-@media (max-width: 768px) {
-  .app-container {
-    padding: var(--spacing-md);
-    gap: var(--spacing-lg);
-  }
-
-  .timer-container {
-    width: var(--timer-size-mobile, 220px);
-    height: var(--timer-size-mobile, 220px);
-    min-width: 200px;
-    min-height: 200px;
-  }
-
-  .settings-panel {
-    min-width: auto;
-    width: 100%;
-    max-width: 400px;
-  }
-
-  .theme-switcher-container {
-    top: var(--spacing-md);
-    right: var(--spacing-md);
-  }
-}
-
-/* Small phones */
-@media (max-width: 480px) {
-  .app-container {
-    padding: var(--spacing-sm);
-    gap: var(--spacing-md);
-  }
-
-  .timer-container {
-    width: var(--timer-size-small, 180px);
-    height: var(--timer-size-small, 180px);
-    min-width: 160px;
-    min-height: 160px;
-  }
-
-  .control-group {
-    flex-direction: column;
-    gap: var(--spacing-sm);
-  }
-
-  .control-group > * {
-    width: 100%;
-  }
 }

@@ -8,7 +8,7 @@ Tempus Ring aims to enhance productivity and focus through:
 
 - **Focus Enhancement**: Provide users with a scientifically-backed Pomodoro technique implementation to improve concentration and time management
 - **Aesthetic Personalization**: Offer multiple visual themes to create a pleasant, personalized workspace that matches individual preferences
-- **Cross-platform Accessibility**: Deliver consistent experience across desktop platforms (macOS, Windows, Linux) with future mobile support
+- **Cross-platform Accessibility**: Deliver consistent experience across desktop platforms (macOS, Windows, Linux)
 - **Language Inclusivity**: Support multiple languages (English, Chinese Simplified/Traditional, Japanese) to serve diverse user communities
 - **Developer Integration**: Enable AI assistants and development tools to interact with the timer through MCP (Model Context Protocol)
 - **Seamless Workflow Integration**: Provide system-level integration (tray, notifications) for minimal workflow disruption
@@ -31,7 +31,6 @@ Tempus Ring aims to enhance productivity and focus through:
   - **Artistic Sketch**: Artistic, sketch-like appearance (Canvas)
   - **Hand-drawn**: Hand-drawn aesthetic with smooth SVG (SVG)
 - **Runtime Theme Switching**: Change themes without restarting the application
-- **Responsive Design**: Optimized for desktop with mobile-ready foundation
 
 ### System Integration
 
@@ -142,10 +141,9 @@ Built with a **layered architecture** approach:
 
 **Key Design Patterns**: Event-driven services, pluggable renderers, CSS-first styling, strict dependency injection, type-safe Tauri commands.
 
-## 📱 Platform Support
+## 🖥️ Platform Support
 
 - **Desktop**: macOS, Windows, Linux (production ready)
-- **Mobile**: Android, iOS (development ready via `pnpm tauri:android` / `pnpm tauri:ios`)
 - **Web**: Browser support for development and testing
 
 ## 📊 Performance Metrics
