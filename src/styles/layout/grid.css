@@ -76,12 +76,57 @@
   width: 100%;
 }
 
-/* Minimal control panel - icon-only buttons like Cloudlight */
+/* Minimal control panel - use absolute positioning for perfect symmetry */
 .control-panel-minimal {
+  position: relative;
+  width: 100%;
+  height: 5rem; /* Fixed height to ensure alignment */
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-lg);
+}
+
+/* Inner wrapper for absolute positioning */
+.control-panel-minimal-inner {
+  position: relative;
+  width: 10rem; /* Fixed width to control button positioning */
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Alternative: Use direct positioning for minimal layout buttons */
+.control-panel-minimal > button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  transition:
+    background-color 0.2s,
+    box-shadow 0.2s,
+    scale 0.2s;
+}
+
+/* Hover effect that doesn't affect position */
+.control-panel-minimal > button:hover {
+  scale: 1.05; /* Use scale instead of transform to avoid position issues */
+}
+
+/* Position reset button to the left */
+.control-panel-minimal > button:first-child {
+  left: 50%;
+  margin-left: -4.375rem; /* Move RIGHT by 10px (0.625rem) to center */
+}
+
+/* Position start/pause button to the right */
+.control-panel-minimal > button:nth-child(2),
+.control-panel-minimal > button:nth-child(3) {
+  left: 50%;
+  margin-left: 1.625rem; /* Move RIGHT by 10px (0.625rem) to center */
 }
 
 /* Status components layout */

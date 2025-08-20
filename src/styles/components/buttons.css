@@ -74,15 +74,37 @@
 
 /* Minimal buttons - circular icon-only buttons */
 .timer-button-minimal {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 4rem; /* 64px */
   height: 4rem; /* 64px */
   border-radius: var(--radius-full);
   padding: 0;
   min-width: auto;
+  vertical-align: middle;
+  line-height: 1;
+  position: relative;
 }
 
+/* Ensure icons inside minimal buttons are centered */
+.timer-button-minimal > i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.timer-button-minimal > i > svg,
+.timer-button-minimal svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Hover effect for minimal buttons - removed transform to prevent position jump */
 .timer-button-minimal:hover {
-  transform: translateY(-1px) scale(1.05);
+  /* transform removed - handled by parent container */
 }
 
 /* Button state variants - semantic colors */

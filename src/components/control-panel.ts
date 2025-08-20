@@ -219,12 +219,12 @@ export class ControlPanel {
     isRunning: boolean;
     isPaused: boolean;
   }): void {
-    this.startButton.style.display = states.isIdle || states.isPaused ? 'flex' : 'none';
-    this.pauseButton.style.display = states.isRunning ? 'flex' : 'none';
+    this.startButton.style.display = states.isIdle || states.isPaused ? 'block' : 'none';
+    this.pauseButton.style.display = states.isRunning ? 'block' : 'none';
     this.resetButton.disabled = states.isIdle;
 
     if (states.isPaused) {
-      this.startButton.style.display = 'flex';
+      this.startButton.style.display = 'block';
       this.pauseButton.style.display = 'none';
     }
   }
