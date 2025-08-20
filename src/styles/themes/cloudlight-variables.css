@@ -1,0 +1,95 @@
+/* Cloudlight Theme Variables - Minimal light design */
+/* This file only contains CSS custom properties for the Cloudlight theme */
+
+.theme-cloudlight {
+  /* Color System - Minimal gray tones */
+  --primary-color: #1f2937; /* gray-800 for ticks */
+  --secondary-color: #9ca3af; /* gray-400 */
+  --accent-color: #ef4444; /* red-500 for pointer */
+  --background-color: #f3f4f6; /* gray-100 */
+  --body-background: #f3f4f6; /* gray-100 */
+
+  /* Text Colors - Clean and readable */
+  --text-primary: #1f2937; /* gray-800 */
+  --text-secondary: #6b7280; /* gray-500 */
+  --text-muted: #9ca3af; /* gray-400 */
+  --text-inverse: #ffffff; /* white text on dark backgrounds */
+
+  /* Interface Colors - Subtle and clean */
+  --surface-color: #ffffff; /* white surfaces */
+  --border-color: #e5e7eb; /* gray-200 borders */
+  --shadow-color: rgba(0, 0, 0, 0.05); /* subtle shadows */
+
+  /* Button Colors - Default states */
+  --button-bg: #e5e7eb; /* gray-200 */
+  --button-hover: #d1d5db; /* gray-300 */
+  --button-text: #374151; /* gray-700 */
+  --button-border: none;
+  --button-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  --button-hover-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --button-hover-translate: -1px;
+
+  /* Button State Variants - Semantic colors */
+  --button-pause-bg: #fef3c7; /* amber-100 */
+  --button-pause-hover: #fde68a; /* amber-200 */
+  --button-pause-text: #92400e; /* amber-800 */
+  --button-resume-bg: #dbeafe; /* blue-100 */
+  --button-resume-hover: #bfdbfe; /* blue-200 */
+  --button-resume-text: #1e40af; /* blue-800 */
+  --button-reset-bg: #fee2e2; /* red-100 */
+  --button-reset-hover: #fecaca; /* red-200 */
+  --button-reset-text: #991b1b; /* red-800 */
+
+  /* State Colors - Clean and modern */
+  --success-color: #10b981; /* emerald-500 */
+  --warning-color: #f59e0b; /* amber-500 */
+  --error-color: #ef4444; /* red-500 */
+  --info-color: #3b82f6; /* blue-500 */
+
+  /* Timer Sizing - Precise and clean */
+  --timer-size: 240px;
+  --timer-size-large: 280px;
+  --timer-size-xl: 320px;
+  --timer-size-mobile: 220px;
+  --timer-size-small: 180px;
+  --ring-width: 8px;
+  --tick-length: 8px;
+  --major-tick-length: 12px;
+  --hand-width: 2px;
+  --center-dot-size: 12px;
+
+  /* Typography - Clean and modern */
+  --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-family-mono: 'Roboto Mono', 'SF Mono', 'Monaco', monospace;
+  --time-font-size: 2.25rem;
+  --time-font-size-large: 2.6rem;
+  --time-font-size-xl: 3rem;
+  --time-font-size-mobile: 1.9rem;
+  --time-font-size-small: 1.5rem;
+
+  /* Animation Settings - Smooth and precise */
+  --animation-duration: 1500s; /* 25 minutes */
+  --transition-duration: 200ms;
+  --hand-transition: transform 1000ms linear;
+
+  /* Button Styling - Minimal and clean */
+  --button-padding: 12px;
+  --button-radius: 12px;
+
+  /* Clock Elements - Precise styling */
+  --tick-color: var(--secondary-color);
+  --major-tick-color: var(--primary-color);
+  --clock-gradient: linear-gradient(145deg, #ffffff, #e6e6e6);
+  --clock-inner-bg: #ffffff;
+  --clock-outer-border: 8px solid #e5e7eb;
+
+  /* Focus and Interaction States */
+  --focus-ring: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  --focus-border: var(--accent-color);
+  --hover-opacity: 0.8;
+  --active-scale: 0.98;
+
+  /* Performance Settings */
+  --will-change: transform;
+  --contain: layout style;
+}

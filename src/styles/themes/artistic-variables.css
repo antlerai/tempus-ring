@@ -1,0 +1,101 @@
+/* Artistic Theme Variables - Sketch-like aesthetic with creative elements */
+/* This file only contains CSS custom properties for the Artistic theme */
+
+.theme-artistic {
+  /* Color System - Artistic earth tones */
+  --primary-color: #7c2d12; /* red-900 */
+  --secondary-color: #a16207; /* yellow-700 */
+  --accent-color: #c2410c; /* orange-700 */
+  --background-color: #fefce8; /* yellow-50 */
+  --body-background: #fefce8; /* yellow-50 */
+
+  /* Text Colors - Artistic and warm */
+  --text-primary: #451a03; /* amber-950 */
+  --text-secondary: #7c2d12; /* red-900 */
+  --text-muted: #a16207; /* yellow-700 */
+  --text-inverse: #fefce8; /* yellow-50 on dark backgrounds */
+
+  /* Interface Colors - Artistic palette */
+  --surface-color: #fef3c7; /* amber-100 */
+  --border-color: #f59e0b; /* amber-500 */
+  --shadow-color: rgba(124, 45, 18, 0.3); /* red-900 with opacity */
+
+  /* Button Colors - Creative feel */
+  --button-bg: #fed7aa; /* orange-200 */
+  --button-hover: #fb923c; /* orange-400 */
+  --button-text: var(--text-primary);
+  --button-border: 1px solid var(--border-color);
+  --button-shadow: 0 2px 4px rgba(124, 45, 18, 0.2);
+  --button-hover-shadow: 0 4px 8px rgba(124, 45, 18, 0.3);
+  --button-hover-translate: -2px;
+
+  /* Button State Variants - Artistic tones */
+  --button-pause-bg: #fef3c7; /* amber-100 */
+  --button-pause-hover: #fde68a; /* amber-200 */
+  --button-pause-text: #92400e; /* amber-800 */
+  --button-resume-bg: #dbeafe; /* blue-100 */
+  --button-resume-hover: #bfdbfe; /* blue-200 */
+  --button-resume-text: #1e40af; /* blue-800 */
+  --button-reset-bg: #fee2e2; /* red-100 */
+  --button-reset-hover: #fecaca; /* red-200 */
+  --button-reset-text: #991b1b; /* red-800 */
+
+  /* State Colors - Muted artistic tones */
+  --success-color: #16a34a; /* green-600 */
+  --warning-color: #ca8a04; /* yellow-600 */
+  --error-color: #dc2626; /* red-600 */
+  --info-color: #2563eb; /* blue-600 */
+
+  /* Timer Sizing - Creative proportions */
+  --timer-size: 240px;
+  --timer-size-large: 280px;
+  --timer-size-xl: 320px;
+  --timer-size-mobile: 220px;
+  --timer-size-small: 180px;
+  --ring-width: 8px;
+  --tick-length: 6px;
+  --major-tick-length: 12px;
+  --hand-width: 4px; /* Artistic brush width */
+  --center-dot-size: 10px;
+
+  /* Typography - Artistic fonts */
+  --font-family-primary: 'Crimson Text', 'Georgia', serif;
+  --font-family-mono: 'Courier Prime', 'Courier New', monospace;
+  --time-font-size: 2.2rem;
+  --time-font-size-large: 2.7rem;
+  --time-font-size-xl: 3.1rem;
+  --time-font-size-mobile: 1.8rem;
+  --time-font-size-small: 1.5rem;
+
+  /* SVG Artistic Effects */
+  --brush-roughness: 1.8; /* Artistic brush roughness */
+  --paint-opacity: 0.8; /* Paint-like transparency */
+  --sketch-variation: 0.4; /* Sketch line variation */
+  --texture-intensity: 0.3; /* Paper texture intensity */
+
+  /* Animation Settings - Artistic timing */
+  --animation-duration: 1500s; /* 25 minutes */
+  --transition-duration: 350ms; /* Slightly slower for artistic feel */
+  --hand-transition: transform 1100ms ease-in-out;
+
+  /* Button Styling - Creative shapes */
+  --button-padding: 12px 18px;
+  --button-radius: 8px;
+
+  /* Clock Elements - Artistic styling */
+  --tick-color: var(--secondary-color);
+  --major-tick-color: var(--primary-color);
+  --clock-gradient: linear-gradient(135deg, #fef3c7, #fed7aa);
+  --clock-inner-bg: #fef3c7;
+  --clock-outer-border: 3px solid var(--border-color);
+
+  /* Focus and Interaction States */
+  --focus-ring: 0 0 0 3px rgba(194, 65, 12, 0.2);
+  --focus-border: var(--accent-color);
+  --hover-opacity: 0.85;
+  --active-scale: 0.97;
+
+  /* Performance Settings */
+  --will-change: transform, opacity, filter;
+  --contain: layout style;
+}

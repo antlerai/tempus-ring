@@ -1,0 +1,105 @@
+/* Hand-Drawn Theme Variables - Sketchy hand-drawn aesthetic */
+/* This file only contains CSS custom properties for the Hand-Drawn theme */
+
+.theme-hand-drawn {
+  /* Color System - Sketchy pencil tones */
+  --primary-color: #525252; /* gray-600 */
+  --secondary-color: #a3a3a3; /* gray-400 */
+  --accent-color: #dc2626; /* red-600 */
+  --background-color: #fafafa; /* gray-50 */
+  --body-background: #fafafa; /* gray-50 */
+
+  /* Text Colors - Sketchy text */
+  --text-primary: #171717; /* gray-900 */
+  --text-secondary: #525252; /* gray-600 */
+  --text-muted: #737373; /* gray-500 */
+  --text-inverse: #fafafa; /* gray-50 on dark backgrounds */
+
+  /* Interface Colors - Paper-like surfaces */
+  --surface-color: #ffffff; /* white paper */
+  --border-color: #d4d4d8; /* gray-300 */
+  --shadow-color: rgba(82, 82, 82, 0.2); /* gray-600 with opacity */
+
+  /* Button Colors - Sketchy buttons */
+  --button-bg: #f4f4f5; /* gray-100 */
+  --button-hover: #e4e4e7; /* gray-200 */
+  --button-text: #525252; /* gray-600 */
+  --button-border: 2px solid var(--border-color);
+  --button-shadow: 0 2px 4px rgba(82, 82, 82, 0.15);
+  --button-hover-shadow: 0 4px 8px rgba(82, 82, 82, 0.2);
+  --button-hover-translate: -1px;
+
+  /* Button State Variants - Sketchy states */
+  --button-pause-bg: #fef3c7; /* amber-100 */
+  --button-pause-hover: #fde68a; /* amber-200 */
+  --button-pause-text: #92400e; /* amber-800 */
+  --button-resume-bg: #dbeafe; /* blue-100 */
+  --button-resume-hover: #bfdbfe; /* blue-200 */
+  --button-resume-text: #1e40af; /* blue-800 */
+  --button-reset-bg: #fee2e2; /* red-100 */
+  --button-reset-hover: #fecaca; /* red-200 */
+  --button-reset-text: #991b1b; /* red-800 */
+
+  /* State Colors - Sketchy status colors */
+  --success-color: #16a34a; /* green-600 */
+  --warning-color: #ca8a04; /* yellow-600 */
+  --error-color: #dc2626; /* red-600 */
+  --info-color: #2563eb; /* blue-600 */
+
+  /* Timer Sizing - Sketchy proportions */
+  --timer-size: 240px;
+  --timer-size-large: 280px;
+  --timer-size-xl: 320px;
+  --timer-size-mobile: 220px;
+  --timer-size-small: 180px;
+  --ring-width: 6px; /* Thinner for sketchy feel */
+  --tick-length: 6px;
+  --major-tick-length: 10px;
+  --hand-width: 2px; /* Thin pencil line */
+  --center-dot-size: 8px;
+
+  /* Typography - Hand-written fonts */
+  --font-family-primary: 'Kalam', 'Comic Sans MS', cursive;
+  --font-family-mono: 'Inconsolata', 'Courier New', monospace;
+  --time-font-size: 2.1rem;
+  --time-font-size-large: 2.5rem;
+  --time-font-size-xl: 2.8rem;
+  --time-font-size-mobile: 1.7rem;
+  --time-font-size-small: 1.4rem;
+
+  /* SVG Hand-drawn Effects */
+  --sketch-roughness: 3; /* High roughness for sketchy look */
+  --line-wobble: 0.8; /* Hand-drawn line wobble */
+  --stroke-variation: 0.5; /* Stroke width variation */
+  --sketch-seed: 42; /* Randomness seed for consistency */
+
+  /* Animation Settings - Sketchy movement */
+  --animation-duration: 1500s; /* 25 minutes */
+  --transition-duration: 400ms; /* Slightly slower for organic feel */
+  --hand-transition: transform 1300ms ease-out;
+
+  /* Button Styling - Sketchy shapes */
+  --button-padding: 10px 14px;
+  --button-radius: 6px;
+
+  /* Clock Elements - Hand-drawn styling */
+  --tick-color: var(--secondary-color);
+  --major-tick-color: var(--primary-color);
+  --clock-gradient: none; /* No gradient for sketchy feel */
+  --clock-inner-bg: #ffffff;
+  --clock-outer-border: 2px solid var(--border-color);
+
+  /* Paper Texture Effects */
+  --paper-texture: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><defs><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="1" stitchTiles="stitch"/></filter></defs><rect width="100%" height="100%" filter="url(%23noiseFilter)" opacity="0.02"/></svg>');
+  --paper-grain-opacity: 0.03;
+
+  /* Focus and Interaction States - Sketchy feedback */
+  --focus-ring: 0 0 0 3px rgba(220, 38, 38, 0.2);
+  --focus-border: var(--accent-color);
+  --hover-opacity: 0.85;
+  --active-scale: 0.97;
+
+  /* Performance Settings */
+  --will-change: transform, filter;
+  --contain: layout style;
+}

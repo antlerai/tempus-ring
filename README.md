@@ -53,6 +53,7 @@ Tempus Ring aims to enhance productivity and focus through:
 - **TypeScript (Strict Mode)**: Type-safe development with comprehensive error checking
 - **Vite**: Fast build tooling and hot module replacement
 - **Tailwind CSS v4**: Modern utility-first CSS framework with CSS-first configuration
+- **Layered CSS Architecture**: Modular styling system (base/layout/components/themes)
 - **Lucide Icons**: Consistent, scalable icon system
 
 ### Backend & Desktop
@@ -84,6 +85,7 @@ Tempus Ring aims to enhance productivity and focus through:
 ### Architecture Patterns
 
 - **Layered Architecture**: Strict dependency flow (types → services → factories → components)
+- **CSS-First Styling**: Dynamic effects via CSS variables, static styles via CSS files
 - **Event-Driven Design**: Loose coupling through typed event emission
 - **Factory Pattern**: Theme-to-renderer mapping and object creation
 - **Dependency Injection**: Service composition without global state
@@ -136,8 +138,9 @@ Built with a **layered architecture** approach:
 - **Services Layer**: Business logic (timer, theme, notifications, statistics)
 - **Factories Layer**: Object creation and dependency injection
 - **Components Layer**: UI components with pluggable theme renderers
+- **Styles Layer**: Modular CSS architecture with theme-specific variables
 
-**Key Design Patterns**: Event-driven services, pluggable renderers, strict dependency injection, type-safe Tauri commands.
+**Key Design Patterns**: Event-driven services, pluggable renderers, CSS-first styling, strict dependency injection, type-safe Tauri commands.
 
 ## 📱 Platform Support
 

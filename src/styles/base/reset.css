@@ -1,0 +1,88 @@
+/* Modern CSS Reset - Minimal and focused */
+/* Optimized for Tempus Ring application needs */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-family: var(--font-family-primary);
+  background-color: var(--background-color);
+  color: var(--text-primary);
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+#root,
+#__next {
+  isolation: isolate;
+}
+
+/* Remove default focus styles - custom focus styles will be added per component */
+:focus {
+  outline: none;
+}
+
+/* Add focus styles back for accessibility when using keyboard navigation */
+:focus-visible {
+  outline: 2px solid var(--focus-border);
+  outline-offset: 2px;
+}
+
+/* Improve font rendering for monospace fonts used in timer display */
+.timer-text,
+[class*='timer-time'] {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}

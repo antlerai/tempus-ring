@@ -4,155 +4,310 @@
 
 ## 核心设计原则
 
-- **数据驱动**: 渲染过程完全由 `TimerService` 提供的状态和数据驱动。
-- **关注点分离**: 渲染逻辑、主题管理和计时器状态被清晰地分离到不同的服务和组件中。
-- **可扩展性**: 系统设计允许轻松添加新主题或新的渲染技术，而无需大规模重构。
-- **事件驱动通信**: 组件之间通过一个简单的事件发射器进行解耦通信，增强了模块化。
+- **数据驱动**: 渲染过程完全由 `TimerService` 提供的状态和数据驱动
+- **样式与逻辑分离**: 所有静态样式由 CSS 决定，仅在动态渲染需求无法通过 CSS 实现时才在 TypeScript 中处理
+- **CSS 变量驱动**: 动态效果通过 CSS 自定义属性和数据属性控制，避免直接样式操作
+- **分层架构**: 采用 base/layout/components/themes 四层样式架构，确保可维护性
+- **渲染器适配**: 不同主题采用各自适合的渲染方式（DOM/SVG/Canvas）
 
-## 系统概览
+## 新样式系统架构
 
-系统主要由以下几个核心部分组成：
+### 1. 分层样式系统
 
-1. **`ThemeManager`**: 管理主题的定义、加载和切换。
-2. **`TimerDisplay`**: 协调渲染流程，是视图层的核心控制器。
-3. **`TimerFactory`**: 根据当前主题配置，创建相应的渲染器实例（策略模式）。
-4. **`TimerRenderer` (接口)**: 定义了所有渲染器（如 Canvas, SVG, DOM）必须实现的通用接口。
-5. **`TimerService`**: 维护计时器的核心状态和逻辑，并作为数据源。
+```
+src/styles/
+├── base/                    # 基础层 - 系统级样式
+│   ├── reset.css           # CSS 重置和标准化
+│   ├── variables.css       # 全局 CSS 变量系统
+│   └── animations.css      # 通用动画定义
+├── layout/                  # 布局层 - 结构和定位
+│   └── grid.css            # 网格系统和响应式布局
+├── components/              # 组件层 - UI 组件样式
+│   ├── buttons.css         # 按钮组件样式
+│   └── timer.css           # 计时器组件样式
+└── themes/                  # 主题层 - 主题特定样式
+    ├── cloudlight-variables.css    # Cloudlight 主题变量
+    ├── cloudlight.css              # Cloudlight 主题样式
+    ├── wabisabi-variables.css      # WabiSabi 主题变量
+    ├── wabisabi.css               # WabiSabi 主题样式
+    └── ... (其他主题)
+```
 
-## 主题系统 (`ThemeManager`)
+### 2. CSS 变量驱动系统
 
-`ThemeManager` 是主题系统的中枢，负责所有与主题相关的操作。
+**全局动态变量** (`base/variables.css`):
+```css
+:root {
+  /* 动画控制变量 - 由 JavaScript 更新 */
+  --progress: 0;                      /* 计时器进度 (0-1) */
+  --rotation: 0deg;                   /* 当前旋转角度 */
+  --intensity: 0;                     /* 动画强度 (0-1) */
+  --state: 'idle';                    /* 当前计时器状态 */
+}
+```
 
-### 1. 主题定义
+**主题特定变量** (`themes/*-variables.css`):
+```css
+.theme-cloudlight {
+  --primary-color: #1f2937;
+  --accent-color: #ef4444;
+  --hand-transition: transform 1000ms linear;
+  --will-change: transform;
+  --contain: layout style;
+}
+```
 
-所有主题都在 `ThemeManager` 内部的 `themes` 对象中进行定义。每个主题配置 (`ThemeDefinition`) 包含以下关键属性：
+### 3. 数据属性状态控制
 
-- `name`: 主题的唯一标识符（`ThemeName`）。
-- `displayName`: 用于在 UI 中显示的名称。
-- `renderer`: **渲染器类型** (`'canvas'`, `'svg'`, or `'dom'`)。这是决定时钟如何绘制的关键。
-- `colors`, `fonts`, `spacing`, `shadows`: 定义主题视觉风格的 token。
-- `cssVariables`: 一组将应用于 `:root` 元素的 CSS 自定义属性。
-- `styleSheet`: 与该主题关联的特定 CSS 文件的名称。
+渲染器使用数据属性而非直接样式操作：
 
 ```typescript
-// src/services/theme-manager.ts
-private themes: Record<ThemeName, ThemeDefinition> = {
-  [THEME_NAMES.WABISABI]: {
-    config: {
-      name: THEME_NAMES.WABISABI,
-      renderer: 'canvas', // 使用 Canvas 渲染器
-      // ... 其他视觉配置
-    },
-    cssVariables: { /* ... */ },
-    styleSheet: 'wabisabi.css',
+// ✅ 正确方式 - 使用数据属性和 CSS 变量
+this.container.style.setProperty('--progress', progress.toString());
+this.container.style.setProperty('--intensity', intensity.toString());
+this.hand.dataset.animationState = isRunning ? 'running' : 'paused';
+
+// ❌ 错误方式 - 直接操作样式
+this.hand.style.background = handColor;
+this.hand.style.transform = `rotate(${rotation}deg)`;
+```
+
+对应的 CSS 控制：
+```css
+/* 基于数据属性的状态控制 */
+.timer-hand[data-animation-state="running"] {
+  transition: transform var(--hand-transition);
+}
+
+.timer-hand[data-animation-state="paused"] {
+  transition: none;
+}
+
+/* 基于 CSS 变量的动态效果 */
+.timer-hand.timer-progress-dynamic {
+  transform: translateX(-50%) rotate(var(--rotation, 0deg));
+}
+
+.timer-hand.timer-intensity-effects {
+  --computed-intensity: calc(var(--intensity, 0) * 1.2);
+  background: hsl(0, calc(60% + var(--computed-intensity) * 20%), 
+                     calc(55% - var(--computed-intensity) * 10%));
+}
+```
+
+## 主题配置系统
+
+### 1. 主题样式配置接口
+
+```typescript
+export interface ThemeStyleConfig {
+  cssFiles: string[];               // 必需的 CSS 文件
+  variablesFile: string;           // CSS 变量定义文件
+  rendererType: RendererType;      // 渲染器类型
+  animations: {
+    useCSS: boolean;               // 优先使用 CSS 动画
+    fallbackToJS: boolean;         // 允许 JS 动画降级
+    duration: number;              // 默认动画时长
+  };
+  performance?: {
+    willChange?: string[];         // will-change 属性
+    contain?: string;              // CSS containment
+    layerize?: boolean;           // 强制创建合成层
+  };
+}
+```
+
+### 2. 主题配置映射
+
+```typescript
+export const THEME_STYLE_CONFIGS: Record<string, ThemeStyleConfig> = {
+  cloudlight: {
+    cssFiles: [
+      '/src/styles/themes/cloudlight-variables.css',
+      '/src/styles/themes/cloudlight.css'
+    ],
+    rendererType: 'dom',
+    animations: { useCSS: true, fallbackToJS: false, duration: 200 }
   },
-  [THEME_NAMES.CLOUDLIGHT]: {
-    config: {
-      name: THEME_NAMES.CLOUDLIGHT,
-      renderer: 'dom', // 使用 DOM 渲染器
-      // ... 其他视觉配置
-    },
-    cssVariables: { /* ... */ },
-    styleSheet: 'cloudlight.css',
-  },
+  
+  wabisabi: {
+    cssFiles: [
+      '/src/styles/themes/wabisabi-variables.css',
+      '/src/styles/themes/wabisabi.css'
+    ],
+    rendererType: 'canvas',
+    animations: { useCSS: false, fallbackToJS: true, duration: 400 }
+  }
   // ... 其他主题
 };
 ```
 
-### 2. 主题切换流程
+## 渲染器架构
 
-当用户选择一个新主题时，`ThemeManager.switchTheme()` 方法会执行以下操作：
+### 1. 渲染器类型分工
 
-1. **验证主题**: 检查所选主题是否存在。
-2. **应用主题**: 调用内部的 `applyTheme()` 方法：
-    a.  将新主题的 `cssVariables` 应用到 `document.documentElement` 的 `style` 上。
-    b.  动态加载与主题相关的 CSS `styleSheet`（如果尚未加载）。
-    c.  更新 `document.documentElement` 的 `className` 以反映当前主题（例如，`theme-wabisabi`）。
-3. **持久化**: 将新主题的名称保存到 `localStorage`，以便在应用下次启动时恢复。
-4. **发出事件**: 发出一个 `theme:changed` 事件，通知应用的其他部分（主要是 `TimerDisplay`）主题已更改。
+- **DOM 渲染器** (Cloudlight, Dawn-Dusk, Nightfall)
+  - 适用于简单几何形状和标准动画
+  - 完全基于 CSS 动画和变量
+  - 性能优秀，易于调试
 
-## 时钟渲染流程 (`TimerDisplay`)
+- **SVG 渲染器** (Artistic, Hand-Drawn)  
+  - 适用于复杂形状和艺术效果
+  - CSS + JavaScript 混合动画
+  - 支持路径动画和滤镜效果
 
-`TimerDisplay` 是一个 UI 组件，它将计时器数据和当前主题结合起来，以在屏幕上呈现视觉效果。
+- **Canvas 渲染器** (WabiSabi)
+  - 适用于手绘风格和像素级控制
+  - JavaScript 驱动的帧动画
+  - 支持 Rough.js 等特效库
 
-### 1. 初始化流程
+### 2. 统一渲染接口
 
-1. **实例化**: `TimerDisplay` 在应用启动时被创建。
-2. **获取主题**: 它从 `ThemeManager` 获取当前主题的配置。
-3. **创建渲染器**: 它调用 `TimerFactory.createRenderer()`，并传入渲染器容器元素和当前主题配置。`TimerFactory` 会根据主题配置中的 `renderer` 属性（`'canvas'`, `'svg'`, `'dom'`）返回一个具体的渲染器实例。
-4. **初始渲染**: 新创建的渲染器会执行其 `render()` 方法，绘制出计时器的初始状态。
-
-```mermaid
-sequenceDiagram
-    participant App as 应用入口
-    participant TD as TimerDisplay
-    participant TM as ThemeManager
-    participant TF as TimerFactory
-    participant Renderer as 具体渲染器
-
-    App->>TD: new TimerDisplay(config)
-    TD->>TM: getCurrentTheme()
-    TM-->>TD: themeConfig
-    TD->>TF: createRenderer(container, themeConfig)
-    TF-->>TD: new SpecificRenderer()
-    TD->>Renderer: render(initialProgress, themeConfig)
+```typescript
+export interface TimerRenderer {
+  render(progress: number, theme: ThemeConfig): void;
+  resize(width: number, height: number): void;
+  destroy(): void;
+  updateTime(timeString: string): void;
+  setAnimationState(isRunning: boolean): void;
+  createTicks(count: number): void;
+}
 ```
 
-### 2. 数据驱动的更新循环
+### 3. CSS 优先的实现原则
 
-1. **计时器滴答**: `TimerService` 在其内部的 `setInterval` 循环中，定期（通常是每秒）发出 `timer:tick` 事件，并附带最新的 `TimerData`（包括 `remainingTime`, `progress` 等）。
-2. **监听事件**: `TimerDisplay` 监听 `timer:tick` 事件。
-3. **更新渲染器**: 当接收到事件时，`TimerDisplay` 会调用其 `updateRenderer()` 方法，该方法进而调用当前渲染器实例的 `render()` 方法，并传入新的进度数据。
-4. **视觉更新**: 渲染器根据新的进度数据更新其视觉表现（例如，重绘 Canvas、更新 SVG 路径或修改 DOM 元素）。
-
-```mermaid
-sequenceDiagram
-    participant TS as TimerService
-    participant TD as TimerDisplay
-    participant Renderer as 当前渲染器
-
-    loop 计时器运行中
-        TS->>TS: setInterval tick
-        TS-->>TD: emit('timer:tick', data)
-        TD->>Renderer: render(data.progress, themeConfig)
-    end
+```typescript
+// 渲染器实现示例 - 优先使用 CSS
+class CloudlightDOMRenderer extends DOMRenderer {
+  private updateProgressVariables(progress: number): void {
+    const intensity = Math.min(1, progress * 1.2);
+    
+    // ✅ 设置 CSS 变量，让 CSS 处理样式计算
+    this.container.style.setProperty('--progress', progress.toString());
+    this.container.style.setProperty('--intensity', intensity.toString());
+    
+    // ✅ 使用 CSS 类控制状态
+    this.hand.classList.toggle('timer-intensity-effects', intensity > 0);
+    
+    // ✅ 使用数据属性触发 CSS 规则
+    this.centerDot.dataset.progress = Math.round(progress * 100).toString();
+  }
+}
 ```
 
-### 3. 主题切换时的渲染器重建
+## 性能优化策略
 
-这是确保渲染逻辑与主题保持同步的关键机制。
+### 1. CSS 合成层优化
 
-1. **监听主题变化**: `TimerDisplay` 监听由 `ThemeManager` 发出的 `theme:changed` 事件。
-2. **重建渲染器**: 当事件触发时，`TimerDisplay` 会执行 `recreateRenderer()` 方法：
-    a.  调用当前渲染器的 `destroy()` 方法来清理资源（例如，移除事件监听器、清除 Canvas）。
-    b.  清空渲染器容器的 HTML 内容。
-    c.  重复**初始化流程**中的第 3 步，使用 `TimerFactory` 为新主题创建一个全新的渲染器实例。
-3. **无缝切换**: 新的渲染器接管渲染任务，确保视觉效果与新主题的 `renderer` 类型和配置完全匹配。
+```css
+/* 关键动画元素启用硬件加速 */
+.timer-container,
+.timer-display,
+.timer-progress-ring,
+.timer-hand {
+  will-change: var(--will-change, transform);
+  contain: var(--contain, layout style);
+  transform: translateZ(0); /* 强制创建合成层 */
+}
+```
+
+### 2. 动画性能类
+
+```css
+.animate-gpu {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.animate-composite {
+  will-change: transform, opacity;
+}
+```
+
+### 3. 响应式断点优化
+
+```css
+/* 减少小屏幕设备的动画复杂度 */
+@media (max-width: 480px) {
+  .timer-progress-ring {
+    animation: rotate-clockwise var(--animation-duration) linear;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timer-progress-ring,
+  .timer-hand {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+```
+
+## 主题切换流程
+
+### 1. 样式加载机制
+
+```typescript
+export async function loadThemeStyles(themeName: string): Promise<void> {
+  const config = getThemeStyleConfig(themeName);
+  
+  // 按依赖顺序加载 CSS 文件
+  for (const cssFile of config.cssFiles) {
+    await loadCSSFile(cssFile);
+  }
+  
+  // 应用自定义属性
+  if (config.customProperties) {
+    applyCustomProperties(config.customProperties);
+  }
+  
+  // 应用性能优化
+  if (config.performance) {
+    applyPerformanceOptimizations(config.performance);
+  }
+}
+```
+
+### 2. 渲染器适配流程
 
 ```mermaid
 sequenceDiagram
     participant User as 用户
-    participant SettingsPanel as 设置面板
-    participant TM as ThemeManager
-    participant TD as TimerDisplay
-    participant OldRenderer as 旧渲染器
-    participant TF as TimerFactory
+    participant ThemeManager as 主题管理器
+    participant StyleLoader as 样式加载器
+    participant TimerDisplay as 计时器显示
     participant NewRenderer as 新渲染器
 
-    User->>SettingsPanel: 选择新主题
-    SettingsPanel->>TM: switchTheme('new-theme')
-    TM-->>TD: emit('theme:changed')
-    TD->>OldRenderer: destroy()
-    TD->>TF: createRenderer(container, newThemeConfig)
-    TF-->>TD: new NewSpecificRenderer()
-    TD->>NewRenderer: render(currentProgress, newThemeConfig)
+    User->>ThemeManager: 切换主题
+    ThemeManager->>StyleLoader: 加载主题样式
+    StyleLoader-->>ThemeManager: 样式就绪
+    ThemeManager-->>TimerDisplay: theme:changed 事件
+    TimerDisplay->>TimerDisplay: 销毁旧渲染器
+    TimerDisplay->>NewRenderer: 创建新渲染器
+    NewRenderer->>NewRenderer: 应用 CSS 变量驱动的样式
 ```
+
+## 开发指导原则
+
+### ✅ 推荐做法
+
+1. **静态样式用 CSS**：布局、颜色、字体等静态属性必须在 CSS 中定义
+2. **动态效果用变量**：进度、旋转等动态效果通过 CSS 自定义属性实现
+3. **状态用数据属性**：运行/暂停状态使用 `data-*` 属性触发 CSS 规则
+4. **性能优化内置**：为动画元素添加 `will-change` 和 `contain` 属性
+
+### ❌ 避免做法
+
+1. **直接操作 style**：避免 `element.style.property = value` 形式的样式设置
+2. **内联样式**：避免在 HTML 或 JavaScript 中编写内联样式
+3. **频繁 DOM 操作**：避免在动画循环中频繁修改 DOM 结构
+4. **硬编码尺寸**：避免在 JavaScript 中硬编码像素值
 
 ## 关键文件参考
 
-- **主题管理器**: `src/services/theme-manager.ts`
-- **渲染协调器**: `src/components/timer-display.ts`
-- **渲染器工厂**: `src/factories/timer-factory.ts`
-- **渲染器实现**: `src/components/renderers/`
-- **计时器服务**: `src/services/timer-service.ts`
-- **类型定义**: `src/types/`
+- **样式系统入口**: `src/styles/main.css`
+- **主题配置**: `src/config/theme-styles.ts`  
+- **渲染器基类**: `src/components/renderers/`
+- **类型定义**: `src/types/theme-types.ts`, `src/types/renderer-types.ts`
+- **主题变量**: `src/styles/themes/*-variables.css`
+- **组件样式**: `src/styles/components/`

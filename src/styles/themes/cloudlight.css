@@ -134,11 +134,29 @@ body.theme-cloudlight {
   height: 45%;
   background: var(--accent-color);
   transform-origin: bottom center;
-  transform: translateX(-50%) rotate(0deg);
+  transform: translateX(-50%) rotate(var(--rotation, 0deg));
   border-radius: 1px;
   z-index: 10;
-  transition: transform 1s linear;
+  transition: transform var(--hand-transition);
   box-shadow: 0 1px 2px rgba(239, 68, 68, 0.3);
+}
+
+/* Dynamic hand styling using CSS variables */
+.cloudlight-hand.timer-intensity-effects {
+  --computed-intensity: calc(var(--intensity, 0) * 1.2);
+  --intensity-color: hsl(0, calc(60% + var(--computed-intensity) * 20%), calc(55% - var(--computed-intensity) * 10%));
+
+  background: var(--intensity-color);
+  box-shadow: 0 1px 2px rgba(239, 68, 68, calc(0.3 + var(--computed-intensity) * 0.2));
+}
+
+/* Animation state control */
+.cloudlight-hand[data-animation-state='running'] {
+  transition: transform 1s linear;
+}
+
+.cloudlight-hand[data-animation-state='paused'] {
+  transition: none;
 }
 
 .cloudlight-center-dot {
@@ -172,11 +190,30 @@ body.theme-cloudlight {
   background: var(--tick-color);
   border-radius: 0.5px;
   opacity: 0.8;
+
+  /* Use CSS variables for dynamic positioning and sizing */
+  width: var(--tick-width, 1px);
+  height: var(--tick-height, 8px);
+  left: var(--tick-x, 0);
+  top: var(--tick-y, 0);
+  transform-origin: center center;
+  transform: translate(-50%, -50%) rotate(var(--tick-rotation, 0deg));
 }
 
 .cloudlight-tick.major {
   background: var(--major-tick-color);
   opacity: 1;
+}
+
+/* Data attribute styling for ticks */
+.cloudlight-tick[data-tick-type='major'] {
+  background: var(--major-tick-color);
+  opacity: 1;
+}
+
+.cloudlight-tick[data-tick-type='minor'] {
+  background: var(--tick-color);
+  opacity: 0.8;
 }
 
 .theme-cloudlight .timer-progress-ring {

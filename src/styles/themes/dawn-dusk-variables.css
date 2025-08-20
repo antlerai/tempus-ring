@@ -1,0 +1,101 @@
+/* Dawn-Dusk Theme Variables - Gradient transition design */
+/* This file only contains CSS custom properties for the Dawn-Dusk theme */
+
+.theme-dawn-dusk {
+  /* Color System - Dawn and dusk gradients */
+  --primary-color: #fb7185; /* rose-400 */
+  --secondary-color: #fbbf24; /* amber-400 */
+  --accent-color: #f97316; /* orange-500 */
+  --background-color: #fff7ed; /* orange-50 */
+  --body-background: linear-gradient(135deg, #fff7ed, #fef3c7); /* gradient background */
+
+  /* Text Colors - Warm gradient text */
+  --text-primary: #7c2d12; /* red-900 */
+  --text-secondary: #c2410c; /* orange-700 */
+  --text-muted: #ea580c; /* orange-600 */
+  --text-inverse: #fff7ed; /* orange-50 on dark backgrounds */
+
+  /* Interface Colors - Gradient surfaces */
+  --surface-color: #ffedd5; /* orange-100 */
+  --border-color: #fed7aa; /* orange-200 */
+  --shadow-color: rgba(251, 113, 133, 0.2); /* rose-400 with opacity */
+
+  /* Button Colors - Gradient feel */
+  --button-bg: linear-gradient(135deg, #fed7aa, #fbbf24);
+  --button-hover: linear-gradient(135deg, #fb923c, #f59e0b);
+  --button-text: #7c2d12; /* red-900 */
+  --button-border: 1px solid var(--border-color);
+  --button-shadow: 0 4px 6px rgba(251, 113, 133, 0.3);
+  --button-hover-shadow: 0 6px 12px rgba(251, 113, 133, 0.4);
+  --button-hover-translate: -2px;
+
+  /* Button State Variants - Gradient states */
+  --button-pause-bg: linear-gradient(135deg, #fef3c7, #fde68a);
+  --button-pause-hover: linear-gradient(135deg, #fde68a, #facc15);
+  --button-pause-text: #92400e; /* amber-800 */
+  --button-resume-bg: linear-gradient(135deg, #dbeafe, #bfdbfe);
+  --button-resume-hover: linear-gradient(135deg, #bfdbfe, #93c5fd);
+  --button-resume-text: #1e40af; /* blue-800 */
+  --button-reset-bg: linear-gradient(135deg, #fee2e2, #fecaca);
+  --button-reset-hover: linear-gradient(135deg, #fecaca, #fca5a5);
+  --button-reset-text: #991b1b; /* red-800 */
+
+  /* State Colors - Gradient theme status */
+  --success-color: #22c55e; /* green-500 */
+  --warning-color: #eab308; /* yellow-500 */
+  --error-color: #ef4444; /* red-500 */
+  --info-color: #3b82f6; /* blue-500 */
+
+  /* Timer Sizing - Gradient proportions */
+  --timer-size: 240px;
+  --timer-size-large: 280px;
+  --timer-size-xl: 320px;
+  --timer-size-mobile: 220px;
+  --timer-size-small: 180px;
+  --ring-width: 8px;
+  --tick-length: 8px;
+  --major-tick-length: 12px;
+  --hand-width: 3px;
+  --center-dot-size: 12px;
+
+  /* Typography - Gradient theme fonts */
+  --font-family-primary: 'Source Sans Pro', -apple-system, sans-serif;
+  --font-family-mono: 'Source Code Pro', 'Fira Code', monospace;
+  --time-font-size: 2.25rem;
+  --time-font-size-large: 2.6rem;
+  --time-font-size-xl: 3rem;
+  --time-font-size-mobile: 1.9rem;
+  --time-font-size-small: 1.5rem;
+
+  /* Animation Settings - Gradient transitions */
+  --animation-duration: 1500s; /* 25 minutes */
+  --transition-duration: 300ms; /* Smooth gradient transitions */
+  --hand-transition: transform 900ms ease-in-out;
+
+  /* Button Styling - Gradient design */
+  --button-padding: 12px 16px;
+  --button-radius: 10px;
+
+  /* Clock Elements - Gradient styling */
+  --tick-color: var(--secondary-color);
+  --major-tick-color: var(--primary-color);
+  --clock-gradient: conic-gradient(from 0deg, #fb7185, #fbbf24, #f97316, #fb7185);
+  --clock-inner-bg: radial-gradient(circle, #ffedd5, #fed7aa);
+  --clock-outer-border: 3px solid transparent;
+  --clock-outer-border-image: linear-gradient(45deg, #fb7185, #fbbf24) 1;
+
+  /* Gradient Effects - Dawn-dusk specific */
+  --dawn-gradient: linear-gradient(135deg, #fef3c7 0%, #fed7aa 50%, #fb7185 100%);
+  --dusk-gradient: linear-gradient(225deg, #7c3aed 0%, #f97316 50%, #fbbf24 100%);
+  --progress-gradient: conic-gradient(from 0deg, var(--accent-color), var(--primary-color));
+
+  /* Focus and Interaction States */
+  --focus-ring: 0 0 0 3px rgba(249, 115, 22, 0.3);
+  --focus-border: var(--accent-color);
+  --hover-opacity: 0.9;
+  --active-scale: 0.98;
+
+  /* Performance Settings */
+  --will-change: transform, background;
+  --contain: layout style;
+}

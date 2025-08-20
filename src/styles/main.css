@@ -1,0 +1,17 @@
+/* Main CSS Entry Point - Tempus Ring */
+/* Organized imports following the new architecture */
+
+/* Base Layer - Foundation styles */
+@import './base/reset.css';
+@import './base/variables.css';
+@import './base/animations.css';
+
+/* Layout Layer - Structure and positioning */
+@import './layout/grid.css';
+
+/* Component Layer - UI components */
+@import './components/buttons.css';
+@import './components/timer.css';
+
+/* Theme Layer - Theme-specific overrides and extensions */
+/* These are loaded dynamically by the theme manager */

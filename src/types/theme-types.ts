@@ -1,8 +1,39 @@
+export interface ThemeStyleConfig {
+  /** CSS files required for this theme */
+  cssFiles: string[];
+  /** CSS variable definitions file */
+  variablesFile: string;
+  /** Additional CSS modules for specific features */
+  modules?: {
+    animations?: string;
+    effects?: string;
+    responsive?: string;
+  };
+  /** CSS custom properties that can be overridden */
+  customProperties?: Record<string, string>;
+  /** Renderer type that determines the appropriate styling approach */
+  rendererType: RendererType;
+  /** Animation preferences */
+  animations: {
+    useCSS: boolean; // Prefer CSS animations over JS
+    fallbackToJS: boolean; // Allow fallback to JS if CSS fails
+    duration: number; // Default animation duration
+  };
+  /** Performance optimizations */
+  performance?: {
+    willChange?: string[]; // Properties that will change
+    contain?: string; // CSS containment
+    layerize?: boolean; // Force layer creation
+  };
+}
+
 export interface ThemeConfig {
   name: string;
   displayName: string;
   renderer: RendererType;
   layoutMode?: 'standard' | 'minimal';
+  /** Style configuration for this theme */
+  styles?: ThemeStyleConfig;
   controlPanel?: {
     buttonLayout: 'standard' | 'minimal';
     showLabels: boolean;

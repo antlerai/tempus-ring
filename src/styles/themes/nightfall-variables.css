@@ -1,0 +1,99 @@
+/* Nightfall Theme Variables - Dark elegant design */
+/* This file only contains CSS custom properties for the Nightfall theme */
+
+.theme-nightfall {
+  /* Color System - Dark elegant tones */
+  --primary-color: #e2e8f0; /* slate-200 */
+  --secondary-color: #64748b; /* slate-500 */
+  --accent-color: #8b5cf6; /* violet-500 */
+  --background-color: #0f172a; /* slate-900 */
+  --body-background: #0f172a; /* slate-900 */
+
+  /* Text Colors - Dark theme text */
+  --text-primary: #f8fafc; /* slate-50 */
+  --text-secondary: #cbd5e1; /* slate-300 */
+  --text-muted: #94a3b8; /* slate-400 */
+  --text-inverse: #0f172a; /* slate-900 on light backgrounds */
+
+  /* Interface Colors - Dark surfaces */
+  --surface-color: #1e293b; /* slate-800 */
+  --border-color: #334155; /* slate-700 */
+  --shadow-color: rgba(0, 0, 0, 0.5); /* deep shadows */
+
+  /* Button Colors - Dark theme buttons */
+  --button-bg: #334155; /* slate-700 */
+  --button-hover: #475569; /* slate-600 */
+  --button-text: #f8fafc; /* slate-50 */
+  --button-border: 1px solid var(--border-color);
+  --button-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --button-hover-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  --button-hover-translate: -1px;
+
+  /* Button State Variants - Dark theme states */
+  --button-pause-bg: #451a03; /* amber-950 */
+  --button-pause-hover: #92400e; /* amber-800 */
+  --button-pause-text: #fbbf24; /* amber-400 */
+  --button-resume-bg: #1e3a8a; /* blue-900 */
+  --button-resume-hover: #3730a3; /* indigo-800 */
+  --button-resume-text: #60a5fa; /* blue-400 */
+  --button-reset-bg: #7f1d1d; /* red-900 */
+  --button-reset-hover: #dc2626; /* red-600 */
+  --button-reset-text: #f87171; /* red-400 */
+
+  /* State Colors - Dark theme status */
+  --success-color: #22c55e; /* green-500 */
+  --warning-color: #eab308; /* yellow-500 */
+  --error-color: #ef4444; /* red-500 */
+  --info-color: #3b82f6; /* blue-500 */
+
+  /* Timer Sizing - Elegant proportions */
+  --timer-size: 240px;
+  --timer-size-large: 280px;
+  --timer-size-xl: 320px;
+  --timer-size-mobile: 220px;
+  --timer-size-small: 180px;
+  --ring-width: 10px; /* Thicker for elegance */
+  --tick-length: 8px;
+  --major-tick-length: 14px;
+  --hand-width: 3px;
+  --center-dot-size: 14px;
+
+  /* Typography - Elegant fonts */
+  --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-family-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --time-font-size: 2.25rem;
+  --time-font-size-large: 2.6rem;
+  --time-font-size-xl: 3rem;
+  --time-font-size-mobile: 1.9rem;
+  --time-font-size-small: 1.5rem;
+
+  /* Animation Settings - Smooth dark theme */
+  --animation-duration: 1500s; /* 25 minutes */
+  --transition-duration: 250ms;
+  --hand-transition: transform 800ms ease-out;
+
+  /* Button Styling - Dark elegance */
+  --button-padding: 12px 16px;
+  --button-radius: 8px;
+
+  /* Clock Elements - Dark elegant styling */
+  --tick-color: var(--secondary-color);
+  --major-tick-color: var(--primary-color);
+  --clock-gradient: radial-gradient(circle, #1e293b, #0f172a);
+  --clock-inner-bg: #1e293b;
+  --clock-outer-border: 2px solid var(--border-color);
+
+  /* Glow Effects - Dark theme specific */
+  --accent-glow: 0 0 20px rgba(139, 92, 246, 0.4);
+  --center-dot-glow: 0 0 12px rgba(139, 92, 246, 0.6);
+
+  /* Focus and Interaction States */
+  --focus-ring: 0 0 0 3px rgba(139, 92, 246, 0.3);
+  --focus-border: var(--accent-color);
+  --hover-opacity: 0.9;
+  --active-scale: 0.98;
+
+  /* Performance Settings */
+  --will-change: transform, box-shadow;
+  --contain: layout style;
+}

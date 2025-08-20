@@ -67,15 +67,19 @@ export class CloudlightDOMRenderer extends DOMRenderer {
       const tick = document.createElement('div');
       const isMajor = i % 10 === 0 || i === 50;
 
-      // Use CSS classes for styling
+      // Use CSS classes for styling - no inline styles for appearance
       tick.className = isMajor ? 'cloudlight-tick major' : 'cloudlight-tick';
+
+      // Set data attributes for CSS to use
+      tick.dataset.tickIndex = i.toString();
+      tick.dataset.tickType = isMajor ? 'major' : 'minor';
 
       const tickLength = isMajor ? 12 : 8;
       const tickWidth = isMajor ? 3 : 1;
 
-      // Set size using inline styles (dimensions need to be dynamic)
-      tick.style.width = `${tickWidth}px`;
-      tick.style.height = `${tickLength}px`;
+      // Only set size using CSS custom properties, not inline styles
+      tick.style.setProperty('--tick-width', `${tickWidth}px`);
+      tick.style.setProperty('--tick-height', `${tickLength}px`);
 
       // Angle in radians with -90deg offset so i=0 is at top
       const angleRad = ((i * 3.6 - 90) * Math.PI) / 180;
@@ -85,10 +89,10 @@ export class CloudlightDOMRenderer extends DOMRenderer {
       const cx = centerX + r * Math.cos(angleRad);
       const cy = centerY + r * Math.sin(angleRad);
 
-      tick.style.left = `${cx}px`;
-      tick.style.top = `${cy}px`;
-      tick.style.transformOrigin = 'center center';
-      tick.style.transform = `translate(-50%, -50%) rotate(${i * 3.6}deg)`;
+      // Use CSS custom properties for positioning
+      tick.style.setProperty('--tick-x', `${cx}px`);
+      tick.style.setProperty('--tick-y', `${cy}px`);
+      tick.style.setProperty('--tick-rotation', `${i * 3.6}deg`);
 
       this.clockFace.appendChild(tick);
     }
@@ -106,7 +110,9 @@ export class CloudlightDOMRenderer extends DOMRenderer {
     // Progress 0 = 0 degrees (top), Progress 1 = 360 degrees (full rotation)
     const rotation = progress * 360;
 
-    this.hand.style.transform = `translateX(-50%) rotate(${rotation}deg)`;
+    // Use CSS custom properties instead of direct style manipulation
+    this.hand.style.setProperty('--rotation', `${rotation}deg`);
+    this.hand.classList.add('timer-progress-dynamic');
   }
 
   public override render(progress: number, _theme: ThemeConfig): void {
@@ -118,40 +124,47 @@ export class CloudlightDOMRenderer extends DOMRenderer {
     // Update hand position (instead of progress ring)
     this.updateHand(progress);
 
-    // Apply dynamic styling based on progress for enhanced visual feedback
-    this.updateProgressStyling(progress);
+    // Use CSS variables and data attributes for dynamic styling
+    this.updateProgressVariables(progress);
 
     this.renderState.lastRenderTime = performance.now();
   }
 
-  private updateProgressStyling(progress: number): void {
+  private updateProgressVariables(progress: number): void {
     if (!this.hand || !this.centerDot) return;
 
-    // Subtle color transition for the hand based on progress
-    const intensity = Math.min(1, progress * 1.2); // Slightly more intense than linear
-    const handColor = `hsl(0, ${Math.round(60 + intensity * 20)}%, ${Math.round(55 - intensity * 10)}%)`;
+    // Set CSS variables for dynamic styling instead of direct manipulation
+    const intensity = Math.min(1, progress * 1.2);
 
-    this.hand.style.background = handColor;
-    this.hand.style.boxShadow = `0 1px 2px rgba(239, 68, 68, ${0.3 + intensity * 0.2})`;
+    // Update CSS custom properties for intensity-based effects
+    this.container.style.setProperty('--progress', progress.toString());
+    this.container.style.setProperty('--intensity', intensity.toString());
 
-    // Subtle pulsing effect for center dot when near completion
+    // Use data attributes for state-based styling
+    this.centerDot.dataset.progress = Math.round(progress * 100).toString();
+
+    // Add CSS classes for intensity effects
+    this.hand.classList.toggle('timer-intensity-effects', intensity > 0);
+
+    // Near completion state
     if (progress > 0.9) {
-      this.centerDot.style.animation = 'pulse 1s ease-in-out infinite';
+      this.centerDot.classList.add('animate-pulse-glow');
     } else {
-      this.centerDot.style.animation = 'none';
+      this.centerDot.classList.remove('animate-pulse-glow');
     }
   }
 
   public override setAnimationState(isRunning: boolean): void {
     this.renderState.isAnimating = isRunning;
 
+    // Use data attributes and CSS classes instead of direct style manipulation
     if (this.hand) {
-      if (isRunning) {
-        this.hand.style.transition = 'transform 1s linear';
-      } else {
-        this.hand.style.transition = 'none';
-      }
+      this.hand.dataset.animationState = isRunning ? 'running' : 'paused';
+      this.hand.classList.toggle('animate-gpu', isRunning);
     }
+
+    // Set state on container for global CSS rules
+    this.container.dataset.timerState = isRunning ? 'running' : 'paused';
   }
 
   public override updateTime(timeString: string): void {

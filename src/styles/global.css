@@ -1,136 +1,57 @@
 @import 'tailwindcss';
-@import './theme-common.css';
+@import './main.css';
 
-/* Global styles for Tempus Ring */
+/* Global Application Styles - Tempus Ring */
+/* Application-specific styles that extend the modular system */
 
-:root {
-  /* Base color variables - will be overridden by themes */
-  --primary-color: #64748b;
-  --secondary-color: #94a3b8;
-  --background-color: #ffffff;
-  --foreground-color: #1e293b;
-  --muted-color: #6b7280;
-  --muted-foreground-color: #9ca3af;
-  --accent-color: #3b82f6;
-  --destructive-color: #ef4444;
-  --border-color: #e2e8f0;
-  --input-color: #f8fafc;
-  --ring-color: #3b82f6;
-
-  /* Additional semantic colors */
-  --success-color: #10b981;
-  --warning-color: #f59e0b;
-  --error-color: #ef4444;
-
-  /* Typography */
-  --font-family-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', monospace;
-
-  /* Spacing scale */
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --spacing-2xl: 3rem;
-
-  /* Border radius */
-  --radius-sm: 0.25rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 1rem;
-  --radius-full: 9999px;
-
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-
-  /* Animation durations */
-  --duration-fast: 150ms;
-  --duration-normal: 300ms;
-  --duration-slow: 500ms;
-}
-
-/* Base styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  line-height: 1.5;
-  -webkit-text-size-adjust: 100%;
-  font-family: var(--font-family-primary);
-}
-
+/* Body styling with theme support */
 body {
   background-color: var(--body-background, var(--background-color));
-  color: var(--foreground-color);
+  color: var(--text-primary);
   transition:
     background-color var(--duration-normal),
     color var(--duration-normal);
 }
 
-/* Theme-aware utility classes */
+/* Theme-aware utility classes for compatibility */
 .bg-background {
   background-color: var(--background-color);
 }
-
 .text-foreground {
-  color: var(--foreground-color);
+  color: var(--text-primary);
 }
-
 .text-muted-foreground {
-  color: var(--muted-foreground-color);
+  color: var(--text-muted);
 }
-
 .bg-primary {
   background-color: var(--primary-color);
 }
-
 .text-primary {
   color: var(--primary-color);
 }
-
-.text-primary-foreground {
-  color: var(--background-color);
-}
-
-.bg-secondary {
-  background-color: var(--secondary-color);
-}
-
 .text-secondary {
-  color: var(--secondary-color);
+  color: var(--text-secondary);
 }
-
 .text-accent {
   color: var(--accent-color);
 }
-
 .text-destructive {
-  color: var(--destructive-color);
+  color: var(--error-color);
 }
-
 .text-success {
   color: var(--success-color);
 }
-
 .text-warning {
   color: var(--warning-color);
 }
-
 .text-error {
   color: var(--error-color);
 }
-
 .border {
   border-color: var(--border-color);
 }
 
-/* Component base styles */
+/* Application container */
 .container {
   width: 100%;
   max-width: 1200px;
@@ -139,58 +60,11 @@ body {
   padding-right: var(--spacing-md);
 }
 
-/* Button base styles */
-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-  border-radius: var(--radius-md);
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: all var(--duration-fast);
-  border: 1px solid transparent;
-  cursor: pointer;
-  padding: var(--spacing-sm) var(--spacing-md);
-}
-
-button:disabled {
-  pointer-events: none;
-  opacity: 0.5;
-}
-
-button:focus-visible {
-  outline: 2px solid var(--ring-color);
-  outline-offset: 2px;
-}
-
-/* Input base styles */
-input,
-textarea,
-select {
-  display: flex;
-  width: 100%;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
-  background-color: var(--input-color);
-  padding: var(--spacing-sm) var(--spacing-md);
-  font-size: 0.875rem;
-  transition: border-color var(--duration-fast);
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-  border-color: var(--ring-color);
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
-}
-
-/* Card styles */
+/* Card component for compatibility */
 .card {
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-color);
-  background-color: var(--background-color);
+  background-color: var(--surface-color);
   box-shadow: var(--shadow-sm);
   transition: box-shadow var(--duration-normal);
 }
@@ -199,252 +73,66 @@ select:focus {
   box-shadow: var(--shadow-md);
 }
 
-/* Desktop app specific breakpoints */
+/* Desktop app specific responsive behavior */
 @media (min-width: 280px) and (max-width: 320px) {
-  /* Ultra-narrow desktop app window */
   .container {
     max-width: 280px;
     padding-left: var(--spacing-xs);
     padding-right: var(--spacing-xs);
   }
-
-  #timer-display {
-    max-width: 240px;
-    margin: 0 auto;
-  }
-
-  #control-panel {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-xs);
-  }
-
-  #control-panel button {
-    font-size: 0.75rem;
-    padding: var(--spacing-xs) var(--spacing-sm);
-  }
 }
 
 @media (min-width: 321px) and (max-width: 400px) {
-  /* Narrow desktop app window (default size) */
   .container {
     max-width: 400px;
     padding-left: var(--spacing-sm);
     padding-right: var(--spacing-sm);
   }
-
-  #timer-display {
-    max-width: 280px;
-    margin: 0 auto;
-  }
-
-  #control-panel {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-  }
-
-  /* Stack settings in compact layout */
-  #settings-panel {
-    margin-top: var(--spacing-lg);
-  }
-
-  .lg\:grid-cols-3 {
-    grid-template-columns: 1fr; /* Override grid for narrow windows */
-  }
-
-  .lg\:col-span-2 {
-    grid-column: span 1; /* Override col-span for narrow windows */
-  }
 }
 
 @media (min-width: 401px) and (max-width: 600px) {
-  /* Medium desktop app window (when user resizes) */
   .container {
     max-width: 600px;
     padding-left: var(--spacing-md);
     padding-right: var(--spacing-md);
   }
-
-  #timer-display {
-    max-width: 320px;
-    margin: 0 auto;
-  }
-
-  #control-panel {
-    display: flex;
-    flex-direction: row;
-    gap: var(--spacing-md);
-    justify-content: center;
-  }
-
-  /* Can show settings side by side if there's room */
-  .lg\:grid-cols-3 {
-    grid-template-columns: 2fr 1fr;
-  }
 }
 
-/* Web responsive breakpoints (for potential web deployment) */
+/* Web responsive breakpoints */
 @media (min-width: 640px) {
   .container {
     max-width: 640px;
   }
 }
-
 @media (min-width: 768px) {
   .container {
     max-width: 768px;
   }
 }
-
 @media (min-width: 1024px) {
   .container {
     max-width: 1024px;
   }
 }
-
 @media (min-width: 1280px) {
   .container {
     max-width: 1280px;
   }
 }
 
-/* Legacy mobile-first rule (now mainly for web) */
-@media (max-width: 279px) {
-  .container {
-    padding-left: var(--spacing-sm);
-    padding-right: var(--spacing-sm);
-  }
-
-  /* Adjust timer display for mobile */
-  #timer-display {
-    max-width: 280px;
-    margin: 0 auto;
-  }
-
-  /* Stack controls vertically on mobile */
-  #control-panel {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-sm);
-  }
-
-  /* Collapse settings panel on mobile */
-  #settings-panel {
-    margin-top: var(--spacing-lg);
-  }
-}
-
-/* Focus and accessibility styles */
-*:focus-visible {
-  outline: 2px solid var(--ring-color);
-  outline-offset: 2px;
-}
-
-/* Reduced motion preferences */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  ::before,
-  ::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-  :root {
-    --border-color: #000000;
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
-  }
-}
-
-/* Print styles */
-@media print {
-  * {
-    background: white !important;
-    color: black !important;
-    box-shadow: none !important;
-  }
-
-  #settings-panel {
-    display: none !important;
-  }
-}
-
-/* Animation utilities */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-@keyframes slide-in {
-  from {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
-}
-
-.animate-fade-in {
-  animation: fade-in var(--duration-normal) ease-out;
-}
-
-.animate-slide-in {
-  animation: slide-in var(--duration-normal) ease-out;
-}
-
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Timer-specific styles */
-.timer-ring {
-  transition: stroke-dashoffset var(--duration-normal) ease-in-out;
-}
-
-.timer-hand {
-  transition: transform var(--duration-normal) ease-in-out;
-}
-
-/* Utility classes for component spacing */
+/* Spacing utilities */
 .space-y-2 > * + * {
   margin-top: var(--spacing-sm);
 }
-
 .space-y-4 > * + * {
   margin-top: var(--spacing-md);
 }
-
 .space-y-6 > * + * {
   margin-top: var(--spacing-lg);
 }
-
 .space-x-2 > * + * {
   margin-left: var(--spacing-sm);
 }
-
 .space-x-4 > * + * {
   margin-left: var(--spacing-md);
 }
@@ -453,31 +141,24 @@ select:focus {
 .grid {
   display: grid;
 }
-
 .grid-cols-1 {
   grid-template-columns: repeat(1, minmax(0, 1fr));
 }
-
 .grid-cols-2 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
-
 .grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
-
 .gap-2 {
   gap: var(--spacing-sm);
 }
-
 .gap-4 {
   gap: var(--spacing-md);
 }
-
 .gap-6 {
   gap: var(--spacing-lg);
 }
-
 .gap-8 {
   gap: var(--spacing-xl);
 }
@@ -486,8 +167,26 @@ select:focus {
   .lg\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-
   .lg\:col-span-2 {
     grid-column: span 2 / span 2;
+  }
+}
+
+/* Print styles - moved to end to ensure proper cascade order */
+@media print {
+  html,
+  body,
+  .space-y-2 > * + *,
+  .space-y-4 > * + *,
+  .space-y-6 > * + *,
+  .space-x-2 > * + *,
+  .space-x-4 > * + * {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+
+  .settings-panel {
+    display: none !important;
   }
 }

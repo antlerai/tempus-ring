@@ -1,0 +1,227 @@
+/* Button Components - Reusable button styles */
+/* Unified button system supporting different themes and variants */
+
+/* Base button styles */
+.timer-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-lg);
+  font-weight: 500;
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+  letter-spacing: 0.025em;
+  transition: all var(--duration-normal) var(--ease-out);
+  cursor: pointer;
+  border: var(--button-border, none);
+  background-color: var(--button-bg);
+  color: var(--button-text);
+  box-shadow: var(--button-shadow);
+  min-width: 80px;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.timer-button:hover {
+  background-color: var(--button-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--button-hover-shadow, var(--shadow-md));
+}
+
+.timer-button:active {
+  transform: translateY(0) scale(0.98);
+  transition-duration: var(--duration-fast);
+}
+
+.timer-button:focus-visible {
+  outline: none;
+  border-color: var(--focus-border);
+  box-shadow: var(--focus-ring);
+}
+
+.timer-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  pointer-events: none;
+}
+
+/* Button size variants */
+.timer-button-small {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-xs);
+  min-width: 60px;
+}
+
+.timer-button-large {
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-base);
+  min-width: 120px;
+}
+
+/* Button style variants */
+
+/* Standard buttons - full buttons with text and icons */
+.timer-button-standard {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  font-weight: 500;
+  min-width: 100px;
+}
+
+/* Minimal buttons - circular icon-only buttons */
+.timer-button-minimal {
+  width: 4rem; /* 64px */
+  height: 4rem; /* 64px */
+  border-radius: var(--radius-full);
+  padding: 0;
+  min-width: auto;
+}
+
+.timer-button-minimal:hover {
+  transform: translateY(-1px) scale(1.05);
+}
+
+/* Button state variants - semantic colors */
+.timer-button.pause {
+  background-color: var(--button-pause-bg);
+  color: var(--button-pause-text);
+}
+
+.timer-button.pause:hover {
+  background-color: var(--button-pause-hover);
+}
+
+.timer-button.resume {
+  background-color: var(--button-resume-bg);
+  color: var(--button-resume-text);
+}
+
+.timer-button.resume:hover {
+  background-color: var(--button-resume-hover);
+}
+
+.timer-button.reset {
+  background-color: var(--button-reset-bg);
+  color: var(--button-reset-text);
+}
+
+.timer-button.reset:hover {
+  background-color: var(--button-reset-hover);
+}
+
+/* Button content styling */
+.timer-button-icon {
+  width: 1.25rem; /* 20px */
+  height: 1.25rem; /* 20px */
+  flex-shrink: 0;
+}
+
+.timer-button-minimal .timer-button-icon {
+  width: 1.5rem; /* 24px */
+  height: 1.5rem; /* 24px */
+}
+
+.timer-button-text {
+  font-weight: inherit;
+  letter-spacing: inherit;
+}
+
+/* Loading state */
+.timer-button.loading {
+  color: transparent;
+}
+
+.timer-button.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1rem;
+  height: 1rem;
+  margin: -0.5rem 0 0 -0.5rem;
+  border: 2px solid transparent;
+  border-top-color: currentColor;
+  border-radius: var(--radius-full);
+  animation: rotate-clockwise 1s linear infinite;
+}
+
+/* Ripple effect for enhanced feedback */
+.timer-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: var(--radius-full);
+  background-color: currentColor;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: all var(--duration-slow) var(--ease-out);
+}
+
+.timer-button:active::before {
+  width: 100%;
+  height: 100%;
+  opacity: 0.1;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .timer-button {
+    border: 2px solid var(--text-primary);
+    font-weight: 600;
+  }
+
+  .timer-button:focus-visible {
+    outline: 3px solid var(--focus-border);
+    outline-offset: 2px;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .timer-button {
+    transition: none;
+  }
+
+  .timer-button:hover,
+  .timer-button:active {
+    transform: none;
+  }
+
+  .timer-button.loading::after {
+    animation: none;
+  }
+}
+
+/* Dark theme adjustments */
+@media (prefers-color-scheme: dark) {
+  .timer-button {
+    box-shadow:
+      var(--button-shadow),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .timer-button {
+    min-height: 44px; /* Minimum touch target size */
+    min-width: 44px;
+  }
+
+  .timer-button:hover {
+    transform: none;
+    box-shadow: var(--button-shadow);
+  }
+
+  .timer-button:active {
+    transform: scale(0.95);
+    background-color: var(--button-hover);
+  }
+}

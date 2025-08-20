@@ -1,0 +1,136 @@
+/* CSS Custom Properties (Variables) - Base System */
+/* These variables provide the foundation for all themes and can be overridden */
+
+:root {
+  /* Color System - Semantic base colors */
+  --primary-color: #64748b; /* Main brand/theme color */
+  --secondary-color: #94a3b8; /* Supporting color */
+  --accent-color: #3b82f6; /* Highlight color */
+  --background-color: #ffffff; /* Main background */
+  --foreground-color: #1e293b; /* Main text color */
+  --surface-color: #ffffff; /* Surface/card backgrounds */
+  --border-color: #e2e8f0; /* Borders and dividers */
+
+  /* Text Colors - Hierarchical text colors */
+  --text-primary: #1e293b; /* Primary text */
+  --text-secondary: #64748b; /* Secondary text */
+  --text-muted: #94a3b8; /* Muted/disabled text */
+  --text-inverse: #ffffff; /* Text on dark backgrounds */
+
+  /* State Colors - Semantic feedback colors */
+  --success-color: #10b981; /* Success states */
+  --warning-color: #f59e0b; /* Warning states */
+  --error-color: #ef4444; /* Error states */
+  --info-color: #3b82f6; /* Info states */
+
+  /* Button Colors - Interactive element colors */
+  --button-bg: #f1f5f9; /* Default button background */
+  --button-hover: #e2e8f0; /* Button hover state */
+  --button-text: #475569; /* Button text color */
+  --button-border: transparent; /* Button border */
+  --button-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Button shadow */
+
+  /* Button State Variants */
+  --button-pause-bg: #fef3c7; /* Pause button background */
+  --button-pause-hover: #fde68a; /* Pause button hover */
+  --button-pause-text: #92400e; /* Pause button text */
+  --button-resume-bg: #dbeafe; /* Resume button background */
+  --button-resume-hover: #bfdbfe; /* Resume button hover */
+  --button-resume-text: #1e40af; /* Resume button text */
+  --button-reset-bg: #fee2e2; /* Reset button background */
+  --button-reset-hover: #fecaca; /* Reset button hover */
+  --button-reset-text: #991b1b; /* Reset button text */
+
+  /* Focus States */
+  --focus-ring: 0 0 0 3px rgba(59, 130, 246, 0.1); /* Focus outline */
+  --focus-border: var(--accent-color); /* Focus border color */
+
+  /* Typography Scale */
+  --font-family-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+  --font-size-xs: 0.75rem; /* 12px */
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-base: 1rem; /* 16px */
+  --font-size-lg: 1.125rem; /* 18px */
+  --font-size-xl: 1.25rem; /* 20px */
+  --font-size-2xl: 1.5rem; /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+  --font-size-4xl: 2.25rem; /* 36px */
+  --font-size-5xl: 3rem; /* 48px */
+  --font-size-6xl: 3.75rem; /* 60px */
+
+  /* Timer Specific Typography */
+  --time-font-size: 2.25rem; /* Desktop time display */
+  --time-font-size-large: 2.6rem; /* Large screen time display */
+  --time-font-size-xl: 3rem; /* Extra large screen time display */
+  --time-font-size-mobile: 1.9rem; /* Mobile time display */
+  --time-font-size-small: 1.5rem; /* Small screen time display */
+
+  /* Spacing Scale - Consistent spacing system */
+  --spacing-xs: 0.25rem; /* 4px */
+  --spacing-sm: 0.5rem; /* 8px */
+  --spacing-md: 1rem; /* 16px */
+  --spacing-lg: 1.5rem; /* 24px */
+  --spacing-xl: 2rem; /* 32px */
+  --spacing-2xl: 3rem; /* 48px */
+  --spacing-3xl: 4rem; /* 64px */
+
+  /* Border Radius Scale */
+  --radius-none: 0;
+  --radius-sm: 0.25rem; /* 4px */
+  --radius-md: 0.5rem; /* 8px */
+  --radius-lg: 1rem; /* 16px */
+  --radius-xl: 1.5rem; /* 24px */
+  --radius-full: 9999px; /* Full circle/pill */
+
+  /* Shadow Scale */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* Timer Sizing Scale */
+  --timer-size: 240px; /* Default timer size */
+  --timer-size-small: 180px; /* Small screen timer */
+  --timer-size-mobile: 220px; /* Mobile timer */
+  --timer-size-large: 280px; /* Large screen timer */
+  --timer-size-xl: 320px; /* Extra large timer */
+
+  /* Timer Elements */
+  --ring-width: 8px; /* Progress ring thickness */
+  --tick-length: 8px; /* Minor tick length */
+  --major-tick-length: 12px; /* Major tick length */
+  --hand-width: 2px; /* Clock hand width */
+  --center-dot-size: 12px; /* Center dot size */
+
+  /* Animation Timing */
+  --duration-fast: 150ms; /* Fast transitions */
+  --duration-normal: 200ms; /* Normal transitions */
+  --duration-slow: 300ms; /* Slow transitions */
+  --duration-slower: 500ms; /* Very slow transitions */
+  --animation-duration: 1500s; /* Timer animation (25 minutes) */
+
+  /* Animation Easing */
+  --ease-linear: linear;
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Z-Index Scale */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-overlay: 20;
+  --z-modal: 30;
+  --z-popover: 40;
+  --z-toast: 50;
+}
+
+/* Dynamic CSS Variables for Animation Control */
+/* These are updated by JavaScript to drive animations */
+:root {
+  --progress: 0; /* Timer progress (0-1) */
+  --rotation: 0deg; /* Current rotation angle */
+  --intensity: 0; /* Animation intensity (0-1) */
+  --state: 'idle'; /* Current timer state */
+}

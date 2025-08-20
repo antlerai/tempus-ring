@@ -1,0 +1,337 @@
+/* Timer Components - Core timer display styles */
+/* CSS-driven styling with minimal JavaScript dependency */
+
+/* Timer display container */
+.timer-display {
+  position: relative;
+  border-radius: var(--radius-full);
+  transition: all var(--duration-slow) var(--ease-out);
+  border-width: var(--ring-width, 8px);
+  border-style: solid;
+  border-color: var(--border-color);
+  background-color: var(--surface-color);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  contain: layout style paint;
+}
+
+/* Time text display */
+.timer-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-family-mono);
+  font-weight: 700;
+  font-size: var(--time-font-size);
+  color: var(--text-primary);
+  text-rendering: optimizeLegibility;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+  letter-spacing: -0.02em;
+  z-index: var(--z-raised);
+}
+
+/* Time display variants */
+.timer-time-standard {
+  font-size: var(--time-font-size);
+  font-weight: 700;
+  text-align: center;
+  color: var(--text-primary);
+  font-family: var(--font-family-mono);
+}
+
+.timer-time-large {
+  font-size: var(--time-font-size-large);
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-family-mono);
+}
+
+/* Progress ring - animated progress indicator */
+.timer-progress-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-full);
+  border-width: var(--ring-width, 8px);
+  border-style: solid;
+  border-color: transparent;
+  border-top-color: var(--accent-color);
+  transform-origin: center;
+  transition: transform var(--duration-normal) var(--ease-out);
+  z-index: var(--z-base);
+}
+
+/* CSS-driven progress rotation */
+.timer-progress-ring.dynamic {
+  transform: rotate(calc(var(--rotation, 0deg)));
+}
+
+/* Progress ring states */
+.timer-progress-ring[data-state='running'] {
+  animation: rotate-clockwise var(--animation-duration) linear infinite;
+}
+
+.timer-progress-ring[data-state='paused'] {
+  animation-play-state: paused;
+}
+
+.timer-progress-ring[data-progress='100'] {
+  animation: pulse-glow 1s ease-in-out 3;
+}
+
+/* Timer tick marks */
+.timer-tick {
+  position: absolute;
+  background-color: var(--tick-color, var(--secondary-color));
+  transform-origin: bottom center;
+  border-radius: 0.5px;
+  opacity: 0.8;
+}
+
+.timer-tick-major {
+  background-color: var(--major-tick-color, var(--primary-color));
+  width: 2px;
+  height: var(--major-tick-length, 12px);
+  opacity: 1;
+}
+
+.timer-tick-minor {
+  background-color: var(--tick-color, var(--secondary-color));
+  width: 1px;
+  height: var(--tick-length, 8px);
+}
+
+/* Timer hands for clock-style display */
+.timer-hand {
+  position: absolute;
+  background-color: var(--accent-color);
+  transform-origin: bottom center;
+  transition: transform var(--duration-normal) var(--ease-linear);
+  border-radius: 1px;
+  z-index: var(--z-raised);
+}
+
+.timer-hand-hour {
+  width: var(--hand-width, 2px);
+  height: calc(var(--hand-length, 45%) * 0.6);
+}
+
+.timer-hand-minute {
+  width: var(--hand-width, 2px);
+  height: var(--hand-length, 45%);
+}
+
+/* CSS-driven hand rotation */
+.timer-hand.dynamic,
+.timer-hand.timer-progress-dynamic {
+  transform: translateX(-50%) rotate(var(--rotation, 0deg));
+}
+
+/* Enhanced dynamic hand styling with data attributes */
+.timer-hand[data-animation-state='running'] {
+  transition: transform var(--hand-transition, 1s linear);
+}
+
+.timer-hand[data-animation-state='paused'] {
+  transition: none;
+}
+
+/* Center dot for clock displays */
+.timer-center-dot {
+  position: absolute;
+  border-radius: var(--radius-full);
+  width: var(--center-dot-size, 12px);
+  height: var(--center-dot-size, 12px);
+  background-color: var(--accent-color);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: calc(var(--z-raised) + 1);
+  box-shadow: var(--center-dot-glow, none);
+}
+
+/* Intensity-based styling using CSS variables */
+.timer-intensity-effects {
+  --computed-intensity: calc(var(--intensity, 0) * 1.2);
+  --intensity-color: hsl(0, calc(60% + var(--computed-intensity) * 20%), calc(55% - var(--computed-intensity) * 10%));
+
+  background-color: var(--intensity-color);
+  box-shadow: 0 1px 2px rgba(239, 68, 68, calc(0.3 + var(--computed-intensity) * 0.2));
+}
+
+/* State display components */
+.timer-state-standard {
+  font-size: var(--font-size-lg);
+  font-weight: 500;
+  text-align: center;
+  padding: var(--spacing-xs) var(--spacing-lg);
+  border-radius: var(--radius-full);
+  background-color: var(--surface-color);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.timer-state-minimal {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  text-align: center;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+}
+
+/* Session counter components */
+.timer-session-standard {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-lg);
+  background-color: var(--surface-color);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.timer-session-minimal {
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+}
+
+/* Progress text display */
+.timer-progress-text {
+  font-size: var(--font-size-sm);
+  text-align: center;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+/* Dynamic content using data attributes */
+[data-timer-state='work'] .timer-display {
+  border-color: var(--accent-color);
+}
+
+[data-timer-state='break'] .timer-display {
+  border-color: var(--success-color);
+}
+
+[data-timer-state='paused'] .timer-display {
+  border-color: var(--warning-color);
+}
+
+[data-timer-state='running'] .timer-progress-ring {
+  animation: rotate-clockwise var(--animation-duration) linear infinite;
+}
+
+[data-timer-state='paused'] .timer-progress-ring {
+  animation-play-state: paused;
+}
+
+/* Progress-based animations using data attributes */
+[data-progress='100'] .timer-center-dot,
+.timer-center-dot[data-progress='100'] {
+  animation: pulse-glow 1s ease-in-out 3;
+}
+
+.timer-center-dot[data-progress] {
+  --progress-value: attr(data-progress number, 0);
+}
+
+/* High progress state (>90%) */
+.timer-center-dot.animate-pulse-glow {
+  animation: pulse-glow 1s ease-in-out infinite;
+}
+
+/* Container state-based styling */
+[data-timer-state='running'] {
+  --animation-state: 'running';
+}
+
+[data-timer-state='paused'] {
+  --animation-state: 'paused';
+}
+
+[data-timer-state='idle'] {
+  --animation-state: 'idle';
+}
+
+/* Responsive typography */
+@media (min-width: 1400px) {
+  .timer-text {
+    font-size: var(--time-font-size-xl);
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .timer-text {
+    font-size: var(--time-font-size-xl);
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .timer-text {
+    font-size: var(--time-font-size-large);
+  }
+}
+
+@media (min-width: 769px) and (max-width: 991px) {
+  .timer-text {
+    font-size: var(--time-font-size);
+  }
+}
+
+@media (max-width: 768px) {
+  .timer-text {
+    font-size: var(--time-font-size-mobile);
+  }
+}
+
+@media (max-width: 480px) {
+  .timer-text {
+    font-size: var(--time-font-size-small);
+  }
+}
+
+/* High contrast mode adjustments */
+@media (prefers-contrast: high) {
+  .timer-display {
+    border-width: calc(var(--ring-width, 8px) + 2px);
+  }
+
+  .timer-tick-minor,
+  .timer-tick-major {
+    background-color: var(--text-primary);
+    opacity: 1;
+  }
+
+  .timer-text {
+    font-weight: 800;
+    text-shadow: 0 0 2px var(--background-color);
+  }
+}
+
+/* Performance optimizations */
+.timer-display,
+.timer-progress-ring,
+.timer-hand {
+  will-change: transform;
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .timer-progress-ring,
+  .timer-hand {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .timer-display {
+    transition: border-color var(--duration-normal) var(--ease-out);
+  }
+}

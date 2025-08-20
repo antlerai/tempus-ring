@@ -1,0 +1,194 @@
+/* Animation Definitions - Reusable animations for all themes */
+/* CSS-driven animations to minimize JavaScript style manipulation */
+
+/* Core timer animations */
+@keyframes pulse-ring {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.8;
+  }
+}
+
+@keyframes rotate-clockwise {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes rotate-counterclockwise {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 5px var(--accent-color);
+  }
+  50% {
+    box-shadow:
+      0 0 20px var(--accent-color),
+      0 0 30px var(--accent-color);
+  }
+}
+
+@keyframes bounce-gentle {
+  0%,
+  20%,
+  53%,
+  80%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%,
+  43% {
+    transform: translate3d(0, -10px, 0);
+  }
+  70% {
+    transform: translate3d(0, -5px, 0);
+  }
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+/* Progress-driven animations using CSS custom properties */
+@keyframes progress-rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(calc(var(--progress) * 360deg));
+  }
+}
+
+/* Dynamic animations that respond to CSS variables */
+.timer-progress-dynamic {
+  transform: rotate(calc(var(--rotation, 0deg)));
+  transition: transform var(--duration-normal) var(--ease-out);
+}
+
+.timer-intensity-glow {
+  box-shadow: 0 0 calc(var(--intensity, 0) * 20px) var(--accent-color);
+  transition: box-shadow var(--duration-normal) var(--ease-out);
+}
+
+/* Animation utility classes */
+.animate-pulse-ring {
+  animation: pulse-ring 2s ease-in-out infinite;
+}
+
+.animate-rotate-cw {
+  animation: rotate-clockwise var(--animation-duration, 1500s) linear infinite;
+}
+
+.animate-rotate-ccw {
+  animation: rotate-counterclockwise var(--animation-duration, 1500s) linear infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in var(--duration-slow) var(--ease-out);
+}
+
+.animate-slide-up {
+  animation: slide-up var(--duration-slow) var(--ease-out);
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent 25%, var(--accent-color) 50%, transparent 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-bounce-gentle {
+  animation: bounce-gentle 0.6s ease-out;
+}
+
+/* State-based animations */
+[data-state='running'] .timer-hand {
+  animation: rotate-clockwise var(--animation-duration) linear infinite;
+}
+
+[data-state='paused'] .timer-elements {
+  animation-play-state: paused;
+}
+
+[data-progress='100'] .timer-completion {
+  animation: pulse-glow 1s ease-in-out 3;
+}
+
+/* Performance optimizations */
+.animate-gpu {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.animate-composite {
+  will-change: transform, opacity;
+}
+
+/* Accessibility: Respect user's motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  [data-state] .timer-hand {
+    animation: none !important;
+  }
+
+  .timer-progress-dynamic {
+    transition: none !important;
+  }
+}
